@@ -1,6 +1,6 @@
 <div class="content-wrapper">
     <div wire:loading wire:target="openEditSection,closedEditSection" class="loader" role="status" aria-hidden="true"></div>
-    <div class="card">
+    <div class="card mb-4">
         <div class="card-body">
             <div class="top-box-set">
                 <h4>My Profile</h4>

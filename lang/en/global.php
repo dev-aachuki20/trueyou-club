@@ -262,5 +262,12 @@ return [
     'account'                              => 'Account',
     'update_password'                      => 'Update Password',
     'back'                                => 'Back',
-    'sno'                                  => 'S.No.',
+    'sno'                                 => 'S.No.',
+    'image'                               => 'Image',
+    'video'                               => 'Video',
+    'loading'                             => 'Loading',
+    'active'                              => 'Active',
+    'inactive'                            => 'Inactive',
+
+
 ];

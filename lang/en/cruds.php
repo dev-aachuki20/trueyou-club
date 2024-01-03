@@ -60,4 +60,16 @@ return [
         ],
     ],
 
+    'webinar' => [
+        'title'                 => 'Webinars',
+        'title_singular'        => 'Webinar',
+        'fields' => [
+            'title'   => 'Title',
+            'date'    => 'Date',
+            'time'    => 'Time',
+            'presenter'   => 'Presenter',
+            'description' => 'Description',
+        ],
+    ],
+
 ];

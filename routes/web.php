@@ -49,7 +49,9 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
     Route::view('admin/profile', 'auth.profile.index')->name('auth.admin-profile');
     Route::group(['as' => 'admin.','prefix'=>'admin'], function () {        
         Route::view('dashboard', 'admin.index')->name('dashboard');
-      
+
+        Route::view('webinars', 'admin.webinar.index')->name('webinars');
+        
         Route::view('settings', 'admin.setting.index')->name('settings');
     
         Route::view('transactions', 'admin.transactions.index')->name('transactions'); 
