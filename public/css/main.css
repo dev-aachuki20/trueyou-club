@@ -21,7 +21,7 @@ a {
     text-decoration: none;
 }
 a:hover{
-	color: #3F53FE;
+	color: #006AF2;
 }
 h1,
 h2,
@@ -62,9 +62,9 @@ h3 {
 	color: #464B70 !important;
 }
 .btn-fill {
-    background: #3F53FE;
+    background: #006AF2;
     color: #fff;
-    border: 2px solid #3F53FE;
+    border: 2px solid #006AF2;
     width: 100%;
     padding: 14px 22px;
     border-radius: 5px;
@@ -77,8 +77,9 @@ h3 {
     font-family: 'Barlow', sans-serif;
 }
 .btn-fill:hover{
-	color: #3F53FE;
+	color: #006AF2;
 	background-color: transparent;
+    border-color:#006AF2;
 }
 .pb-120{
     padding-bottom: 120px;
@@ -98,7 +99,7 @@ input[type="radio"] {
 input[type="radio"]:checked:before{
     position: absolute;
     content: '';
-    background: #3F53FE;
+    background: #006AF2;
     border-radius: 100%;
     width: 10px;
     height: 10px;
@@ -271,7 +272,7 @@ input[type="radio"]:checked:before{
     content: '';
     height: 25px;
     width: 4px;
-    background: #3F53FE;
+    background: #006AF2;
     left: 0;
     top: 0;
     bottom: 0;
@@ -456,6 +457,7 @@ input[type="radio"]:checked:before{
     top: 0;
     bottom: 0;
     min-height: 100vh;
+    border-left: 1px solid #eaeceb;
 }
 .h-100vh{
     min-height: 100vh;
@@ -499,8 +501,8 @@ input[type="radio"]:checked:before{
     transition: .4s;
 }
 input:checked + .slider {
-    background-color: #3F53FE;
-    border-color: #3F53FE;
+    background-color: #006AF2;
+    border-color: #006AF2;
 }
 input:checked + .slider:before {
   	-webkit-transform: translateX(19px);
@@ -599,8 +601,8 @@ input:checked + .slider:before {
     transition: all 0.4s ease-in-out;
 }
 .grid-block-view:hover{
-    border: 1px solid #3F53FE;
-    background: #3F53FE;
+    border: 1px solid #006AF2;
+    background: #006AF2;
 }
 .grid-block-view:hover h3{
     color: #fff;
@@ -666,7 +668,7 @@ input:checked + .slider:before {
     margin: 15px 0;
 }
 .drag-file-area label .browse-files-text {
-    color: #3F53FE;
+    color: #006AF2;
     font-weight: 700;
     cursor: pointer;
     text-transform: capitalize;
@@ -842,8 +844,8 @@ input:checked + .slider:before {
     font-weight: 600;
 }
 .btn-light:hover{
-    background: #3F53FE;
-    border-color: #3F53FE;
+    background: #006AF2;
+    border-color: #006AF2;
     color: #fff;
 }
 .my-30{
@@ -959,7 +961,7 @@ input:checked + .slider:before {
     transition: all 0.4s ease-in-out;
 }
 .copyright-text a:hover{
-    color: #3F53FE;
+    color: #006AF2;
 }
 .copyright-text {
     font-weight: 600;
@@ -1088,8 +1090,8 @@ input:checked + .slider:before {
     text-transform: capitalize;
 }
 .buyers-tabs .nav-link.active {
-    border-color: #3F53FE;
-    background: #3F53FE;
+    border-color: #006AF2;
+    background: #006AF2;
 }
 .buyers-tabs li:first-child .nav-link {
     border-radius: 5px 0 0 5px;
@@ -1164,8 +1166,8 @@ input:checked + .slider:before {
     position: relative;
 }
 .unhide-btn {
-    border: 1px solid #3F53FE !important;
-    background: #3F53FE !important;
+    border: 1px solid #006AF2 !important;
+    background: #006AF2 !important;
     border-radius: 100%;
     width: 30px;
     height: 30px;
@@ -1176,8 +1178,8 @@ input:checked + .slider:before {
 /*    position: absolute;
     right: 0;
     top: 0;*/
-    background: #3F53FE;
-    border: 1px solid #3F53FE;
+    background: #006AF2;
+    border: 1px solid #006AF2;
     color: #fff;
     font-family: 'Barlow', sans-serif;
     font-weight: 500;
@@ -1340,7 +1342,7 @@ input:checked + .slider:before {
     width: 24px;
 }
 .popup-icon {
-    border: 8px solid #3F53FE;
+    border: 8px solid #006AF2;
     border-radius: 100%;
     width: 116px;
     height: 116px;
@@ -1439,7 +1441,7 @@ input:checked + .slider:before {
 }
 
 .features-items input[type="radio"]:checked:before{
-    background:#3F53FE;
+    background:#006AF2;
 }
 .features-items input[type="radio"]::before{
     position: absolute;
@@ -1473,7 +1475,7 @@ input:checked + .slider:before {
 }
 .package-plan {
     padding: 3px 13px;
-    background: #3F53FE;
+    background: #006AF2;
     border-radius: 5px 5px 0 0;
     color: #ffff;
     font-size: 14px;

@@ -217,7 +217,7 @@ button.btn, a.btn {
     padding: 8px 15px;
     border-radius: 5px !important;
     font-weight: 600;
-    font-family: 'Barlow', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 16px !important;
 }
 .card .card-body {
@@ -227,13 +227,13 @@ button.btn, a.btn {
 }
 .card .card-title, .card .card-title h4 {
     color: #212529;
-    font-family: 'Barlow', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 25px;
     font-weight: 700;
 }
 .table-design th h4 {
     margin-bottom: 0;
-    font-family: 'Barlow', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 .table-design th, .table-design td, .table-design td p {
     padding: 15px 0;
@@ -260,15 +260,15 @@ button.btn, a.btn {
     border-color: #0A2540;
 }
 .btn-blue{
-  background: #3F53FE;
-  border-color: #3F53FE;
+  background: #006AF2;
+  border-color: #006AF2;
 }
 .btn-dark-blue:hover{
   color: #0A2540;
   background: transparent;
 }
 .btn-blue:hover {
-    color: #3F53FE;
+    color: #006AF2;
     background-color: transparent;
 }
 .form-control {
@@ -276,7 +276,7 @@ button.btn, a.btn {
     border: 1px solid #E1E3E7 !important;
     padding: 13px 15px 13px 15px !important;
     color: #464B70 !important;
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 14px !important;
     font-weight: 400 !important;
     box-shadow: none !important;
@@ -286,8 +286,10 @@ button.btn, a.btn {
   font-size: 12px;
 }
 .form-group label {
-    font-family: 'Barlow', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 700;
+    margin-bottom: 0;
+    line-height: 2.2rem;
 }
 .file-input {
     display: block;
@@ -320,7 +322,7 @@ button.btn, a.btn {
 }
 
 .file-input:hover > .button {
-  background: #3F53FE;
+  background: #006AF2;
   color: white;
 }
 
@@ -359,14 +361,14 @@ span.select2-selection.select2-selection--multiple {
 }
 .select2-container--classic .select2-search--inline .select2-search__field{
       color: #464B70 !important;
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 14px !important;
     font-weight: 400 !important;
     box-shadow: none !important;
 }
 span.select2-selection.select2-selection--multiple .select2-search__field {
     color: #464B70 !important;
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 14px !important;
     font-weight: 400 !important;
     height: 32px;
@@ -380,7 +382,7 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
     color: #464B70 !important;
 }
 .select2-container--classic .select2-results__option--highlighted.select2-results__option--selectable {
-    background-color: #3f53fe !important;
+    background-color: #006AF2 !important;
     color: #fff !important;
 }
 .select2-container--classic.select2-container--open .select2-dropdown {
@@ -422,7 +424,7 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
 .radio-block-group input[type="radio"]:checked:before{
     position: absolute;
     content: '';
-    background: #3F53FE;
+    background: #006AF2;
     border-radius: 100%;
     width: 10px;
     min-width: 10px;
@@ -442,7 +444,7 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
     vertical-align: middle;
 }
 .card-title .btn-header {
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
     padding: 11px 17px;
     display: flex;
     align-items: center;
@@ -541,22 +543,23 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
     align-items: flex-end;
 }
 .welcome {
-    font-family: 'Nunito Sans', sans-serif;
-    color: #414136;
+    font-family: 'Roboto', sans-serif;
+    color: #0A2540;
     font-size: 12px;
     text-transform: capitalize;
     line-height: 9px;
     margin-bottom: 6px;
+    font-weight: 400;
 }
 .dropdown-toggle{
     box-shadow: none !important;
 }
 .user-name-title {
-    color: #000;
+    color: #0A2540;
     font-size: 16px;
     font-weight: 600;
     line-height: 15px;
-    font-family: 'Barlow', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 .user-dropdown .dropdown-menu {
     border-radius: 10px;
@@ -606,7 +609,7 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
     color: #121639;
     font-size: 16px;
     font-weight: 500;
-    font-family: 'Barlow', sans-serif;
+    font-family: 'Roboto', sans-serif;
     transition: all 0.4s ease-in-out;
     display: flex;
     align-items: center;
@@ -623,7 +626,7 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
 .user-dropdown .dropdown-menu li .dropdown-item:hover{
     background: transparent;
     color: #0A2540;
-    font-weight: 600;
+    /* font-weight: 600; */
 }
 .user-dropdown .dropdown-menu li {
     padding: 0 15px;
@@ -635,7 +638,7 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
     content: '';
     height: 25px;
     width: 4px;
-    background: #3F53FE;
+    background: #006AF2;
     left: 0;
     top: 0;
     bottom: 0;
@@ -668,7 +671,7 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
     font-size: 25px;
     color: #121639;
     font-weight: 700;
-    font-family: 'Barlow', sans-serif;
+    font-family: 'Roboto', sans-serif;
     margin-bottom: 0;
 }
 footer.footer {
@@ -680,7 +683,7 @@ footer.footer {
 .copyright-text {
     color: #464B70;
     font-size: 14px;
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 .card-body-icon {
     width: 74px;
@@ -765,7 +768,7 @@ footer.footer {
 /*--------- profile -----------*/
 .inner-page-title{
     color: #212529;
-    font-family: 'Barlow', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 25px;
     font-weight: 700;
 }
@@ -797,12 +800,12 @@ footer.footer {
 }
 .right-content-profile h5 {
     font-size: 18px;
-    font-family: 'Barlow', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 600;
 }
 .change {
-    border: 1px solid #3f53fe;
-    color: #3f53fe;
+    border: 1px solid #006AF2;
+    color: #006AF2;
     background: #fff;
 }
 .left-imag-col{
@@ -927,6 +930,8 @@ input::-webkit-inner-spin-button {
     padding-left: 0.1rem !important;
     color: #ec3818;
     padding-top: 0.25em;
+    position: absolute;
+    top: 5px;
 }
 
 body .form-group label {
@@ -1088,8 +1093,8 @@ body .datepicker .datepicker-years .table-condensed{
 }
 
 .kyclisting_tab .nav-link.active {
-    background-color: #3f53fe;
-    border-color: #3f53fe;
+    background-color: #006AF2;
+    border-color: #006AF2;
 }
 
 .kyclisting_tab .tab-content{
