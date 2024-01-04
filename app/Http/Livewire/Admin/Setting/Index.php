@@ -51,7 +51,7 @@ class Index extends Component
 
     public function render()
     {
-        $allSettingType = Setting::groupBy('group')->pluck('group');
+        $allSettingType = Setting::groupBy('group')->where('status',1)->pluck('group');
 
         return view('livewire.admin.setting.index',compact('allSettingType'));
     }
