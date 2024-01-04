@@ -25,7 +25,7 @@ class Index extends Component
     public $removeImage = false;
 
     protected $listeners = [
-        'cancel','show', 'edit', 'toggle', 'updateStatus', 'confirmedToggleAction','delete','deleteConfirm'
+        'cancel','show', 'edit', 'toggle', 'confirmedToggleAction','delete','deleteConfirm'
     ];
 
     public function mount(){
@@ -60,7 +60,7 @@ class Index extends Component
             'status'      => 'required',
             'image'       => 'required|image|max:'.config('constants.img_max_size'),
         ],[
-            'meeting_link.strip_tags'=> 'The meeting_link field is required',
+            'meeting_link.strip_tags'=> 'The meeting link field is required',
         ]);
 
         $validatedData['date']   = Carbon::parse($this->date)->format('Y-m-d');
@@ -113,7 +113,7 @@ class Index extends Component
         }
 
         $validatedData = $this->validate($validatedArray,[
-            'meeting_link.strip_tags'=> 'The meeting_link field is required',
+            'meeting_link.strip_tags'=> 'The meeting link field is required',
         ]);
 
         $validatedData['date']   = Carbon::parse($this->date)->format('Y-m-d');
@@ -148,14 +148,6 @@ class Index extends Component
         $this->viewMode = true;
     }
 
-    public function updateStatus($id){
-        if($this->isConfirmed){
-            $this->isConfirmed = false;
-            $model = Webinar::find($id);
-            $model->update(['status' => !$model->status]);
-            $this->alert('success', trans('messages.change_status_success_message'));
-        }
-    }
 
     public function initializePlugins(){
         $this->dispatchBrowserEvent('loadPlugins');

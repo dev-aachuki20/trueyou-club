@@ -51,6 +51,10 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
         Route::view('dashboard', 'admin.index')->name('dashboard');
 
         Route::view('webinars', 'admin.webinar.index')->name('webinars');
+
+        Route::view('blogs', 'admin.blog.index')->name('blogs');
+
+        Route::view('news', 'admin.news.index')->name('news');
         
         Route::view('settings', 'admin.setting.index')->name('settings');
     

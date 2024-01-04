@@ -71,4 +71,24 @@ return [
         ],
     ],
 
+    'blog' => [
+        'title'                 => 'Blogs',
+        'title_singular'        => 'Blog',
+        'fields' => [
+            'title'   => 'Title',
+            'content' => 'Content',
+            'publish_date' => 'Publish Date'
+        ],
+    ],
+
+    'news' => [
+        'title'                 => 'News',
+        'title_singular'        => 'News',
+        'fields' => [
+            'title'   => 'Title',
+            'content' => 'Content',
+            'publish_date' => 'Publish Date'
+        ],
+    ],
+
 ];
