@@ -56,8 +56,8 @@ class WebinarTable extends Component
 
         $allWebinar = Webinar::query()->where(function ($query) use($searchValue,$statusSearch) {
             $query->where('title', 'like', '%'.$searchValue.'%')
-            ->orWhere('presenter', 'like', '%'.$searchValue.'%')
             ->orWhere('status', $statusSearch)
+            ->orWhereRaw("date_format(date, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%'])
             ->orWhereRaw("date_format(created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
         })
         ->orderBy($this->sortColumnName, $this->sortDirection)

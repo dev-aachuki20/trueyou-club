@@ -54,10 +54,6 @@
                     </th>
 
                     <th class="text-gray-500 text-xs">
-                        {{ __('cruds.webinar.fields.presenter')}}
-                    </th>
-
-                    <th class="text-gray-500 text-xs">
                         {{ __('cruds.webinar.fields.date')}}
                     </th>
                 
@@ -83,7 +79,6 @@
                     <tr>
                         <td>{{ $serialNo+1 }}</td>
                         <td>{{ ucwords($webinar->title) }}</td>
-                        <td>{{ ucwords($webinar->presenter) }}</td>
                         <td>{{ convertDateTimeFormat($webinar->date,'date') }}</td>
                         <td>
                             <label class="toggle-switch">

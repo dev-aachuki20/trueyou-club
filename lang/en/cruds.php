@@ -67,8 +67,7 @@ return [
             'title'   => 'Title',
             'date'    => 'Date',
             'time'    => 'Time',
-            'presenter'   => 'Presenter',
-            'description' => 'Description',
+            'meeting_link' => 'Meeting Link',
         ],
     ],
 

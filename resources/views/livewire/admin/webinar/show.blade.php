@@ -16,12 +16,6 @@
             </div>
         </div>
 
-        <div class="form-group row">
-            <label class="col-sm-3 col-form-label font-weight-bold">@lang('cruds.webinar.fields.presenter')</label>
-            <div class="col-sm-9 col-form-label">
-                 {{ ucwords($detail->presenter) }}
-            </div>
-        </div>
     
         <div class="form-group row">
             <label class="col-sm-3 col-form-label font-weight-bold">@lang('cruds.webinar.fields.date')</label>
@@ -39,9 +33,9 @@
         </div>
     
         <div class="form-group row">
-            <label class="col-sm-3 col-form-label font-weight-bold">@lang('cruds.webinar.fields.description')</label>
+            <label class="col-sm-3 col-form-label font-weight-bold">@lang('cruds.webinar.fields.meeting_link')</label>
             <div class="col-sm-9 col-form-label">
-                {!! $detail->description !!}
+                {!! $detail->meeting_link !!}
             </div>
         </div>
     

@@ -6,18 +6,11 @@
 <form wire:submit.prevent="{{ $updateMode ? 'update' : 'store' }}" class="forms-sample">
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.webinar.fields.title')}}<i class="fas fa-asterisk"></i></label>
                 <input type="text" class="form-control" wire:model.defer="title" placeholder="{{ __('cruds.webinar.fields.title')}}" autocomplete="off">
                 @error('title') <span class="error text-danger">{{ $message }}</span>@enderror
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="font-weight-bold justify-content-start">{{ __('cruds.webinar.fields.presenter')}}<i class="fas fa-asterisk"></i></label>
-                <input type="text" class="form-control" wire:model.defer="presenter" placeholder="{{ __('cruds.webinar.fields.presenter')}}" autocomplete="off">
-                @error('presenter') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
     </div>
@@ -43,12 +36,12 @@
 
     <div class="row">
         <div class="col-md-12 mb-4">
-            <div class="form-group mb-0" wire:ignore>
-                <label class="font-weight-bold justify-content-start">{{ __('cruds.webinar.fields.description')}}<i class="fas fa-asterisk"></i>
+            <div class="form-group mb-0">
+                <label class="font-weight-bold justify-content-start">{{ __('cruds.webinar.fields.meeting_link')}}<i class="fas fa-asterisk"></i>
                 </label>
-                <textarea class="form-control" id="summernote" wire:model.defer="description" rows="4"></textarea>
+                <textarea class="form-control" wire:model.defer="meeting_link" rows="4"></textarea>
             </div>
-            @error('description') <span class="error text-danger">{{ $message }}</span>@enderror
+            @error('meeting_link') <span class="error text-danger">{{ $message }}</span>@enderror
         </div>
     </div>
 

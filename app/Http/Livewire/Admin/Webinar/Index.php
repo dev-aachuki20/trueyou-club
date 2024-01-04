@@ -20,7 +20,7 @@ class Index extends Component
 
     public $search = '', $formMode = false , $updateMode = false, $viewMode = false;
 
-    public $webinar_id=null, $title, $presenter, $date = null, $time=null, $description, $image, $originalImage, $status=1;
+    public $webinar_id=null, $title,  $date = null, $time=null, $meeting_link, $image, $originalImage, $status=1;
 
     public $removeImage = false;
 
@@ -54,14 +54,13 @@ class Index extends Component
     public function store(){
         $validatedData = $this->validate([
             'title'        => 'required',
-            'presenter'    => 'required',
             'date'         => 'required',
             'time'         => 'required',
-            'description' => 'required|strip_tags',
+            'meeting_link' => 'required|strip_tags',
             'status'      => 'required',
             'image'       => 'required|image|max:'.config('constants.img_max_size'),
         ],[
-            'description.strip_tags'=> 'The description field is required',
+            'meeting_link.strip_tags'=> 'The meeting_link field is required',
         ]);
 
         $validatedData['date']   = Carbon::parse($this->date)->format('Y-m-d');
@@ -76,7 +75,7 @@ class Index extends Component
 
         $this->formMode = false;
 
-        $this->reset(['title','presenter','date','time','description','status','image']);
+        $this->reset(['title','date','time','meeting_link','status','image']);
 
         $this->flash('success',trans('messages.add_success_message'));
 
@@ -93,10 +92,9 @@ class Index extends Component
         $webinar = Webinar::findOrFail($id);
         $this->webinar_id      =  $webinar->id;
         $this->title           =  $webinar->title;
-        $this->presenter       =  $webinar->presenter;
         $this->date            =  Carbon::parse($webinar->date)->format('d-m-Y');
         $this->time            =  Carbon::parse($webinar->time)->format('h:i A');
-        $this->description    =  $webinar->description;
+        $this->meeting_link    =  $webinar->meeting_link;
         $this->status         =  $webinar->status;
         $this->originalImage  =  $webinar->image_url;
 
@@ -105,10 +103,9 @@ class Index extends Component
 
     public function update(){
         $validatedArray['title']        = 'required';
-        $validatedArray['presenter']    = 'required';
         $validatedArray['date']         = 'required';
         $validatedArray['time']         = 'required';
-        $validatedArray['description'] = 'required|strip_tags';
+        $validatedArray['meeting_link'] = 'required|strip_tags';
         $validatedArray['status']      = 'required';
 
         if($this->image || $this->removeImage){
@@ -116,7 +113,7 @@ class Index extends Component
         }
 
         $validatedData = $this->validate($validatedArray,[
-            'description.strip_tags'=> 'The description field is required',
+            'meeting_link.strip_tags'=> 'The meeting_link field is required',
         ]);
 
         $validatedData['date']   = Carbon::parse($this->date)->format('Y-m-d');
@@ -140,7 +137,7 @@ class Index extends Component
 
         $this->flash('success',trans('messages.edit_success_message'));
 
-        $this->reset(['title','presenter','date','time','description','status','image']);
+        $this->reset(['title','date','time','meeting_link','status','image']);
 
         return redirect()->route('admin.webinars');
     }
