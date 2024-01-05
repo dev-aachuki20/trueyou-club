@@ -60,5 +60,7 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
     
         Route::view('transactions', 'admin.transactions.index')->name('transactions'); 
 
+        Route::view('quotes', 'admin.quote.index')->name('quotes');
+
     });
 });

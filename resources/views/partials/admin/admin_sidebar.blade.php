@@ -38,6 +38,14 @@
                     <i class="icon-grid menu-icon far fa-newspaper"></i>
                     <span class="menu-title"> {{ __('cruds.news.title') }} </span>
                 </a>
+            </li>
+            @endcan
+            @can('quote_access')
+            <li class="nav-item {{ request()->is('admin/quotes') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.quotes') }}">
+                    <i class="icon-grid menu-icon fa fa-quote-left"></i>
+                    <span class="menu-title"> {{ __('cruds.quote.title') }} </span>
+                </a>
             </li> 
             @endcan
             

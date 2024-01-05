@@ -88,6 +88,15 @@ return [
             'title'   => 'Title',
             'content' => 'Content',
             'publish_date' => 'Publish Date'
+        ]
+    ],
+
+    'quote' => [
+        'title'                 => 'Quotes',
+        'title_singular'        => 'Quote',
+        'fields' => [
+            'message'   => 'Quote Message',
+
         ],
     ],
 
