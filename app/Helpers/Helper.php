@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('convertToFloat')) {
@@ -169,3 +170,13 @@ if (!function_exists('generateOTP')) {
 	}
 }
 
+if (!function_exists('getDecryptSlug')) {
+	function getDecryptSlug($encryptSlug) {
+		try{
+			$id = last(explode('-', $encryptSlug));
+			return decrypt($id);
+		} catch (DecryptException $e) {
+			return false;
+		}
+	}
+}

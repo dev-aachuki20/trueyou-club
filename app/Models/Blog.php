@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class Blog extends Model
 {
@@ -67,5 +69,28 @@ class Blog extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+ 
+    /*
+    // Api For api
+     public function getRouteKey()
+    {
+        return Str::slug($this->title) . '-' . encrypt($this->getAttribute('id'));
+    }
+ 
+    public function resolveRouteBinding($value, $field = null)
+    {
+        try{
+            $id = last(explode('-', $value));
+            $model = parent::resolveRouteBinding(decrypt($id), $field);
 
+            return $model;
+    
+        } catch (DecryptException $e) {
+            abort(404); // Invalid encrypted ID
+        }
+    } */
+
+    public function getEncryptSlugAttribute(){
+        return Str::slug($this->title) . '-' . encrypt($this->getAttribute('id'));
+    }
 }

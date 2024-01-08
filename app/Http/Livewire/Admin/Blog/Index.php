@@ -59,7 +59,7 @@ class Index extends Component
         DB::beginTransaction();
         try{
 
-            $validatedData['date']   = Carbon::parse($this->publish_date)->format('Y-m-d');
+            $validatedData['publish_date']   = Carbon::parse($this->publish_date)->format('Y-m-d');
           
             $validatedData['status'] = $this->status;
     
