@@ -78,7 +78,7 @@
         </div>
     </div>
 
-    <button type="submit" wire:loading.attr="disabled" class="btn btn-primary mr-2">
+    <button type="submit" wire:loading.attr="disabled" class="btn btn-primary mr-2 joinBtn">
         {{ $updateMode ? __('global.update') : __('global.submit') }}
         <span wire:loading wire:target="{{ $updateMode ? 'update' : 'store' }}">
             <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>

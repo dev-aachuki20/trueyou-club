@@ -479,6 +479,8 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
 }
 .search-table-data > div > .relative > .flex > .flex input {
     padding: 16px 37px 14px 48px !important;
+    border: 1px solid #eaeceb;
+    box-shadow: none !important;
 }
 .sidebar .nav.sub-menu .nav-item::before{
     margin-left: 15px;
@@ -1116,16 +1118,30 @@ body .datepicker .datepicker-years .table-condensed{
 
 .webinar-item {
     border-radius: 10px;
-    border: 1px solid  #DDDDE9;
+    border: 1px solid #DDDDE9;
     background: #ffffff;
-    padding: 30px;
-    margin-bottom: 30px;
+    padding: 30px 30px 40px;
+    margin-bottom: 40px;
+    position: relative;
 }
 
 .webinar-item-inner{
     display: flex;
     align-items: flex-start;
     gap: 20px;
+}
+
+.webinar-item-inner>.webinar-img {
+    width: 254px;
+    height: 162px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.webinar-item-inner>.webinar-img>img {
+    width: 100%;
+    height: 162px;
+    object-fit: cover;
 }
 
 .webinar-disabled{
@@ -1143,6 +1159,13 @@ body .datepicker .datepicker-years .table-condensed{
     background: rgb(255 255 255 / 71%);
     /* backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px); */
+}
+
+.update-webinar {
+    position: absolute;
+    right: 20px;
+    bottom: -20px;
+    background-color: #ffffff;
 }
 
 .webinar-disabled .btn{
@@ -1192,6 +1215,17 @@ body .datepicker .datepicker-years .table-condensed{
     border-radius: 50px !important;
     background: #006AF2;
     box-shadow: 8px 6px 15px 0px rgba(0, 97, 222, 0.25);
+    color: #ffffff !important;
+    gap: 5px;
+}
+
+.btn.joinBtn svg path{
+    fill: #ffffff;
+}
+
+.btn.joinBtn:hover{
+    background-color: #0659c5;
+    border-color: #0659c5;
 }
 
 .buyer-active-verfiy {
@@ -1221,8 +1255,7 @@ body .datepicker .datepicker-years .table-condensed{
 .update-webinar>ul{
     justify-content: flex-end;
     margin-bottom: 0;
-    padding-top: 1rem;
-
+    padding: 0 0.5rem
 }
 
 .update-webinar>ul>li a {
@@ -1255,4 +1288,54 @@ body .datepicker .datepicker-years .table-condensed{
 
 .update-webinar>ul>li a svg path {
     fill: #626263;
+}
+
+.no-record {
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    opacity: .4;
+}
+
+.quotes-listing>ul {
+    padding-left: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.quotes-listing ul>li{
+    height: 100%;
+}
+
+.quotes-date {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #878787;
+    margin-top: .5rem;
+}
+
+span.items-center.justify-between select {
+    border-radius: 5px;
+}
+
+button.btn.btn-secondary {
+    padding: 15px 30px;
+    border-radius: 60px !important;
+    background: #F5F7F9;
+    border-color: transparent;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+button.btn.btn-secondary:hover{
+    background-color: #878787;
+}
+
+@media(max-width:991px){
+    .webinar_listing.row>.col-md-6 {
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
 }

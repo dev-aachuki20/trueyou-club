@@ -3,8 +3,8 @@
        
         <!-- Show entries & Search box -->
         <div class="flex items-center justify-between mb-1">
-            <div class="flex items-center">                
-                <div class="items-center justify-between p-2 sm:flex">
+            <div class="w-100 flex items-center">                
+                <div class="w-100 items-center justify-between p-2 sm:flex">
                     <div class="flex items-center my-2 sm:my-0">
                         <span class="items-center justify-between p-2 sm:flex"> 
                             Show 
@@ -125,8 +125,8 @@
     </div>--}}
 
     <div class="flex items-center justify-between mb-1">
-        <div class="flex items-center">                
-            <div class="items-center justify-between p-2 sm:flex">
+        <div class="w-100 flex items-center">                
+            <div class="w-100 items-center justify-between p-2 sm:flex">
                 <div class="flex items-center my-2 sm:my-0">
                     <span class="items-center justify-between p-2 sm:flex"> 
                         Show 
@@ -250,7 +250,7 @@
                 </div>
             @endforeach
         @else
-            <div ><p></p class="text-center">{{ __('messages.no_record_found')}}</p></div>
+            <div class="no-record">{{ __('messages.no_record_found')}}</div>
         @endif
 
         {{ $allWebinar->links('vendor.pagination.custom-pagination') }}

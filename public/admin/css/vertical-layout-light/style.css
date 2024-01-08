@@ -28498,6 +28498,9 @@ div.tagsinput span.tag a {
   transition-duration: 0.25s;
   transition-property: background;
   -webkit-transition-property: background;
+  margin-top: 0 !important;
+  margin-bottom: 1rem;
+  /* overflow: hidden; */
 }
 
 .sidebar .nav .nav-item .collapse {
@@ -28519,6 +28522,7 @@ div.tagsinput span.tag a {
   transition-duration: 0.45s;
   transition-property: color;
   -webkit-transition-property: color;
+  background-color: #F5F7F9;
 }
 
 .sidebar .nav .nav-item .nav-link i {
@@ -28602,6 +28606,7 @@ div.tagsinput span.tag a {
 .sidebar .nav .nav-item.active > .nav-link {
   background: #006AF2;
   position: relative;
+  box-shadow: 8px 6px 15px 0px rgba(0, 97, 222, 0.25);
 }
 
 .sidebar .nav .nav-item.active > .nav-link i,
