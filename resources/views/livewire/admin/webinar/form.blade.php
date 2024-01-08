@@ -39,7 +39,8 @@
             <div class="form-group mb-0">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.webinar.fields.meeting_link')}}<i class="fas fa-asterisk"></i>
                 </label>
-                <textarea class="form-control" wire:model.defer="meeting_link" rows="4"></textarea>
+                <!-- <textarea class="form-control" wire:model.defer="meeting_link" rows="4"></textarea> -->
+                <input type="url" class="form-control" wire:model.defer="meeting_link" />
             </div>
             @error('meeting_link') <span class="error text-danger">{{ $message }}</span>@enderror
         </div>

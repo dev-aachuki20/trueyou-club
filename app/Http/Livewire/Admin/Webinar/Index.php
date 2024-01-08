@@ -56,7 +56,7 @@ class Index extends Component
             'title'        => 'required',
             'date'         => 'required',
             'time'         => 'required',
-            'meeting_link' => 'required|strip_tags',
+            'meeting_link' => 'required|url',
             'status'      => 'required',
             'image'       => 'required|image|max:'.config('constants.img_max_size'),
         ],[
@@ -105,7 +105,7 @@ class Index extends Component
         $validatedArray['title']        = 'required';
         $validatedArray['date']         = 'required';
         $validatedArray['time']         = 'required';
-        $validatedArray['meeting_link'] = 'required|strip_tags';
+        $validatedArray['meeting_link'] = 'required|url';
         $validatedArray['status']      = 'required';
 
         if($this->image || $this->removeImage){
@@ -156,6 +156,8 @@ class Index extends Component
     public function cancel(){
         $this->reset();
         $this->resetValidation();
+
+        $this->dispatchBrowserEvent('webinarCounterEvent');
     }
 
     public function delete($id)
