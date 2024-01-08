@@ -250,7 +250,7 @@
                 </div>
             @endforeach
         @else
-            <div class="text-center">{{ __('messages.no_record_found')}}</div>
+            <div ><p></p class="text-center">{{ __('messages.no_record_found')}}</p></div>
         @endif
 
         {{ $allWebinar->links('vendor.pagination.custom-pagination') }}

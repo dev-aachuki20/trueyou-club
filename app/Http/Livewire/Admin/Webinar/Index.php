@@ -58,7 +58,7 @@ class Index extends Component
             'time'         => 'required',
             'meeting_link' => 'required|url',
             'status'      => 'required',
-            'image'       => 'required|image|max:'.config('constants.img_max_size'),
+            'image'       => 'nullable|image|max:'.config('constants.img_max_size'),
         ],[
             'meeting_link.strip_tags'=> 'The meeting link field is required',
         ]);
@@ -109,7 +109,7 @@ class Index extends Component
         $validatedArray['status']      = 'required';
 
         if($this->image || $this->removeImage){
-            $validatedArray['image'] = 'required|image|max:'.config('constants.img_max_size');
+            $validatedArray['image'] = 'nullable|image|max:'.config('constants.img_max_size');
         }
 
         $validatedData = $this->validate($validatedArray,[
