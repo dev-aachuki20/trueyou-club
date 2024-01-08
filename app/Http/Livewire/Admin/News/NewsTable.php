@@ -26,6 +26,7 @@ class NewsTable extends Component
 
     public function updatePaginationLength($length)
     {
+        $this->resetPage();
         $this->paginationLength = $length;
     }
 
