@@ -41,11 +41,9 @@ return [
             'deleted_at'        => 'Deleted at',
         ],
     ],
-   
- 
-    'dashboard'  => [
-       
-    ],
+
+
+    'dashboard'  => [],
 
     'transaction' => [
         'title'                 => 'Transactions',
@@ -98,6 +96,27 @@ return [
             'message'   => 'Quote Message',
 
         ],
+    ],
+
+    'seminar' => [
+        'title'                 => 'Seminars',
+        'title_singular'        => 'Seminar',
+        'fields' => [
+            'title'   => 'Title',
+            'date'    => 'Date',
+            'time'    => 'Time',
+            'venue'   => 'Venue',
+        ],
+    ],
+
+    'health' => [
+        'title'                 => 'Health',
+        'title_singular'        => 'Health',
+        'fields' => [
+            'title'   => 'Title',
+            'content' => 'Content',
+            'publish_date' => 'Publish Date'
+        ]
     ],
 
 ];

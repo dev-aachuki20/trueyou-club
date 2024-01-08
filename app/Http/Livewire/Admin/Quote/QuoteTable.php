@@ -14,18 +14,24 @@ class QuoteTable extends Component
     use WithPagination;
 
     public $search = null;
-    
+
     public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10;
-    
+
     protected $listeners = [
-       'refreshTable'=>'render'
+        'refreshTable' => 'render',
+        'updatePaginationLength',
     ];
 
     public function updatedSearch()
     {
         $this->resetPage();
     }
-    
+
+    public function updatePaginationLength($length)
+    {
+        $this->paginationLength = $length;
+    }
+
     public function sortBy($columnName)
     {
         $this->resetPage();
@@ -38,7 +44,7 @@ class QuoteTable extends Component
 
         $this->sortColumnName = $columnName;
     }
-    
+
     public function swapSortDirection()
     {
         return $this->sortDirection === 'asc' ? 'desc' : 'asc';
@@ -48,14 +54,14 @@ class QuoteTable extends Component
     {
         $statusSearch = null;
         $searchValue = $this->search;
-        
-        $allQuote = Quote::query()->where(function ($query) use($searchValue,$statusSearch) {
-            $query->where('message', 'like', '%'.$searchValue.'%')
-            ->orWhereRaw("date_format(created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
-        })
-        ->orderBy($this->sortColumnName, $this->sortDirection)
-        ->paginate($this->paginationLength);
 
-        return view('livewire.admin.quote.quote-table',compact('allQuote'));
+        $allQuote = Quote::query()->where(function ($query) use ($searchValue, $statusSearch) {
+            $query->where('message', 'like', '%' . $searchValue . '%')
+                ->orWhereRaw("date_format(created_at, '" . config('constants.search_datetime_format') . "') like ?", ['%' . $searchValue . '%']);
+        })
+            ->orderBy($this->sortColumnName, $this->sortDirection)
+            ->paginate($this->paginationLength);
+
+        return view('livewire.admin.quote.quote-table', compact('allQuote'));
     }
 }

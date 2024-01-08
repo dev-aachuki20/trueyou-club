@@ -8,6 +8,8 @@
                     <div class="flex items-center my-2 sm:my-0">
                         <span class="items-center justify-between p-2 sm:flex">
                             Show
+                            <!-- <select name="perPage" class="ml-2 mr-2 border block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 form-select leading-6 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5" wire:model="perPage"> -->
+
                             <select name="perPage" class="ml-2 mr-2 border block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 form-select leading-6 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5" wire:change="$emit('updatePaginationLength', $event.target.value)">
                                 @foreach(config('constants.datatable_entries') as $length)
                                 <option value="{{ $length }}">{{ $length }}</option>
@@ -46,7 +48,7 @@
                     <tr>
                         <th class="text-gray-500 text-xs font-medium">{{ trans('global.sno') }}</th>
                         <th class="text-gray-500 text-xs">
-                            {{ __('cruds.blog.fields.title')}}
+                            {{ __('cruds.health.fields.title')}}
                             <span wire:click="sortBy('title')" class="float-right text-sm" style="cursor: pointer;">
                                 <i class="fa fa-arrow-up {{ $sortColumnName === 'title' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
                                 <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'title' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
@@ -54,7 +56,7 @@
                         </th>
 
                         <th class="text-gray-500 text-xs">
-                            {{ __('cruds.blog.fields.publish_date')}}
+                            {{ __('cruds.health.fields.publish_date')}}
                         </th>
 
                         <th class="text-gray-500 text-xs">
@@ -74,36 +76,36 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if($allBlogs->count() > 0)
-                    @foreach($allBlogs as $serialNo => $blog)
+                    @if($allHealth->count() > 0)
+                    @foreach($allHealth as $serialNo => $health)
                     <tr>
                         <td>{{ $serialNo+1 }}</td>
-                        <td>{{ ucwords($blog->title) }}</td>
-                        <td>{{ convertDateTimeFormat($blog->publish_date,'date') }}</td>
+                        <td>{{ ucwords($health->title) }}</td>
+                        <td>{{ convertDateTimeFormat($health->publish_date,'date') }}</td>
                         <td>
                             <label class="toggle-switch">
-                                <input type="checkbox" class="toggleSwitch" wire:click.prevent="$emitUp('toggle',{{$blog->id}})" {{ $blog->status == 1 ? 'checked' : '' }}>
+                                <input type="checkbox" class="toggleSwitch" wire:click.prevent="$emitUp('toggle',{{$health->id}})" {{ $health->status == 1 ? 'checked' : '' }}>
                                 <div class="switch-slider round"></div>
                             </label>
 
                         </td>
-                        <td>{{ convertDateTimeFormat($blog->created_at,'date') }}</td>
+                        <td>{{ convertDateTimeFormat($health->created_at,'date') }}</td>
                         <td>
 
-                            @can('blog_show')
-                            <button title="Show" type="button" wire:click.prevent="$emitUp('show', {{$blog->id}})" class="btn btn-primary btn-rounded btn-icon">
+                            @can('health_show')
+                            <button title="Show" type="button" wire:click.prevent="$emitUp('show', {{$health->id}})" class="btn btn-primary btn-rounded btn-icon">
                                 <i class="ti-eye"></i>
                             </button>
                             @endcan
 
-                            @can('blog_edit')
-                            <button title="Edit" type="button" wire:click.prevent="$emitUp('edit', {{$blog->id}})" class="btn btn-info btn-rounded btn-icon">
+                            @can('health_edit')
+                            <button title="Edit" type="button" wire:click.prevent="$emitUp('edit', {{$health->id}})" class="btn btn-info btn-rounded btn-icon">
                                 <i class="ti-pencil-alt"></i>
                             </button>
                             @endcan
 
-                            @can('blog_delete')
-                            <button title="Delete" type="button" wire:click.prevent="$emitUp('delete', {{$blog->id}})" class="btn btn-danger btn-rounded btn-icon">
+                            @can('health_delete')
+                            <button title="Delete" type="button" wire:click.prevent="$emitUp('delete', {{$health->id}})" class="btn btn-danger btn-rounded btn-icon">
                                 <i class="ti-trash"></i>
                             </button>
                             @endcan
@@ -121,7 +123,7 @@
             </table>
         </div>
 
-        {{ $allBlogs->links('vendor.pagination.custom-pagination') }}
+        {{ $allHealth->links('vendor.pagination.custom-pagination') }}
     </div>
 
 </div>

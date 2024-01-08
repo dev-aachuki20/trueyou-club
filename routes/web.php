@@ -62,5 +62,11 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
 
         Route::view('quotes', 'admin.quote.index')->name('quotes');
 
+        Route::view('seminars', 'admin.seminar.index')->name('seminars');
+
+        Route::view('health', 'admin.health.index')->name('health');
+
+
+
     });
 });

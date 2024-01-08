@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Http\Livewire\Admin\Blog;
+namespace App\Http\Livewire\Admin\Health;
 
-use Carbon\Carbon;
+use App\Models\Health;
 use Livewire\Component;
-use App\Models\Blog;
-use Illuminate\Support\Str;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 
-class BlogTable extends Component
+class HealthTable extends Component
 {
     use WithPagination;
 
@@ -50,7 +48,6 @@ class BlogTable extends Component
     {
         return $this->sortDirection === 'asc' ? 'desc' : 'asc';
     }
-
     public function render()
     {
         $statusSearch = null;
@@ -61,7 +58,7 @@ class BlogTable extends Component
             $statusSearch = 0;
         }
 
-        $allBlogs = Blog::query()->where(function ($query) use ($searchValue, $statusSearch) {
+        $allHealth = Health::query()->where(function ($query) use ($searchValue, $statusSearch) {
             $query->where('title', 'like', '%' . $searchValue . '%')
                 ->orWhere('status', $statusSearch)
                 ->orWhereRaw("date_format(publish_date, '" . config('constants.search_datetime_format') . "') like ?", ['%' . $searchValue . '%'])
@@ -69,7 +66,6 @@ class BlogTable extends Component
         })
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);
-
-        return view('livewire.admin.blog.blog-table', compact('allBlogs'));
+        return view('livewire.admin.health.health-table', compact('allHealth'));
     }
 }

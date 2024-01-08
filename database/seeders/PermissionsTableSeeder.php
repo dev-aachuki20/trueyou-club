@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use App\Models\Permission;
@@ -70,7 +71,7 @@ class PermissionsTableSeeder extends Seeder
                 'created_at' => $createDate,
                 'updated_at' => $updateDate,
             ],
-            [   
+            [
                 'title'      => 'user_edit',
                 'created_at' => $createDate,
                 'updated_at' => $updateDate,
@@ -90,13 +91,13 @@ class PermissionsTableSeeder extends Seeder
                 'created_at' => $createDate,
                 'updated_at' => $updateDate,
             ],
-            
+
             [
                 'title'      => 'setting_access',
                 'created_at' => $createDate,
                 'updated_at' => $updateDate,
             ],
-          
+
             [
                 'title'      => 'transaction_access',
                 'created_at' => $createDate,
@@ -114,7 +115,7 @@ class PermissionsTableSeeder extends Seeder
                 'created_at' => $createDate,
                 'updated_at' => $updateDate,
             ],
-            [   
+            [
                 'title'      => 'webinar_edit',
                 'created_at' => $createDate,
                 'updated_at' => $updateDate,
@@ -140,7 +141,7 @@ class PermissionsTableSeeder extends Seeder
                 'created_at' => $createDate,
                 'updated_at' => $updateDate,
             ],
-            [   
+            [
                 'title'      => 'blog_edit',
                 'created_at' => $createDate,
                 'updated_at' => $updateDate,
@@ -166,7 +167,7 @@ class PermissionsTableSeeder extends Seeder
                 'created_at' => $createDate,
                 'updated_at' => $updateDate,
             ],
-            [   
+            [
                 'title'      => 'news_edit',
                 'created_at' => $createDate,
                 'updated_at' => $updateDate,
@@ -192,7 +193,7 @@ class PermissionsTableSeeder extends Seeder
                 'created_at' => $createDate,
                 'updated_at' => $updateDate,
             ],
-            [   
+            [
                 'title'      => 'quote_edit',
                 'created_at' => $createDate,
                 'updated_at' => $updateDate,
@@ -209,9 +210,61 @@ class PermissionsTableSeeder extends Seeder
             ],
 
 
+            [
+                'title'      => 'seminar_access',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'seminar_create',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'seminar_edit',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'seminar_show',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'seminar_delete',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+
+            [
+                'title'      => 'health_access',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'health_create',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'health_edit',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'health_show',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'health_delete',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+
+
         ];
 
         Permission::insert($permissions);
-
     }
 }

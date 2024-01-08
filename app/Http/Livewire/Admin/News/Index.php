@@ -23,7 +23,7 @@ class Index extends Component
     public $removeImage = false;
 
     protected $listeners = [
-        'cancel','show', 'edit', 'toggle', 'confirmedToggleAction','delete','deleteConfirm'
+        'cancel','show', 'edit', 'toggle', 'confirmedToggleAction','delete','deleteConfirm', 'updatePaginationLength'
     ];
 
     public function mount(){
@@ -60,7 +60,7 @@ class Index extends Component
         DB::beginTransaction();
         try{
 
-            $validatedData['date']   = Carbon::parse($this->publish_date)->format('Y-m-d');
+            $validatedData['publish_date']   = Carbon::parse($this->publish_date)->format('Y-m-d');
           
             $validatedData['status'] = $this->status;
     
