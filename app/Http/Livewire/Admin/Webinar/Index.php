@@ -71,7 +71,9 @@ class Index extends Component
         $webinar = Webinar::create($validatedData);
 
         //Upload Image
-        uploadImage($webinar, $this->image, 'webinar/image/',"webinar", 'original', 'save', null);
+        if ($this->image) {
+            uploadImage($webinar, $this->image, 'webinar/image/',"webinar", 'original', 'save', null);
+        }
 
         $this->formMode = false;
 
