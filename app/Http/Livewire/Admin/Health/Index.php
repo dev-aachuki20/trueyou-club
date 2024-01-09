@@ -22,7 +22,7 @@ class Index extends Component
     public $removeImage = false;
 
     protected $listeners = [
-        'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm', 'updatePaginationLength'
+        'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm'
     ];
 
     public function mount()

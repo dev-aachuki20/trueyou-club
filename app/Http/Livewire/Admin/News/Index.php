@@ -16,21 +16,23 @@ class Index extends Component
 {
     use  LivewireAlert, WithFileUploads;
 
-    public $search = '', $formMode = false , $updateMode = false, $viewMode = false;
+    public $search = '', $formMode = false, $updateMode = false, $viewMode = false;
 
-    public $news_id=null, $title,  $publish_date = null,  $content, $image, $originalImage, $status=1;
+    public $news_id = null, $title,  $publish_date = null,  $content, $image, $originalImage, $status = 1;
 
     public $removeImage = false;
 
     protected $listeners = [
-        'cancel','show', 'edit', 'toggle', 'confirmedToggleAction','delete','deleteConfirm', 'updatePaginationLength'
+        'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm'
     ];
 
-    public function mount(){
+    public function mount()
+    {
         abort_if(Gate::denies('news_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
     }
 
-    public function updatedPublishDate(){
+    public function updatedPublishDate()
+    {
         $this->publish_date = Carbon::parse($this->publish_date)->format('d-m-Y');
     }
 
@@ -39,54 +41,52 @@ class Index extends Component
         return view('livewire.admin.news.index');
     }
 
-    
+
     public function create()
     {
         $this->initializePlugins();
         $this->formMode = true;
     }
 
-    public function store(){
+    public function store()
+    {
         $validatedData = $this->validate([
             'title'        => 'required',
             'publish_date' => 'required',
             'content'      => 'required|strip_tags',
             'status'       => 'required',
-            'image'        => 'nullable|image|max:'.config('constants.img_max_size'),
-        ],[
-            'content.strip_tags'=> 'The content field is required',
+            'image'        => 'nullable|image|max:' . config('constants.img_max_size'),
+        ], [
+            'content.strip_tags' => 'The content field is required',
         ]);
 
         DB::beginTransaction();
-        try{
+        try {
 
             $validatedData['publish_date']   = Carbon::parse($this->publish_date)->format('Y-m-d');
-          
+
             $validatedData['status'] = $this->status;
-    
+
             $news = News::create($validatedData);
-    
-            if($this->image){
-                uploadImage($news, $this->image, 'news/image/',"news", 'original', 'save', null);                
+
+            if ($this->image) {
+                uploadImage($news, $this->image, 'news/image/', "news", 'original', 'save', null);
             }
-           
+
             $this->formMode = false;
-    
+
             DB::commit();
 
-            $this->reset(['title','publish_date','content','status','image']);
-    
-            $this->flash('success',trans('messages.add_success_message'));
-    
-            return redirect()->route('admin.news');
+            $this->reset(['title', 'publish_date', 'content', 'status', 'image']);
 
-        }catch (\Exception $e) {
+            $this->flash('success', trans('messages.add_success_message'));
+
+            return redirect()->route('admin.news');
+        } catch (\Exception $e) {
             DB::rollBack();
 
-            $this->alert('error',trans('messages.error_message'));
-
+            $this->alert('error', trans('messages.error_message'));
         }
-
     }
 
     public function edit($id)
@@ -102,82 +102,82 @@ class Index extends Component
         $this->content         =  $news->content;
         $this->status          =  $news->status;
         $this->originalImage   =  $news->image_url;
-
     }
 
 
-    public function update(){
+    public function update()
+    {
         $rules['title']        = 'required';
         $rules['publish_date'] = 'required';
         $rules['content']      = 'required|strip_tags';
         $rules['status']       = 'required';
 
-        if($this->image){
-            $rules['image'] = 'nullable|image|max:'.config('constants.img_max_size');
+        if ($this->image) {
+            $rules['image'] = 'nullable|image|max:' . config('constants.img_max_size');
         }
 
-        $validatedData = $this->validate($rules,[
-            'meeting_link.strip_tags'=> 'The meeting_link field is required',
+        $validatedData = $this->validate($rules, [
+            'meeting_link.strip_tags' => 'The meeting_link field is required',
         ]);
 
         $validatedData['publish_date']   = Carbon::parse($this->publish_date)->format('Y-m-d');
         $validatedData['status'] = $this->status;
 
         DB::beginTransaction();
-        try{
+        try {
 
             $news = News::find($this->news_id);
 
             // Check if the image has been changed
             if ($this->image) {
-                if($news->newsImage){
+                if ($news->newsImage) {
                     $uploadImageId = $news->newsImage->id;
-                    uploadImage($news, $this->image, 'news/image/',"news", 'original', 'update', $uploadImageId);
-                }else{
-                    uploadImage($news, $this->image, 'news/image/',"news", 'original', 'save', null);
+                    uploadImage($news, $this->image, 'news/image/', "news", 'original', 'update', $uploadImageId);
+                } else {
+                    uploadImage($news, $this->image, 'news/image/', "news", 'original', 'save', null);
                 }
             }
 
-            if($this->removeImage){
-                if($news->newsImage){
+            if ($this->removeImage) {
+                if ($news->newsImage) {
                     $uploadImageId = $news->newsImage->id;
                     deleteFile($uploadImageId);
                 }
             }
-    
+
             $news->update($validatedData);
-    
+
             $this->formMode = false;
             $this->updateMode = false;
-    
+
             DB::commit();
 
-            $this->flash('success',trans('messages.edit_success_message'));
-    
-            $this->reset(['title','publish_date','content','status','image']);
-    
-            return redirect()->route('admin.news');
+            $this->flash('success', trans('messages.edit_success_message'));
 
-        }catch (\Exception $e) {
+            $this->reset(['title', 'publish_date', 'content', 'status', 'image']);
+
+            return redirect()->route('admin.news');
+        } catch (\Exception $e) {
             DB::rollBack();
 
-            $this->alert('error',trans('messages.error_message'));
-
+            $this->alert('error', trans('messages.error_message'));
         }
-        
     }
 
-    public function show($id){
+    public function show($id)
+    {
         $this->news_id = $id;
         $this->formMode = false;
         $this->viewMode = true;
     }
 
-    public function initializePlugins(){
+    public function initializePlugins()
+    {
         $this->dispatchBrowserEvent('loadPlugins');
     }
 
-    public function cancel(){
+    public function cancel()
+    {
         $this->reset();
         $this->resetValidation();
     }
@@ -185,7 +185,7 @@ class Index extends Component
     public function delete($id)
     {
         $this->confirm('Are you sure?', [
-            'text'=>'You want to delete it.',
+            'text' => 'You want to delete it.',
             'toast' => false,
             'position' => 'center',
             'confirmButtonText' => 'Yes, delete it!',
@@ -198,7 +198,8 @@ class Index extends Component
         ]);
     }
 
-    public function deleteConfirm($event){
+    public function deleteConfirm($event)
+    {
         $deleteId = $event['data']['inputAttributes']['deleteId'];
         $model    = News::find($deleteId);
         $model->delete();
@@ -208,9 +209,10 @@ class Index extends Component
         $this->alert('success', trans('messages.delete_success_message'));
     }
 
-    public function toggle($id){
+    public function toggle($id)
+    {
         $this->confirm('Are you sure?', [
-            'text'=>'You want to change the status.',
+            'text' => 'You want to change the status.',
             'toast' => false,
             'position' => 'center',
             'confirmButtonText' => 'Yes Confirm!',
@@ -234,7 +236,8 @@ class Index extends Component
         $this->alert('success', trans('messages.change_status_success_message'));
     }
 
-    public function changeStatus($statusVal){
+    public function changeStatus($statusVal)
+    {
         $this->status = (!$statusVal) ? 1 : 0;
     }
 }
