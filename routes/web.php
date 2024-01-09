@@ -25,29 +25,28 @@ Route::get('/', function () {
 Route::get('/storage-link', function () {
     Artisan::call('storage:link');
     return '<h1>Storage linked</h1>';
-}); 
+});
 
 //Clear Cache facade value:
-Route::get('/cache-clear', function() {
+Route::get('/cache-clear', function () {
     Artisan::call('optimize:clear');
     return '<h1>All Cache cleared</h1>';
 });
 
 // Auth::routes(['verify' => true]);
 
-Route::get('email/verify/{id}/{hash}', [VerificationController::class,'verify'])->name('verification.verify');
+Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
 
-Route::group(['middleware' => ['web', 'guest'], 'as' => 'auth.','prefix'=>''], function () {    
+Route::group(['middleware' => ['web', 'guest'], 'as' => 'auth.', 'prefix' => ''], function () {
     // Route::view('signup', 'auth.admin.register')->name('register');
     Route::view('/admin/login', 'auth.admin.login')->name('login');
     Route::view('forget-password', 'auth.admin.forget-password')->name('forget-password');
     Route::view('reset-password/{token}/{email}', 'auth.admin.reset-password')->name('reset-password');
- 
-});    
+});
 
-Route::group(['middleware' => ['auth','preventBackHistory']], function () {
+Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
     Route::view('admin/profile', 'auth.profile.index')->name('auth.admin-profile');
-    Route::group(['as' => 'admin.','prefix'=>'admin'], function () {        
+    Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
         Route::view('dashboard', 'admin.index')->name('dashboard');
 
         Route::view('webinars', 'admin.webinar.index')->name('webinars');
@@ -55,10 +54,10 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
         Route::view('blogs', 'admin.blog.index')->name('blogs');
 
         Route::view('news', 'admin.news.index')->name('news');
-        
+
         Route::view('settings', 'admin.setting.index')->name('settings');
-    
-        Route::view('transactions', 'admin.transactions.index')->name('transactions'); 
+
+        Route::view('transactions', 'admin.transactions.index')->name('transactions');
 
         Route::view('quotes', 'admin.quote.index')->name('quotes');
 
@@ -66,7 +65,8 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
 
         Route::view('health', 'admin.health.index')->name('health');
 
+        Route::view('contacts', 'admin.contact.index')->name('contacts');
 
-
+        Route::view('users', 'admin.user.index')->name('users');
     });
 });

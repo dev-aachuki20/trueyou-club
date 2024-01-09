@@ -110,12 +110,25 @@ return [
     ],
 
     'health' => [
-        'title'                 => 'Health',
+        'title'                 => 'Healths',
         'title_singular'        => 'Health',
         'fields' => [
             'title'   => 'Title',
             'content' => 'Content',
             'publish_date' => 'Publish Date'
+        ]
+    ],
+
+    'contacts' => [
+        'title'                 => 'Contacts',
+        'title_singular'        => 'Contact',
+        'fields' => [
+            'full_name'   => 'Full Name',
+            'first_name'   => 'First Name',
+            'last_name' => 'Last Name',
+            'phone_number' => 'Phone Number',
+            'email' => 'Email',
+            'message' => 'Message'
         ]
     ],
 

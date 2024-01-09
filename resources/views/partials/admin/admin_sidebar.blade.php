@@ -117,6 +117,24 @@
         </li>
         @endcan
 
+        @can('contact_access')
+        <li class="nav-item {{ request()->is('admin/contacts') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin.contacts') }}">
+                <i class="icon-grid menu-icon fa-regular fa-address-book"></i>
+                <span class="menu-title"> {{ __('cruds.contacts.title') }} </span>
+            </a>
+        </li>
+        @endcan
+        
+        {{-- @can('user_access')
+        <li class="nav-item {{ request()->is('admin/users') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.users') }}">
+            <i class="icon-grid menu-icon fa-regular fa-address-book"></i>
+            <span class="menu-title"> {{ __('cruds.user.title') }} </span>
+        </a>
+        </li>
+        @endcan --}}
+
         @can('transaction_access')
         {{-- <li class="nav-item {{ request()->is('admin/transactions') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.transactions') }}">

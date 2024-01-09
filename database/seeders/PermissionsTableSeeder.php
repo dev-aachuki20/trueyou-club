@@ -262,6 +262,32 @@ class PermissionsTableSeeder extends Seeder
                 'updated_at' => $updateDate,
             ],
 
+            [
+                'title'      => 'contact_access',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'contact_create',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            // [
+            //     'title'      => 'contact_edit',
+            //     'created_at' => $createDate,
+            //     'updated_at' => $updateDate,
+            // ],
+            [
+                'title'      => 'contact_show',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'contact_delete',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+
 
         ];
 
