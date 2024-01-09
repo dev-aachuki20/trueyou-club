@@ -37,7 +37,7 @@
                     <div class="tab-pane fade show active" id="{{$tab}}">
                       
                         <div class="card mb-4">
-                            <div class="card-header background-purple-color">
+                            <div class="card-header background-purple-color mb-4">
                                 <label class="font-weight-bold">{{ ucwords(str_replace('_',' ',$tab)) }}</label>
                             </div>
                             <div class="card-body"> 
@@ -151,7 +151,7 @@
                                     @endif
                                     
                                     <div class="text-right mt-3">
-                                        <button class="btn btn-success" type="submit" wire:loading.attr="disabled">
+                                        <button class="btn btn-primary" type="submit" wire:loading.attr="disabled">
                                         {{ __('global.update') }}     
                                             <span wire:loading wire:target="update">
                                                 <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>

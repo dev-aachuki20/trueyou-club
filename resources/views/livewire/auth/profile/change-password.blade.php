@@ -36,10 +36,12 @@
             </div>
         </div>
     </div>
-    <button type="submit" class="btn btn btn-fill btn-blue uppassword">{{__('global.update_password')}}
+    <div class="submit-btn">
+    <button type="submit" class="btn btn btn-fill btn-blue uppassword btn-secondary">{{__('global.update_password')}}
     <span wire:loading wire:target="updatePassword">
                         <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
                     </span>
     </button>
+</div>
     
 </form>
