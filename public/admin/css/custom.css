@@ -841,6 +841,7 @@ footer.footer {
 .left-imag-col{
     max-width: 224px;
     flex: 100px;
+    margin-bottom: 1.5rem;
 }
 .left-imag-col img {
     width: 224px;
@@ -1435,21 +1436,20 @@ button.btn.btn-secondary:hover{
     position: relative;
     padding-bottom: 1.5rem;
 }
-.profile-image-update button{
+.profile-image-update{
     width: 100%;
-    max-width: 200px;
     position: absolute;
     bottom: -40px;
     left: 50%;
     transform: translate(-50%, 0);
+    justify-content: center;
 }
 
 .profile-page .form-control {
     height: 50px;
-    border: none;
+    border: none !important;
     border-bottom: 1px solid #E1E3E7 !important;
     border-radius: 0;
-    padding: 13px 15px 13px 15px !important;
     color: #464B70 !important;
     font-family: 'Roboto', sans-serif;
     font-size: 14px !important;
@@ -1565,9 +1565,48 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
     border-color: #D4DEEB !important;
 }
 
+.profile-image-update .btn-outline-success.btn-primary {
+    background-color: #03cb03;
+    min-width: 100px;
+    box-shadow: none !important;
+}
+
+.profile-image-update .btn-outline-danger.btn-primary {
+    background-color: red;
+    min-width: 100px;
+    box-shadow: none !important;
+}
+
+@media(max-width:1440px){
+    .webinar_listing .row .col-12.col-md-6 {
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+}
+
 @media(max-width:991px){
     .webinar_listing.row>.col-md-6 {
         max-width: 100%;
         flex: 0 0 100%;
+    }
+}
+
+@media(max-width:767px){
+
+    .webinar-item-inner{
+        flex-direction: column;
+    }
+
+    .webinar-item-inner>.webinar-img {
+        width: 100%;
+        height: 200px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .webinar-item-inner>.webinar-img>img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
     }
 }
