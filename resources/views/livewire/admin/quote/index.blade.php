@@ -95,7 +95,6 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('admin/assets/select2-bootstrap-theme/select2-bootstrap.min.css') }}">
-<link rel="stylesheet" href="{{ asset('admin/css/vertical-layout-light/style.css') }}">
 
 @endpush
 

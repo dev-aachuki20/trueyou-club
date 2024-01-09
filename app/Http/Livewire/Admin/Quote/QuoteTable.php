@@ -19,13 +19,13 @@ class QuoteTable extends Component
 
     protected $listeners = [
         'refreshTable' => 'render',
-        'updatePaginationLength',
     ];
 
-    public function updatedSearch()
+    public function updatedPaginationLength()
     {
         $this->resetPage();
     }
+
 
     public function updatePaginationLength($length)
     {

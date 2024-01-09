@@ -21,14 +21,13 @@ class NewsTable extends Component
 
     protected $listeners = [
         'refreshTable' => 'render',
-        'updatePaginationLength',
     ];
 
-    public function updatePaginationLength($length)
+    public function updatedPaginationLength()
     {
         $this->resetPage();
-        $this->paginationLength = $length;
     }
+
 
     public function updatedSearch()
     {

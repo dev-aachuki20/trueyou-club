@@ -42,12 +42,9 @@
     </div>
 
 </div>
-
 @push('styles')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.css" />
-
 <link rel="stylesheet" href="{{ asset('admin/assets/select2-bootstrap-theme/select2-bootstrap.min.css') }}">
-<link rel="stylesheet" href="{{ asset('admin/css/vertical-layout-light/style.css') }}">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 @endpush
@@ -115,30 +112,20 @@
     webinarCounter();
 
     function webinarCounter(){
-        $(".webinar-item").each(function(index, element) {
+        $(".webinar-item-active").each(function(index, element) {
             var totalSeconds = $(this).data('diff_in_seconds');
-            // var days = $(this).find('.counter-outer[data-label = "days"]').data('value')
-            // var hour = $(this).find('.counter-outer[data-label = "hours"]').data('value')
-            // var minute = $(this).find('.counter-outer[data-label = "minutes"]').data('value')
-            // var sec = $(this).find('.counter-outer[data-label = "seconds"]').data('value')
-
-            // var totalSeconds = parseInt(days * 24 * 60 * 60) + parseInt(hour * 60 * 60) + parseInt(minute * 60) + sec;
-
+           
             const countdownInterval = setInterval(() => {
                 if (totalSeconds <= 0) {
                     // Countdown has reached zero
                     clearInterval(countdownInterval);
-                    var startdate = $(this).attr("data-conteststartDate");
-                    var conteststatus = $(this).attr("data-contest-status");
-
-                    $(this).find('.time-contest').html(startdate);
-                    $(this).find('.contest-name').html(conteststatus);
-                    $(this).find('.register-btn').addClass('disabled');
-                    $(this).find('.register-btn').removeAttr('data-bs-toggle');
-                    $(this).find('.register-btn').removeAttr('data-bs-target');
-
-                    // $(this).find('.time-contest').html('<div class="time-contest-inner"><p class="body-font-small text-white">Registrtion Closed</p><h4 class="text-white mb-0">' + startdate + '</h4></div>');
+                    
+                    $(this).find('.joinBtn').removeClass('d-none');
+                    $(this).find('.webinar-time-system').addClass('d-none');
+                   
                 } else {
+                    $(this).find('.webinar-time-system').removeClass('d-none');
+
                     // Calculate days, hours, minutes, and seconds
                     var days = Math.floor(totalSeconds / (24 * 60 * 60));
                     var hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));

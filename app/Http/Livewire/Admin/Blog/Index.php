@@ -28,6 +28,7 @@ class Index extends Component
 
     public function mount(){
         abort_if(Gate::denies('blog_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $this->publish_date = Carbon::now()->format('d-m-Y');
     }
 
     public function updatedPublishDate(){

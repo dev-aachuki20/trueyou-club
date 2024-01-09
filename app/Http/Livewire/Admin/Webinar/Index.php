@@ -30,6 +30,9 @@ class Index extends Component
 
     public function mount(){
         abort_if(Gate::denies('webinar_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $this->date = Carbon::now()->format('d-m-Y');
+        $this->time = Carbon::now()->format('h:i A');
     }
 
     public function updatedDate(){
