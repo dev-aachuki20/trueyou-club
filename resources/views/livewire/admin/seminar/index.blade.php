@@ -113,15 +113,9 @@
     seminarCounter();
 
     function seminarCounter() {
-        $(".webinar-item").each(function(index, element) {
+        $(".webinar-item-active").each(function(index, element) {
             var totalSeconds = $(this).data('diff_in_seconds');
-            // var days = $(this).find('.counter-outer[data-label = "days"]').data('value')
-            // var hour = $(this).find('.counter-outer[data-label = "hours"]').data('value')
-            // var minute = $(this).find('.counter-outer[data-label = "minutes"]').data('value')
-            // var sec = $(this).find('.counter-outer[data-label = "seconds"]').data('value')
-
-            // var totalSeconds = parseInt(days * 24 * 60 * 60) + parseInt(hour * 60 * 60) + parseInt(minute * 60) + sec;
-
+           
             const countdownInterval = setInterval(() => {
                 if (totalSeconds <= 0) {
                     // Countdown has reached zero
@@ -129,14 +123,10 @@
                     var startdate = $(this).attr("data-conteststartDate");
                     var conteststatus = $(this).attr("data-contest-status");
 
-                    $(this).find('.time-contest').html(startdate);
-                    $(this).find('.contest-name').html(conteststatus);
-                    $(this).find('.register-btn').addClass('disabled');
-                    $(this).find('.register-btn').removeAttr('data-bs-toggle');
-                    $(this).find('.register-btn').removeAttr('data-bs-target');
+                    $(this).find('.webinar-time-system').remove();
 
-                    // $(this).find('.time-contest').html('<div class="time-contest-inner"><p class="body-font-small text-white">Registrtion Closed</p><h4 class="text-white mb-0">' + startdate + '</h4></div>');
                 } else {
+
                     // Calculate days, hours, minutes, and seconds
                     var days = Math.floor(totalSeconds / (24 * 60 * 60));
                     var hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));

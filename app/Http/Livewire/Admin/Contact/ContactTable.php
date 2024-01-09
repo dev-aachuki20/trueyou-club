@@ -20,10 +20,9 @@ class ContactTable extends Component
         'updatePaginationLength',
     ];
 
-    public function updatePaginationLength($length)
+    public function updatedPaginationLength()
     {
         $this->resetPage();
-        $this->paginationLength = $length;
     }
 
     public function updatedSearch()

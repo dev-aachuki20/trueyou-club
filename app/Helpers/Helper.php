@@ -156,8 +156,10 @@ if (!function_exists('convertDateTimeFormat')) {
 		$changeFormatValue = Carbon::parse($value);
 		if ($type == 'date') {
 			return $changeFormatValue->format(config('constants.date_format'));
-		}else if($type='datetime'){
+		}else if($type == 'datetime'){
 			return $changeFormatValue->format(config('constants.datetime_format'));
+		}else if($type == 'fulldatetime'){
+			return $changeFormatValue->format(config('constants.full_datetime_format'));
 		}
 		return $changeFormatValue;
 	}

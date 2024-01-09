@@ -85,11 +85,6 @@
 
             {{ $allHealth->links('vendor.pagination.custom-pagination') }}
         </div>
-<<<<<<< Updated upstream
-
 </div>
-=======
-    </div>
->>>>>>> Stashed changes
 
 </div>

@@ -1,14 +1,14 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <div class="user-profile-box">
         <div class="profile-img">
-            <img class="img-fluid" src="https://trueyouclub.hipl-staging3.com/storage/user/profile-images/QL0LecUZMDSQSYNbPuKsbDoJ0pX1tjPcnCM5Fwgv.png" alt="">
+            <img class="img-fluid" src="{{ isset(auth()->user()->profile_image_url) && !empty(auth()->user()->profile_image_url) ? auth()->user()->profile_image_url : asset(config('constants.default.profile_image')) }}" alt="">
         </div>
         <div class="title-profile">
             <h2>
                 Welcome Back!
             </h2>
             <p>
-                Jane Cooper
+                {{ auth()->user()->name }}
             </p>
         </div>
         <div class="vip-box">

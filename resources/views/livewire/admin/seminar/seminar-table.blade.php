@@ -13,10 +13,11 @@
             $now = now();
             $startSeminarTime = \Carbon\Carbon::parse($dateTime);
 
-            $startDays = 00;
-            $startHours = 00;
-            $startMinutes = 00;
-            $startSeconds = 00;
+            $startDays = 0;
+            $startHours = 0;
+            $startMinutes = 0;
+            $startSeconds = 0;
+            $diffInSeconds = 0;
             if($now < $startSeminarTime){ $timeDiff=$now->diff($startSeminarTime);
                 $diffInSeconds = $now->diffInSeconds($startSeminarTime);
 
@@ -27,7 +28,7 @@
             }
         @endphp
             <div class="col-12 col-md-6">
-                <div class="webinar-item" data-diff_in_seconds="{{ $diffInSeconds }}">
+                <div class="webinar-item  {{ $diffInSeconds > 0 ? 'webinar-item-active' : '' }}" data-diff_in_seconds="{{ $diffInSeconds }}">
                     <div class="webinar-item-inner">
                         <div class="webinar-img">
                             <img class="img-fluid" src="{{ $seminar->image_url ? $seminar->image_url : asset(config('constants.default.no_image')) }}" alt="">
@@ -37,13 +38,30 @@
                                 {{ ucwords($seminar->title) }}
                             </h3>
 
-                            <p class="seminar-description">
-                                {!! ucwords($seminar->venue) !!}
-                            </p>
+                            <div class="date-time d-flex">
+                                <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.5 12.3988C8.63627 12.3988 7.11377 10.885 7.11377 9.01251C7.11377 7.14001 8.63627 5.63501 10.5 5.63501C12.3638 5.63501 13.8863 7.14876 13.8863 9.02126C13.8863 10.8938 12.3638 12.3988 10.5 12.3988ZM10.5 6.94751C9.36252 6.94751 8.42627 7.87501 8.42627 9.02126C8.42627 10.1675 9.35377 11.095 10.5 11.095C11.6463 11.095 12.5738 10.1675 12.5738 9.02126C12.5738 7.87501 11.6375 6.94751 10.5 6.94751Z" fill="#DA7821"/>
+                                    <path d="M10.5 19.915C9.20497 19.915 7.90122 19.425 6.88622 18.4537C4.30497 15.9687 1.45247 12.005 2.52872 7.28875C3.49997 3.01 7.23622 1.09375 10.5 1.09375C10.5 1.09375 10.5 1.09375 10.5087 1.09375C13.7725 1.09375 17.5087 3.01 18.48 7.2975C19.5475 12.0137 16.695 15.9687 14.1137 18.4537C13.0987 19.425 11.795 19.915 10.5 19.915ZM10.5 2.40625C7.95372 2.40625 4.68122 3.7625 3.81497 7.5775C2.86997 11.6987 5.45997 15.2512 7.80497 17.5C9.31872 18.9612 11.69 18.9612 13.2037 17.5C15.54 15.2512 18.13 11.6987 17.2025 7.5775C16.3275 3.7625 13.0462 2.40625 10.5 2.40625Z" fill="#DA7821"/>
+                                    </svg>
+                                <span>
+                                    {{ ucwords($seminar->venue) }}
+                                </span>
+                            </div>
+
+                            <span class="quotes-date">
+                                <svg width="14" height="15" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8.66683 2.33337H2.25016C1.7439 2.33337 1.3335 2.74378 1.3335 3.25004V9.66671C1.3335 10.173 1.7439 10.5834 2.25016 10.5834H8.66683C9.17309 10.5834 9.5835 10.173 9.5835 9.66671V3.25004C9.5835 2.74378 9.17309 2.33337 8.66683 2.33337Z" stroke="#878787" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M7.2915 1.41675V3.25008" stroke="#878787" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M3.62549 1.41675V3.25008" stroke="#878787" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M1.3335 5.08337H9.5835" stroke="#878787" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                {{ convertDateTimeFormat($seminar->date.' '.$seminar->time,'fulldatetime') }}
+                            </span>
 
                             {{-- <a href="{{ $seminar->meeting_link }}" class="btn btn-primary joinBtn">
                             Join The Seminar
                             </a> --}}
+                            @if($diffInSeconds != 0)
                             <div class="webinar-time-system webinar-time-{{ $seminar->id }} counter-main">
 
                                 <div class="time-item counter-outer" data-label="days" data-value="{{ $startDays }}">
@@ -59,6 +77,7 @@
                                     <b class="counter">{{ $startSeconds }}</b><span>Second</span>
                                 </div>
                             </div>
+                            @endif
                         </div>
                     </div>
                     <div class="update-webinar">

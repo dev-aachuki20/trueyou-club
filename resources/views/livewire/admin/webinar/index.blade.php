@@ -121,11 +121,10 @@
                     clearInterval(countdownInterval);
                     
                     $(this).find('.joinBtn').removeClass('d-none');
-                    $(this).find('.webinar-time-system').addClass('d-none');
                    
+                    $(this).find('.webinar-time-system').remove();
                 } else {
-                    $(this).find('.webinar-time-system').removeClass('d-none');
-
+                   
                     // Calculate days, hours, minutes, and seconds
                     var days = Math.floor(totalSeconds / (24 * 60 * 60));
                     var hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));

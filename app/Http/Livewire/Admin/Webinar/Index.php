@@ -22,7 +22,7 @@ class Index extends Component
 
     public $webinar_id=null, $title,  $date = null, $time=null, $meeting_link, $image, $originalImage, $status=1;
 
-    public $removeImage = false;
+    public $removeImage = false, $showJoinBtn = false;
 
     protected $listeners = [
         'cancel','show', 'edit', 'toggle', 'confirmedToggleAction','delete','deleteConfirm'

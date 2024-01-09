@@ -84,8 +84,5 @@
         
         {{ $allBlogs->links('vendor.pagination.custom-pagination') }}
     </div>
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 </div>
