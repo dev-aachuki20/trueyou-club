@@ -20,7 +20,7 @@ class Index extends Component
 
     public $search = '', $formMode = false , $updateMode = false, $viewMode = false;
 
-    public $webinar_id=null, $title,  $date = null, $time=null, $meeting_link, $image, $originalImage, $status=1;
+    public $webinar_id=null, $title,  $start_date = null, $start_time=null, $end_date = null, $end_time = null, $meeting_link, $image, $originalImage, $status=1;
 
     public $removeImage = false, $showJoinBtn = false;
 
@@ -31,16 +31,27 @@ class Index extends Component
     public function mount(){
         abort_if(Gate::denies('webinar_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $this->date = Carbon::now()->format('d-m-Y');
-        $this->time = Carbon::now()->format('h:i A');
+        $this->start_date = Carbon::now()->format('d-m-Y');
+        $this->start_time = Carbon::now()->format('h:i A');
     }
 
-    public function updatedDate(){
-        $this->date = Carbon::parse($this->date)->format('d-m-Y');
+    public function updatedStartDate(){
+        $this->start_date = Carbon::parse($this->start_date)->format('d-m-Y');
+        $this->end_date = Carbon::parse($this->start_date)->format('d-m-Y');
     }
 
-    public function updatedTime(){
-        $this->time = Carbon::parse($this->time)->format('h:i A');
+    public function updatedStartTime(){
+        $this->start_time = Carbon::parse($this->start_time)->format('h:i A');
+        $this->end_time = Carbon::parse($this->start_time)->format('h:i A');
+
+    }
+
+    public function updatedEndDate(){
+        $this->end_date = Carbon::parse($this->end_date)->format('d-m-Y');
+    }
+
+    public function updatedEndTime(){
+        $this->end_time = Carbon::parse($this->end_time)->format('h:i A');
     }
 
     public function render()
@@ -57,19 +68,24 @@ class Index extends Component
     public function store(){
         $validatedData = $this->validate([
             'title'        => 'required',
-            'date'         => 'required',
-            'time'         => 'required',
+            'start_date'   => 'required',
+            'start_time'   => 'required',
+            'end_date'     => 'required',
+            'end_time'     => 'required',
             'meeting_link' => 'required|url',
-            'status'      => 'required',
+            // 'status'      => 'required',
             'image'       => 'nullable|image|max:'.config('constants.img_max_size'),
         ],[
             'meeting_link.strip_tags'=> 'The meeting link field is required',
         ]);
 
-        $validatedData['date']   = Carbon::parse($this->date)->format('Y-m-d');
-        $validatedData['time']   = Carbon::parse($this->time)->format('H:i');
+        $validatedData['start_date']   = Carbon::parse($this->start_date)->format('Y-m-d');
+        $validatedData['start_time']   = Carbon::parse($this->start_time)->format('H:i');
 
-        $validatedData['status'] = $this->status;
+        $validatedData['end_date']   = Carbon::parse($this->end_date)->format('Y-m-d');
+        $validatedData['end_time']   = Carbon::parse($this->end_time)->format('H:i');
+
+        // $validatedData['status'] = $this->status;
 
         $webinar = Webinar::create($validatedData);
 
@@ -80,7 +96,7 @@ class Index extends Component
 
         $this->formMode = false;
 
-        $this->reset(['title','date','time','meeting_link','status','image']);
+        $this->reset();
 
         $this->flash('success',trans('messages.add_success_message'));
 
@@ -93,25 +109,28 @@ class Index extends Component
         $this->formMode = true;
         $this->updateMode = true;
 
-
         $webinar = Webinar::findOrFail($id);
         $this->webinar_id      =  $webinar->id;
         $this->title           =  $webinar->title;
-        $this->date            =  Carbon::parse($webinar->date)->format('d-m-Y');
-        $this->time            =  Carbon::parse($webinar->time)->format('h:i A');
+        $this->start_date      =  Carbon::parse($webinar->start_date)->format('d-m-Y');
+        $this->start_time      =  Carbon::parse($webinar->start_time)->format('h:i A');
+        $this->end_date        =  Carbon::parse($webinar->end_date)->format('d-m-Y');
+        $this->end_time        =  Carbon::parse($webinar->end_time)->format('h:i A');
         $this->meeting_link    =  $webinar->meeting_link;
-        $this->status         =  $webinar->status;
-        $this->originalImage  =  $webinar->image_url;
+        $this->status          =  $webinar->status;
+        $this->originalImage   =  $webinar->image_url;
 
     }
 
 
     public function update(){
         $validatedArray['title']        = 'required';
-        $validatedArray['date']         = 'required';
-        $validatedArray['time']         = 'required';
+        $validatedArray['start_date']   = 'required';
+        $validatedArray['start_time']   = 'required';
+        $validatedArray['end_date']     = 'required';
+        $validatedArray['end_time']     = 'required';
         $validatedArray['meeting_link'] = 'required|url';
-        $validatedArray['status']      = 'required';
+        // $validatedArray['status']       = 'required';
 
         if($this->image || $this->removeImage){
             $validatedArray['image'] = 'nullable|image|max:'.config('constants.img_max_size');
@@ -121,8 +140,12 @@ class Index extends Component
             'meeting_link.strip_tags'=> 'The meeting link field is required',
         ]);
 
-        $validatedData['date']   = Carbon::parse($this->date)->format('Y-m-d');
-        $validatedData['time']   = Carbon::parse($this->time)->format('H:i');
+        $validatedData['start_date']   = Carbon::parse($this->start_date)->format('Y-m-d');
+        $validatedData['start_time']   = Carbon::parse($this->start_time)->format('H:i');
+
+        $validatedData['end_date']   = Carbon::parse($this->end_date)->format('Y-m-d');
+        $validatedData['end_time']   = Carbon::parse($this->end_time)->format('H:i');
+
         $validatedData['status'] = $this->status;
 
         $webinar = Webinar::find($this->webinar_id);
@@ -142,7 +165,7 @@ class Index extends Component
 
         $this->flash('success',trans('messages.edit_success_message'));
 
-        $this->reset(['title','date','time','meeting_link','status','image']);
+        $this->reset();
 
         return redirect()->route('admin.webinars');
     }

@@ -63,8 +63,10 @@ return [
         'title_singular'        => 'Webinar',
         'fields' => [
             'title'   => 'Title',
-            'date'    => 'Date',
-            'time'    => 'Time',
+            'start_date'    => 'Start Date',
+            'start_time'    => 'Start Time',
+            'end_date'      => 'End Date',
+            'end_time'      => 'End Time',
             'meeting_link' => 'Meeting Link',
         ],
     ],
@@ -110,7 +112,7 @@ return [
     ],
 
     'health' => [
-        'title'                 => 'Healths',
+        'title'                 => 'Health',
         'title_singular'        => 'Health',
         'fields' => [
             'title'   => 'Title',

@@ -46,18 +46,35 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.css" />
 <link rel="stylesheet" href="{{ asset('admin/assets/select2-bootstrap-theme/select2-bootstrap.min.css') }}">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.10/datepicker.min.css" /> -->
 @endpush
 
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.10/datepicker.min.js"></script> -->
 <script type="text/javascript">
 
-    document.addEventListener('loadPlugins', function (event) {
 
-        $('input[id="webinar_time"]').daterangepicker({
+    document.addEventListener('loadPlugins', function (event) {
+/*
+        $('#start_date').datepicker({
+            minDate: 0,
+        });
+        $("#start_date").on("change", function() {
+            var selectedDate = $("#start_date").val();
+            var formattedDate = transformDateFormat(selectedDate);
+            $("#start_date").val(formattedDate);
+        });
+
+        function transformDateFormat(dateString) {
+            var parts = dateString.split("/");
+            return parts[1] + "-" + parts[0] + "-" + parts[2]  ;
+        }
+*/
+        
+        $('input[id="start_time"]').daterangepicker({
             autoApply: true,
             timePicker: true,
             timePicker24Hour: false,
@@ -73,23 +90,60 @@
             // Handle your apply button logic here
             // console.log(start.format('HH:mm'));
 
-            @this.set('time', start.format('HH:mm'));
+            @this.set('start_time', start.format('HH:mm'));
 
 
         }).on('show.daterangepicker', function(ev, picker) {
             picker.container.find(".calendar-table").hide();
         });
 
-        $('input[id="webinar_date"]').daterangepicker({
+        $('input[id="start_date"]').daterangepicker({
             autoApply: true,
             singleDatePicker: true,
             showDropdowns: true,
+            // minDate: moment().format('YYYY-MM-DD'),
             locale: {
                 format: 'DD-MM-YYYY'
             },
         },
         function(start, end, label) {
-            @this.set('date', start.format('YYYY-MM-DD'));
+            @this.set('start_date', start.format('YYYY-MM-DD'));
+        });
+
+        $('input[id="end_time"]').daterangepicker({
+            autoApply: true,
+            timePicker: true,
+            timePicker24Hour: false,
+            singleDatePicker: true,
+            timePickerIncrement: 15,
+            // minDate: moment().startOf('day'),
+            // maxDate: moment().startOf('day').add(12, 'hour'),
+            locale: {
+             format: 'hh:mm A'
+            }
+
+        },function(start, end, label) {
+            // Handle your apply button logic here
+            // console.log(start.format('HH:mm'));
+
+            @this.set('end_time', start.format('HH:mm'));
+
+
+        }).on('show.daterangepicker', function(ev, picker) {
+            picker.container.find(".calendar-table").hide();
+        });
+
+        $('input[id="end_date"]').daterangepicker({
+            autoApply: true,
+            singleDatePicker: true,
+            showDropdowns: true,
+            minDate: moment("{{$end_date}}").format('YYYY-MM-DD'),
+            locale: {
+                format: 'DD-MM-YYYY'
+            },
+        },
+        function(start, end, label) {
+            @this.set('end_date', start.format('YYYY-MM-DD'));
         });
 
         $('.dropify').dropify();

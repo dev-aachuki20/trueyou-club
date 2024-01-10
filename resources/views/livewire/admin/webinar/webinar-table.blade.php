@@ -7,8 +7,8 @@
             @if($allWebinar->count() > 0)
                 @foreach($allWebinar as $serialNo => $webinar)
                     @php 
-                        $date = $webinar->date;
-                        $time = $webinar->time; 
+                        $date = $webinar->start_date;
+                        $time = $webinar->start_time; 
                         $dateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date . ' ' . $time);
                     
                         $now = now();

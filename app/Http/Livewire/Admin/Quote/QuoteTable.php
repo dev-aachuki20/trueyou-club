@@ -15,7 +15,7 @@ class QuoteTable extends Component
 
     public $search = null;
 
-    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10;
+    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder="Search By Quote, Created Date";
 
     protected $listeners = [
         'refreshTable' => 'render',
@@ -58,8 +58,8 @@ class QuoteTable extends Component
 
         $allQuote = Quote::query()->where(function ($query) use ($searchValue, $statusSearch) {
             $query->where('message', 'like', '%' . $searchValue . '%')
-                ->orWhereRaw("date_format(created_at, '" . config('constants.search_datetime_format') . "') like ?", ['%' . $searchValue . '%']);
-        })
+            ->orWhereRaw("DATE_FORMAT(created_at,  '" . config('constants.search_full_date_format') . "') = ?", [date(config('constants.full_date_format'), strtotime($searchValue))]);
+        })->whereDate('created_at','<',Carbon::now())
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);
 

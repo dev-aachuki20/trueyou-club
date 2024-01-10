@@ -20573,11 +20573,12 @@ code {
 
 /* Badges */
 .badge {
-  border-radius: 20px;
-  font-size: 12px;
+  border-radius: 60px;
+  font-size: 14px;
   line-height: 1;
-  padding: .375rem .5625rem;
+  padding: 15px 30px;
   font-weight: normal;
+  box-shadow: rgb(87 182 87 / 11%) 0px 7px 6px 0px;
 }
 
 .badge.badge-pill {
@@ -28439,7 +28440,7 @@ div.tagsinput span.tag a {
 
 .main-panel {
   transition: width 0.25s ease, margin 0.25s ease;
-  width: calc(100% - 270px);
+  width: calc(100% - 320px);
   min-height: calc(100vh - 131px);
   display: -webkit-flex;
   display: flex;
@@ -28475,9 +28476,9 @@ div.tagsinput span.tag a {
   font-family: 'Roboto', sans-serif;
   font-weight: 500;
   padding: 0;
-  width: 270px;
+  width: 320px;
   z-index: 11;
-  border-right: 1px solid  #EAECEB;
+  border-right: 1px solid  #D4DEEB;
   transition: width 0.25s ease, background 0.25s ease;
   -webkit-transition: width 0.25s ease, background 0.25s ease;
   -moz-transition: width 0.25s ease, background 0.25s ease;
@@ -28606,7 +28607,7 @@ div.tagsinput span.tag a {
 .sidebar .nav .nav-item.active > .nav-link {
   background: #006AF2;
   position: relative;
-  box-shadow: 8px 6px 15px 0px rgba(0, 97, 222, 0.25);
+  /* box-shadow: 8px 6px 15px 0px rgba(0, 97, 222, 0.25); */
 }
 
 .sidebar .nav .nav-item.active > .nav-link i,

@@ -1,7 +1,19 @@
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-    <a class="navbar-brand brand-logo" href="{{ route('admin.dashboard') }}"><img src="{{ asset(config('constants.default.admin_logo')) }}" class="mr-2" alt="logo"/></a>
-    <a class="navbar-brand brand-logo-mini" href="{{ route('admin.dashboard') }}"><img src="{{asset('admin/images/logo-mini.svg')}}" alt="logo"/></a>
+        <a class="navbar-brand brand-logo" href="{{ route('admin.dashboard') }}">
+            @if(getSetting('site_logo'))
+            <img src="{{ getSetting('site_logo') }}" class="mr-2" alt="logo"/>
+            @else
+            <img src="{{ asset(config('constants.default.logo')) }}" class="mr-2"  alt="logo"/>
+            @endif
+        </a>
+        <a class="navbar-brand brand-logo-mini" href="{{ route('admin.dashboard') }}">
+            @if(getSetting('short_logo'))
+            <img src="{{ getSetting('short_logo') }}" alt="logo-mini"/>
+            @else
+            <img src="{{ asset(config('constants.default.short_logo')) }}" alt="logo-mini"/>
+            @endif
+        </a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
     <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -86,10 +98,15 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <ul class="list-unstyled mb-0">
-                        <li><a class="dropdown-item" href="{{route('auth.admin-profile')}}"><img src="{{ asset('admin/images/user-login.svg')}}" class="img-fluid">My Profile</a></li>
+                        <li><a class="dropdown-item" href="{{route('auth.admin-profile')}}">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12.16 10.87C12.06 10.86 11.94 10.86 11.83 10.87C9.45 10.79 7.56 8.84 7.56 6.44C7.56 3.99 9.54 2 12 2C14.45 2 16.44 3.99 16.44 6.44C16.43 8.84 14.54 10.79 12.16 10.87Z" stroke="#0A2540" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M7.16 14.56C4.74 16.18 4.74 18.82 7.16 20.43C9.91 22.27 14.42 22.27 17.17 20.43C19.59 18.81 19.59 16.17 17.17 14.56C14.43 12.73 9.92 12.73 7.16 14.56Z" stroke="#0A2540" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg> My Profile</a>
+                        </li>
                         <!-- <li><a class="dropdown-item" href="#"><img src="{{ asset('admin/images/booksaved.svg') }}" class="img-fluid">My Buyers Data</a></li>
                         <li><a class="dropdown-item" href="#"><img src="{{ asset('admin/images/messages.svg') }}" class="img-fluid">Support</a></li> -->
-                        @livewire('auth.admin.logout')
+                        @livewire('auth.admin.logout',['type'=>'navbar'])
                     </ul>
                 </div>
             </div>

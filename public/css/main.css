@@ -48,8 +48,8 @@ h3 {
 }
 .form-control {
     border-radius: 5px !important;
-    border: 0 !important;
-    background: #F6F8FC !important;
+    /* border: 0 !important; */
+    /* background: #F6F8FC !important; */
     height: 50px;
     padding: 17px 0 17px 54px !important;
     color: #464B70 !important;
@@ -67,7 +67,7 @@ h3 {
     border: 2px solid #006AF2;
     width: 100%;
     padding: 14px 22px;
-    border-radius: 5px;
+    border-radius: 60px;
     font-size: 18px;
     font-weight: 600;
     line-height: 26px;
@@ -443,7 +443,8 @@ input[type="radio"]:checked:before{
 }
 .session-img img {
     width: 100%;
-    height: 100%;
+    max-width: 650px;
+    /* height: 100%; */
     object-fit: cover;
 }
 .account-session {
@@ -458,6 +459,10 @@ input[type="radio"]:checked:before{
     bottom: 0;
     min-height: 100vh;
     border-left: 1px solid #eaeceb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e4fdec6b;
 }
 .h-100vh{
     min-height: 100vh;

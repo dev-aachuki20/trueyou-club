@@ -1,4 +1,6 @@
  <!-- Show entries & Search box -->
+ {{-- <div wire:loading wire:target="search" class="loader"></div> --}}
+
  <div class="flex items-center justify-between mb-1">
     <div class="w-100 flex items-center">                
         <div class="w-100 items-center justify-between p-2 sm:flex">
@@ -21,7 +23,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                 </svg>
                             </div>
-                            <input wire:model.debounce.500ms="search" class="block w-full py-3 pl-10 text-sm border-gray-300 leading-4 rounded-md shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 focus:outline-none" placeholder="Search" type="text">
+                            <input wire:model.debounce.500ms="search" class="block w-full py-3 pl-10 text-sm border-gray-300 leading-4 rounded-md shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 focus:outline-none" placeholder="{{ isset($searchBoxPlaceholder) ? $searchBoxPlaceholder : 'Search'}}" type="text">
                             <div class="absolute inset-y-0 right-0 flex items-center pr-2">
                                 <button wire:click="$set('search', null)" class="text-gray-300 hover:text-red-600 focus:outline-none">
                                     <svg class="h-5 w-5 stroke-current w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">

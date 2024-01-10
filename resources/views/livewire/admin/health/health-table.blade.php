@@ -18,8 +18,8 @@
                                     {{ ucwords($health->title) }}
                                 </h3>
 
-                                <div class="seminar-description">
-                                    {!! ucwords($health->content) !!}
+                                <div class="limit-description">
+                                    {!! $health->content !!}
                                 </div>
 
                                 <span class="quotes-date">
@@ -29,7 +29,7 @@
                                         <path d="M3.62549 1.41675V3.25008" stroke="#878787" stroke-linecap="round" stroke-linejoin="round"></path>
                                         <path d="M1.3335 5.08337H9.5835" stroke="#878787" stroke-linecap="round" stroke-linejoin="round"></path>
                                     </svg>
-                                    {{ convertDateTimeFormat($health->publish_date,'date') }}
+                                    {{ convertDateTimeFormat($health->publish_date,'fulldate') }}
                                 </span>
 
 

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('phone_number')->nullable()->default(null);
-            $table->text('email')->nullable()->unique()->default(null);
+            $table->string('email')->nullable()->default(null);
             $table->longText('message')->nullable()->default(null);
             $table->tinyInteger('status')->default(1)->comment('0=> inactive, 1=> active');
             $table->unsignedBigInteger('created_by')->nullable();

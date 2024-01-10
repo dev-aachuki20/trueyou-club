@@ -289,7 +289,7 @@ button.btn, a.btn {
     border-color: transparent;
     border-radius: 60px !important;
     line-height: normal;
-    min-width: 150px;
+    min-width: 150px !important;
 }
 
 .btn-primary:hover{
@@ -641,7 +641,14 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
     transition: all 0.4s ease-in-out;
     display: flex;
     align-items: center;
+    gap: 7px;
 }
+
+.user-dropdown .dropdown-menu li .dropdown-item svg {
+    width: 20px;
+    height: 20px;
+}
+
 .user-dropdown .dropdown-menu li .dropdown-item img {
     margin-right: 12px;
     width: 18px !important;
@@ -677,7 +684,7 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
     background: transparent;
 }
 .navbar{
-    border-bottom: 1px solid #EAECEB;
+    border-bottom: 1px solid #D4DEEB;
 }
 
 /*--- dashboard redesign ---------*/
@@ -927,6 +934,7 @@ input::-webkit-inner-spin-button {
     }
 }
 @media (max-width:575px){
+    
     .card .card-body{
         padding: 15px;
     }
@@ -941,11 +949,8 @@ input::-webkit-inner-spin-button {
     .card-top-box-item {
         gap: 5px;
         flex-direction: column-reverse;
-        width: 100%;
     }
     .card-title .btn-header{
-        max-width: 100%;
-        flex: 100%;
         text-align: center;
         justify-content: center;
     }
@@ -1162,6 +1167,10 @@ body .datepicker .datepicker-years .table-condensed{
     gap: 20px;
 }
 
+.webinar-item-inner .webinar-content {
+    width: 100%;
+}
+
 .webinar-item-inner>.webinar-img {
     width: 254px;
     height: 162px;
@@ -1172,7 +1181,7 @@ body .datepicker .datepicker-years .table-condensed{
 .webinar-item-inner>.webinar-img>img {
     width: 100%;
     height: 162px;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .webinar-disabled{
@@ -1345,6 +1354,8 @@ body .datepicker .datepicker-years .table-condensed{
     display: flex;
     align-items: center;
     gap: 5px;
+    font-size: 12px;
+    line-height: normal;
     color: #878787;
     margin-top: .5rem;
 }
@@ -1545,6 +1556,9 @@ button.btn-close{
 
 body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
     border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .date-time {
@@ -1553,7 +1567,7 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
     font-weight: 600;
     align-items: center;
     gap: 5px;
-    margin: 20px 0;
+    margin: 15px 0;
 }
 
 .dropify-wrapper .dropify-preview .dropify-render img{
@@ -1577,6 +1591,106 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
     box-shadow: none !important;
 }
 
+.view-btn{
+    background-color: #0a2540;
+    border-color: #0a2540;
+}
+
+.seminar-date{
+    color: #0A2540;
+    font-weight: 600;
+}
+
+.seminar-date svg path{
+    stroke: #0A2540;
+}
+
+.sidebar .nav .nav-item .nav-link svg {
+    margin-right: 7px;
+}
+
+.sidebar .nav .nav-item.active .nav-link svg path,
+.sidebar .nav .nav-item:hover .nav-link svg path {
+    stroke: #ffffff;
+}
+
+.limit-description p {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.col-form-label{
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.error {
+    font-size: 12px;
+}
+
+.cancelBtn{
+    padding: 15px 30px;
+    border-radius: 60px !important;
+    background: #F5F7F9;
+    border-color: transparent;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    min-width: 150px;
+}
+
+.daterangepicker.show-calendar .drp-buttons button {
+    padding: 10px 25px !important;
+    min-width: fit-content !important;
+    box-shadow: none !important;
+    line-height: normal;
+}
+
+.show-wrapper .show-d-img{
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 1rem;
+}
+
+.inner-show-content{
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.show-wrapper .show-d-img img{
+    width: 100%;
+}
+
+.show-wrapper h3{
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.date-box {
+    margin: 1rem 0;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.blog-title{
+    width: fit-content;
+    position: relative;
+    margin-bottom: 3rem;
+}
+.blog-title::before{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -15px;
+    width: 70%;
+    height: 3px;
+    background-color: #006AF2;
+    border-radius: 20px;
+}
+
+
 @media(max-width:1440px){
     .webinar_listing .row .col-12.col-md-6 {
         max-width: 100%;
@@ -1592,6 +1706,13 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
 }
 
 @media(max-width:767px){
+    .webinar-item{
+        padding: 20px 20px 40px;
+    }
+
+    .card .card-title, .card .card-title h4{
+        font-size: 20px;
+    }
 
     .webinar-item-inner{
         flex-direction: column;
@@ -1608,5 +1729,21 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
         width: 100%;
         height: 200px;
         object-fit: cover;
+    }
+
+    .btn.joinBtn,
+    .btn-primary,
+    .btn-secondary{
+        padding: 10px 20px !important;
+        font-size: 14px !important;
+    }
+}
+
+@media(max-width:640px){
+    .search-table-data .flex.justify-end.text-gray-600{
+        width: 100%;
+    }
+    span.items-center.justify-between.p-2.sm\:flex {
+        display: flex;
     }
 }

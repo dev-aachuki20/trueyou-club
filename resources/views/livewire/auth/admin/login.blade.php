@@ -4,13 +4,19 @@
         <div class="container-fluid p-0">
             <div class="account-session">
                 <div class="session-img">
-                    <img src="{{  asset('images/login-screen-image.jpg') }}" class="img-fluid" alt="" />
+                    <img src="{{  asset('images/login-screen.svg') }}" class="img-fluid" alt="" />
                 </div>
                 <div class="row align-items-center g-0 h-100vh">
                     <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center">
                         <div class="account-in">
                             <div class="center-content">
-                                <img src="{{ asset(config('constants.default.admin_logo')) }}" class="img-fluid" alt="" />
+                                
+                                @if(getSetting('site_logo'))
+                                <img src="{{ getSetting('site_logo') }}" class="img-fluid" alt="logo"/>
+                                @else
+                                <img src="{{ asset(config('constants.default.logo')) }}" class="img-fluid" alt="logo"/>
+                                @endif
+
                                 <h2> {{ __('auth.login.welcome_back') }}</h2>
                             </div>
                             <form wire:submit.prevent="submitLogin" class="form">

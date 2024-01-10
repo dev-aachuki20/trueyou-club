@@ -18,17 +18,35 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <label class="font-weight-bold justify-content-start">{{ __('cruds.webinar.fields.date')}}<i class="fas fa-asterisk"></i></label>
-                <input type="text" id="webinar_date" class="form-control" wire:model.defer="date" placeholder="{{ __('cruds.webinar.fields.date')}}" autocomplete="off">
-                @error('date') <span class="error text-danger">{{ $message }}</span>@enderror
+                <label class="font-weight-bold justify-content-start">{{ __('cruds.webinar.fields.start_date')}}<i class="fas fa-asterisk"></i></label>
+                <input type="text" id="start_date" class="form-control" wire:model.defer="start_date" placeholder="{{ __('cruds.webinar.fields.start_date')}}" autocomplete="off">
+                @error('start_date') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="form-group">
-                <label class="font-weight-bold justify-content-start">{{ __('cruds.webinar.fields.time')}}<i class="fas fa-asterisk"></i></label>
-                <input type="text" id="webinar_time" class="form-control" wire:model.defer="time" placeholder="{{ __('cruds.webinar.fields.time')}}" autocomplete="off">
+                <label class="font-weight-bold justify-content-start">{{ __('cruds.webinar.fields.start_time')}}<i class="fas fa-asterisk"></i></label>
+                <input type="text" id="start_time" class="form-control" wire:model.defer="start_time" placeholder="{{ __('cruds.webinar.fields.start_time')}}" autocomplete="off">
                 @error('time') <span class="error text-danger">{{ $message }}</span>@enderror
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="font-weight-bold justify-content-start">{{ __('cruds.webinar.fields.end_date')}}<i class="fas fa-asterisk"></i></label>
+                <input type="text" id="end_date" class="form-control" wire:model.defer="end_date" placeholder="{{ __('cruds.webinar.fields.end_date')}}" autocomplete="off">
+                @error('end_date') <span class="error text-danger">{{ $message }}</span>@enderror
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="font-weight-bold justify-content-start">{{ __('cruds.webinar.fields.end_time')}}<i class="fas fa-asterisk"></i></label>
+                <input type="text" id="end_time" class="form-control" wire:model.defer="end_time" placeholder="{{ __('cruds.webinar.fields.end_time')}}" autocomplete="off">
+                @error('end_time') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
     </div>
@@ -39,8 +57,7 @@
             <div class="form-group mb-0">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.webinar.fields.meeting_link')}}<i class="fas fa-asterisk"></i>
                 </label>
-                <!-- <textarea class="form-control" wire:model.defer="meeting_link" rows="4"></textarea> -->
-                <input type="url" class="form-control" wire:model.defer="meeting_link" />
+                <input type="url" class="form-control" placeholder="{{ __('cruds.webinar.fields.meeting_link')}}"  wire:model.defer="meeting_link" />
             </div>
             @error('meeting_link') <span class="error text-danger">{{ $message }}</span>@enderror
         </div>
@@ -63,7 +80,7 @@
         </div>
     </div>
 
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-md-12">
             <div class="form-group">
                 <label class="font-weight-bold">{{__('global.status')}}</label>
@@ -76,7 +93,7 @@
                 @error('state.status') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <button type="submit" wire:loading.attr="disabled" class="btn btn-primary mr-2 joinBtn">
         {{ $updateMode ? __('global.update') : __('global.submit') }}

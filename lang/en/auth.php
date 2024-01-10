@@ -20,8 +20,8 @@ return [
 
     'login' => [
         'welcome_back'          => 'Welcome Back!',
-        'email'                 => 'Username',
-        'email_placeholder'     => 'Enter Your Username Or Email',
+        'email'                 => 'Email',
+        'email_placeholder'     => 'Enter Your Email',
         'password'              => 'Password',
         'password_placeholder'  => 'Enter Your Password',
         'forgot_password'       => 'Forgot Password?',

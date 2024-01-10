@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Setting;
 
 if (!function_exists('convertToFloat')) {
 	function convertToFloat($value)
@@ -160,6 +161,8 @@ if (!function_exists('convertDateTimeFormat')) {
 			return $changeFormatValue->format(config('constants.datetime_format'));
 		}else if($type == 'fulldatetime'){
 			return $changeFormatValue->format(config('constants.full_datetime_format'));
+		}else if($type == 'fulldate'){
+			return $changeFormatValue->format(config('constants.full_date_format'));
 		}
 		return $changeFormatValue;
 	}
@@ -180,5 +183,23 @@ if (!function_exists('getDecryptSlug')) {
 		} catch (DecryptException $e) {
 			return false;
 		}
+	}
+}
+
+if (!function_exists('getSetting')) {
+	function getSetting($key)
+	{
+		$result = null;
+		$setting = Setting::where('key',$key)->where('status',1)->first();
+		if($setting){
+			if($setting->type == 'image'){
+				$result = $setting->image_url;
+			}elseif($setting->type == 'video'){
+				$result = $setting->video_url;
+			}else{
+				$result = $setting->value;
+			}
+		}
+		return $result;
 	}
 }

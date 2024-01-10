@@ -16,9 +16,9 @@ class Index extends Component
 
     protected $layout = null;
 
-    public $search = '', $formMode = false , $updateMode = false, $quote='', $viewMode = false, $modalType = '', $todayDateExist='';
+    public $search = '',  $updateMode = false, $quote='',  $modalType = '';
 
-    public $quote_id=null, $message;
+    public $todayQuote , $quote_id=null, $message;
 
     public $removeImage = false;
 
@@ -32,19 +32,18 @@ class Index extends Component
 
     public function render()
     {
-        $this->todayDateExist = Quote::whereDate('created_at', Carbon::today())->where('created_by', auth()->user()->id)->exists();
+        $this->todayQuote = Quote::whereDate('created_at', Carbon::today())->first();
         return view('livewire.admin.quote.index');
     }
 
     public function create()
     {
-        if($this->todayDateExist){
+        if($this->todayQuote){
             $this->flash('error',trans('Today quoate is already created'));
             return redirect()->route('admin.quotes');
         }
 
         $this->initializePlugins();
-        // $this->formMode = true;
         $this->modalType = 'Add';
 
         $this->dispatchBrowserEvent('openModal');
@@ -70,10 +69,8 @@ class Index extends Component
     {
         $this->initializePlugins();
         $this->dispatchBrowserEvent('openModal');
-        // $this->formMode = true;
         $this->updateMode = true;
         $this->modalType = 'Edit';
-
 
         $quote = Quote::findOrFail($id);
         $this->quote_id      =  $quote->id;
@@ -89,7 +86,7 @@ class Index extends Component
 
         $quote->update($validatedData);
 
-        $this->reset(['message']);
+        $this->reset(['message','updateMode']);
 
         $this->initializePlugins();
 
@@ -98,18 +95,11 @@ class Index extends Component
         $this->alert('success',trans('messages.edit_success_message'));
     }
 
-    public function show($id){
-        $this->quote = Quote::findOrFail($id);
-        $this->modalType = 'View';
-        $this->dispatchBrowserEvent('openModal');
-    }
-
     public function initializePlugins(){
         $this->dispatchBrowserEvent('loadPlugins');
     }
 
     public function cancel(){
-        $this->modalType = '';
         $this->reset();
         $this->resetValidation();
         $this->dispatchBrowserEvent('loadPlugins');
@@ -134,7 +124,8 @@ class Index extends Component
     public function deleteConfirm($event){
         $deleteId = $event['data']['inputAttributes']['deleteId'];
         $model    = Quote::find($deleteId);
-        $model->delete();
+        // $model->delete();
+        $model->forceDelete();
 
         $this->emit('refreshTable');
 

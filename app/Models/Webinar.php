@@ -19,8 +19,10 @@ class Webinar extends Model
 
     protected $fillable = [
         'title',
-        'date',
-        'time',
+        'start_date',
+        'start_time',
+        'end_date',
+        'end_time',
         'meeting_link',
         'status',
         'created_by',

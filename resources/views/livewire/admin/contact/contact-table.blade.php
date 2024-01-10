@@ -35,8 +35,11 @@
                     <td>{{ convertDateTimeFormat($contact->created_at,'date') }}</td>
                     <td>
 
+                        {{-- <button type="button"  class="btn btn-info btn-rounded btn-icon">
+                            <i class="ti-pencil-alt"></i>
+                        </button> --}}
                         @can('contact_show')
-                        <button title="Show" type="button" wire:click.prevent="$emitUp('show', {{$contact->id}})" class="btn btn-primary btn-rounded btn-icon">
+                        <button title="Show" type="button" wire:click.prevent="$emitUp('show', {{$contact->id}})" class="btn btn-info view-btn btn-rounded btn-icon">
                             <i class="ti-eye"></i>
                         </button>
                         @endcan

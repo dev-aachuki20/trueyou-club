@@ -16,8 +16,10 @@ return new class extends Migration
         Schema::create('webinars', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable();
-            $table->date('date')->nullable()->default(null);
-            $table->time('time')->nullable()->default(null);
+            $table->date('start_date')->nullable()->default(null);
+            $table->time('start_time')->nullable()->default(null);
+            $table->date('end_date')->nullable()->default(null);
+            $table->time('end_time')->nullable()->default(null);
             $table->text('meeting_link')->nullable()->default(null);
             $table->tinyInteger('status')->default(1)->comment('0=> inactive, 1=> active');
             $table->unsignedBigInteger('created_by')->nullable();

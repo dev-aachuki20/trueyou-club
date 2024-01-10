@@ -5,7 +5,7 @@
         <div class="form-group row">
             <label class="col-sm-3 col-form-label font-weight-bold">@lang('global.image')</label>
             <div class="col-sm-9 col-form-label">
-                <img class="rounded img-thumbnail" src="{{ $detail->image_url ? $detail->image_url : asset(config('constants.default_user_logo')) }}" width="100px"/>
+                <img class="rounded img-thumbnail" src="{{ $detail->image_url ? $detail->image_url : asset(config('constants.default.no_image')) }}" width="100px"/>
             </div>
         </div>
 
@@ -20,7 +20,7 @@
         <div class="form-group row">
             <label class="col-sm-3 col-form-label font-weight-bold">@lang('cruds.seminar.fields.date')</label>
             <div class="col-sm-9 col-form-label">
-                {{ convertDateTimeFormat($detail->date,'date') }}
+                {{ convertDateTimeFormat($detail->date.' '.$detail->time,'fulldatetime') }}
             </div>
         </div>
 

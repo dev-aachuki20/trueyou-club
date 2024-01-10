@@ -12,6 +12,8 @@ class Logout extends Component
 
     protected $layout = null;
 
+    public $type;
+
     protected $listeners = [
         'confirmLogout'
     ];

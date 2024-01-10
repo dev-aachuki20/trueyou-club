@@ -17,8 +17,8 @@
                                 {{ ucwords($blog->title) }}
                             </h3>
 
-                            <div class="seminar-description">
-                                {!! ucwords($blog->content) !!}
+                            <div class="limit-description">
+                                {!! $blog->content !!}
                             </div>
 
                             <span class="quotes-date">
@@ -28,7 +28,7 @@
                                     <path d="M3.62549 1.41675V3.25008" stroke="#878787" stroke-linecap="round" stroke-linejoin="round"></path>
                                     <path d="M1.3335 5.08337H9.5835" stroke="#878787" stroke-linecap="round" stroke-linejoin="round"></path>
                                 </svg>
-                                {{ convertDateTimeFormat($blog->publish_date,'date') }}
+                                {{ convertDateTimeFormat($blog->publish_date,'fulldate') }}
                             </span>
 
 

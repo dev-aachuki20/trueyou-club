@@ -13,7 +13,11 @@
 					<div class="col-12 col-lg-6 d-flex align-items-center justify-content-center">
 						<div class="account-in">
 							<div class="center-content">
-								<img src="{{ asset(config('constants.default.admin_logo')) }}" class="img-fluid" alt="" />
+								@if(getSetting('site_logo'))
+                                <img src="{{ getSetting('site_logo') }}" class="img-fluid" alt="logo"/>
+                                @else
+                                <img src="{{ asset(config('constants.default.logo')) }}" class="img-fluid" alt="logo"/>
+                                @endif
 								<h2>Forgot Password</h2>
 							</div>
 							<form wire:submit.prevent="submit" class="form">
@@ -44,7 +48,7 @@
 					</div>
 					<div class="col-12 col-lg-6">
 						<div class="session-img">
-							<img src="{{  asset('images/bg.jpg') }}" class="img-fluid" alt="" />
+							<img src="{{  asset('images/login-screen.svg') }}" class="img-fluid" alt="" />
 						</div>
 					</div>
 				</div>
