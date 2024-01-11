@@ -58,40 +58,77 @@
 <script type="text/javascript">
     document.addEventListener('loadPlugins', function(event) {
 
-        $('input[id="seminar_time"]').daterangepicker({
+        $('input[id="start_time"]').daterangepicker({
             autoApply: true,
             timePicker: true,
             timePicker24Hour: false,
             singleDatePicker: true,
             timePickerIncrement: 15,
-            // minDate: moment().startOf('day'),
+            minDate: new Date(),
             // maxDate: moment().startOf('day').add(12, 'hour'),
             locale: {
-                format: 'hh:mm A'
+             format: 'hh:mm A'
             }
 
-        }, function(start, end, label) {
+        },function(start, end, label) {
             // Handle your apply button logic here
             // console.log(start.format('HH:mm'));
 
-            @this.set('time', start.format('HH:mm'));
+            @this.set('start_time', start.format('HH:mm'));
 
 
         }).on('show.daterangepicker', function(ev, picker) {
             picker.container.find(".calendar-table").hide();
         });
 
-        $('input[id="seminar_date"]').daterangepicker({
-                autoApply: true,
-                singleDatePicker: true,
-                showDropdowns: true,
-                locale: {
-                    format: 'DD-MM-YYYY'
-                },
+        $('input[id="start_date"]').daterangepicker({
+            autoApply: true,
+            singleDatePicker: true,
+            showDropdowns: true,
+            minDate: new Date(),
+            locale: {
+                format: 'DD-MM-YYYY'
             },
-            function(start, end, label) {
-                @this.set('date', start.format('YYYY-MM-DD'));
-            });
+        },
+        function(start, end, label) {
+            @this.set('start_date', start.format('YYYY-MM-DD'));
+        });
+
+        $('input[id="end_time"]').daterangepicker({
+            autoApply: true,
+            timePicker: true,
+            timePicker24Hour: false,
+            singleDatePicker: true,
+            timePickerIncrement: 15,
+            minDate: new Date(),
+            // maxDate: moment().startOf('day').add(12, 'hour'),
+            locale: {
+             format: 'hh:mm A'
+            }
+
+        },function(start, end, label) {
+            // Handle your apply button logic here
+            // console.log(start.format('HH:mm'));
+
+            @this.set('end_time', start.format('HH:mm'));
+
+
+        }).on('show.daterangepicker', function(ev, picker) {
+            picker.container.find(".calendar-table").hide();
+        });
+
+        $('input[id="end_date"]').daterangepicker({
+            autoApply: true,
+            singleDatePicker: true,
+            showDropdowns: true,
+            minDate: new Date(),
+            locale: {
+                format: 'DD-MM-YYYY'
+            },
+        },
+        function(start, end, label) {
+            @this.set('end_date', start.format('YYYY-MM-DD'));
+        });
 
         $('.dropify').dropify();
         $('.dropify-errors-container').remove();

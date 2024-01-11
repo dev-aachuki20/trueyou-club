@@ -17,7 +17,7 @@ class NewsTable extends Component
 
     public $search = null;
 
-    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10;
+    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder="Search By Title, Publish Date";
 
     protected $listeners = [
         'refreshTable' => 'render',

@@ -28,7 +28,7 @@
                 <label for="email">{{ __('cruds.user.fields.email') }}</label>
                 <div class="input-set">
                     <span class="icon-left"><img src="{{ asset('admin/images/mail.svg') }}" alt="Img"></span>
-                    <input type="email" class="form-control" wire:model.defer="email" placeholder="Enter {{ __('cruds.user.fields.email') }}" />
+                    <input type="email" class="form-control" wire:model.defer="email" placeholder="Enter {{ __('cruds.user.fields.email') }}" disabled/>
                 </div>
             </div>
         </div>

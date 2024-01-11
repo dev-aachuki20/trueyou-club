@@ -27,7 +27,7 @@
                     <path d="M15.8807 19.904H11.116C8.94214 19.904 7.69141 18.6532 7.69141 16.4793V11.4168C7.69141 9.24292 8.94214 7.99219 11.116 7.99219H15.8807C18.0546 7.99219 19.3054 9.24292 19.3054 11.4168V16.4793C19.3054 18.6532 18.0546 19.904 15.8807 19.904ZM11.116 8.88557C9.41266 8.88557 8.58479 9.71344 8.58479 11.4168V16.4793C8.58479 18.1827 9.41266 19.0106 11.116 19.0106H15.8807C17.5841 19.0106 18.412 18.1827 18.412 16.4793V11.4168C18.412 9.71344 17.5841 8.88557 15.8807 8.88557H11.116Z" fill="#0A2540"/>
                     </svg>
 
-                        {{ convertDateTimeFormat($detail->publish_date,'date') }}
+                        {{ convertDateTimeFormat($detail->publish_date,'fulldate') }}
                     </div>
                     <p class="mt-4">
                         {!! $detail->content !!}
@@ -35,7 +35,7 @@
 
                     <div class="show-btn-box mt-5 text-center">
                         <button wire:click.prevent="cancel" class="btn btn-secondary">
-                            {{ __('global.cancel')}}
+                            {{ __('global.back')}}
                             <span wire:loading wire:target="cancel">
                                 <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
                             </span>
@@ -46,58 +46,6 @@
                 </div>
             </div>
         </div>
-    {{--
-
-        <div class="form-group row">
-            <label class="col-sm-3 col-form-label font-weight-bold">@lang('global.image')</label>
-            <div class="col-sm-9 col-form-label">
-                <img class="rounded img-thumbnail" src="{{ $detail->image_url ? $detail->image_url : asset(config('constants.default.no_image')) }}" width="100px"/>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-sm-3 col-form-label font-weight-bold">@lang('cruds.blog.fields.title')</label>
-            <div class="col-sm-9 col-form-label">
-                 {{ ucwords($detail->title) }}
-            </div>
-        </div>
-
     
-        <div class="form-group row">
-            <label class="col-sm-3 col-form-label font-weight-bold">@lang('cruds.blog.fields.publish_date')</label>
-            <div class="col-sm-9 col-form-label">
-                {{ convertDateTimeFormat($detail->publish_date,'date') }}
-            </div>
-        </div>
-
-    
-        <div class="form-group row">
-            <label class="col-sm-3 col-form-label font-weight-bold">@lang('cruds.blog.fields.content')</label>
-            <div class="col-sm-9 col-form-label">
-                {!! $detail->content !!}
-            </div>
-        </div>
-    
-    
-        <div class="form-group row">
-            <label class="col-sm-3 col-form-label font-weight-bold">@lang('global.status')</label>
-            <div class="col-sm-9 col-form-label">
-                 @if($detail->status)
-                    <div class="badge badge-success">@lang('global.active')</div>
-                 @else
-                    <div class="badge badge-danger">@lang('global.inactive')</div>
-                 @endif
-                 
-            </div>
-        </div>
-    
-        <button wire:click.prevent="cancel" class="btn btn-secondary">
-            {{ __('global.cancel')}}
-            <span wire:loading wire:target="cancel">
-                <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
-            </span>
-        </button>
-    
-        --}}
     </div>
     

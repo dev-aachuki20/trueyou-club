@@ -17,16 +17,15 @@ class LoginRegisterController extends Controller
 {
     public function register(Request $request){
         $validator = Validator::make($request->all(), [
-            'first_name'                => 'required',
-            'last_name'                 => 'required',
+            'name'                      => 'required',
             'email'                     => 'required|email|unique:users,email,NULL,id',
-            'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id',
+            // 'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id',
             'password'                  => 'required|min:8',
             'password_confirmation'     => 'required|same:password',
         ],[
-            'phone.required'=>'The mobile number field is required',
-            'phone.digits' =>'The mobile number must be 10 digits',
-            'phone.unique' =>'The mobile number already exists.',
+            // 'phone.required'=>'The mobile number field is required',
+            // 'phone.digits' =>'The mobile number must be 10 digits',
+            // 'phone.unique' =>'The mobile number already exists.',
         ]);
         if($validator->fails()){
              //Error Response Send
@@ -40,7 +39,11 @@ class LoginRegisterController extends Controller
         DB::beginTransaction();
         try {
             $input = $request->all();
-            $input['name'] = $input['first_name'].' '.$input['last_name'];
+           
+            $nameParts = explode(' ', $input['name']);
+            $input['first_name'] = $nameParts[0]; 
+            $input['last_name'] = isset($nameParts[1]) ? $nameParts[1] : null;
+        
             $input['password'] = bcrypt($input['password']);
             $user = User::create($input);
 

@@ -19,7 +19,7 @@ class Index extends Component
 
     public $search = '', $formMode = false, $updateMode = false, $viewMode = false;
 
-    public $seminar_id = null, $title,  $date = null, $time = null, $venue, $image, $originalImage, $status = 1;
+    public $seminar_id = null, $title, $total_ticket,  $start_date = null, $start_time=null, $end_date = null, $end_time = null,  $venue, $image, $originalImage, $status = 1;
 
     public $removeImage = false;
 
@@ -30,19 +30,32 @@ class Index extends Component
     public function mount()
     {
         abort_if(Gate::denies('seminar_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $this->date = Carbon::now()->format('d-m-Y');
-        $this->time = Carbon::now()->format('h:i A');
+
+        $this->start_date = Carbon::now()->format('d-m-Y');
+        $this->start_time = Carbon::now()->format('h:i A');
+        $this->end_date = Carbon::now()->format('d-m-Y');
+        $this->end_time = Carbon::now()->format('h:i A');
     }
 
-    public function updatedDate()
-    {
-        $this->date = Carbon::parse($this->date)->format('d-m-Y');
+    public function updatedStartDate(){
+        $this->start_date = Carbon::parse($this->start_date)->format('d-m-Y');
+        $this->end_date = Carbon::parse($this->start_date)->format('d-m-Y');
     }
 
-    public function updatedTime()
-    {
-        $this->time = Carbon::parse($this->time)->format('h:i A');
+    public function updatedStartTime(){
+        $this->start_time = Carbon::parse($this->start_time)->format('h:i A');
+        $this->end_time = Carbon::parse($this->start_time)->format('h:i A');
+
     }
+
+    public function updatedEndDate(){
+        $this->end_date = Carbon::parse($this->end_date)->format('d-m-Y');
+    }
+
+    public function updatedEndTime(){
+        $this->end_time = Carbon::parse($this->end_time)->format('h:i A');
+    }
+
     public function render()
     {
         return view('livewire.admin.seminar.index');
@@ -59,19 +72,25 @@ class Index extends Component
         $validatedData = $this->validate(
             [
                 'title'        => 'required',
-                'date'         => 'required',
-                'time'         => 'required',
+                'total_ticket' => 'required|integer|min:0',
+                'start_date'   => 'required|date',
+                'start_time'   => 'required|date_format:h:i A',
+                'end_date'     => 'required|date|after_or_equal:start_date',
+                'end_time'     => 'required|date_format:h:i A|after:start_time',
                 'venue'        => 'required',
-                'status'       => 'required',
+                // 'status'       => 'required',
                 'image'        => 'nullable|image|max:' . config('constants.img_max_size'),
             ],
-            // [
-            //     'meeting_link.strip_tags' => 'The meeting link field is required',
-            // ]
+            [
+                'end_time.after' => 'The end time must be a time after the start time.',
+            ]
         );
 
-        $validatedData['date']   = Carbon::parse($this->date)->format('Y-m-d');
-        $validatedData['time']   = Carbon::parse($this->time)->format('H:i');
+        $validatedData['start_date']   = Carbon::parse($this->start_date)->format('Y-m-d');
+        $validatedData['start_time']   = Carbon::parse($this->start_time)->format('H:i');
+
+        $validatedData['end_date']   = Carbon::parse($this->end_date)->format('Y-m-d');
+        $validatedData['end_time']   = Carbon::parse($this->end_time)->format('H:i');
 
         $validatedData['status'] = $this->status;
 
@@ -84,7 +103,7 @@ class Index extends Component
 
         $this->formMode = false;
 
-        $this->reset(['title', 'date', 'time', 'venue', 'status', 'image']);
+        $this->reset();
 
         $this->flash('success', trans('messages.add_success_message'));
 
@@ -101,10 +120,13 @@ class Index extends Component
         $seminar = Seminar::findOrFail($id);
         $this->seminar_id      =  $seminar->id;
         $this->title           =  $seminar->title;
-        $this->date            =  Carbon::parse($seminar->date)->format('d-m-Y');
-        $this->time            =  Carbon::parse($seminar->time)->format('h:i A');
+        $this->total_ticket    =  $seminar->total_ticket;
+        $this->start_date      =  Carbon::parse($seminar->start_date)->format('d-m-Y');
+        $this->start_time      =  Carbon::parse($seminar->start_time)->format('h:i A');
+        $this->end_date        =  Carbon::parse($seminar->end_date)->format('d-m-Y');
+        $this->end_time        =  Carbon::parse($seminar->end_time)->format('h:i A');
         $this->venue           =  $seminar->venue;
-        $this->status          =  $seminar->status;
+        // $this->status          =  $seminar->status;
         $this->originalImage   =  $seminar->image_url;
     }
 
@@ -112,24 +134,33 @@ class Index extends Component
     public function update()
     {
         $validatedArray['title']        = 'required';
-        $validatedArray['date']         = 'required';
-        $validatedArray['time']         = 'required';
+        $validatedArray['total_ticket'] = 'required|integer|min:0';
+
+        $validatedArray['start_date']   = 'required|date';
+        $validatedArray['start_time']   = 'required|date_format:h:i A';
+        $validatedArray['end_date']     = 'required|date|after_or_equal:start_date';
+        $validatedArray['end_time']     = 'required|date_format:h:i A|after:start_time';
         $validatedArray['venue']        = 'required';
-        $validatedArray['status']       = 'required';
+        // $validatedArray['status']       = 'required';
 
         if ($this->image || $this->removeImage) {
             $validatedArray['image'] = 'nullable|image|max:' . config('constants.img_max_size');
         }
 
-        // $validatedData = $this->validate($validatedArray, [
-        //     'meeting_link.strip_tags' => 'The meeting link field is required',
-        // ]);
+        $validatedData = $this->validate($validatedArray, [
+            'end_time.after' => 'The end time must be a time after the start time.',
+        ]);
 
         $validatedData['title']  = $this->title;
         $validatedData['venue']  = $this->venue;
-        $validatedData['date']   = Carbon::parse($this->date)->format('Y-m-d');
-        $validatedData['time']   = Carbon::parse($this->time)->format('H:i');
-        $validatedData['status'] = $this->status;
+
+        $validatedData['start_date']   = Carbon::parse($this->start_date)->format('Y-m-d');
+        $validatedData['start_time']   = Carbon::parse($this->start_time)->format('H:i');
+
+        $validatedData['end_date']   = Carbon::parse($this->end_date)->format('Y-m-d');
+        $validatedData['end_time']   = Carbon::parse($this->end_time)->format('H:i');
+
+        // $validatedData['status'] = $this->status;
 
         $seminar = Seminar::find($this->seminar_id);
         // Check if the image has been changed
@@ -146,7 +177,7 @@ class Index extends Component
 
         $this->flash('success', trans('messages.edit_success_message'));
 
-        $this->reset(['title', 'date', 'time', 'venue', 'status', 'image']);
+        $this->reset();
 
         return redirect()->route('admin.seminars');
     }

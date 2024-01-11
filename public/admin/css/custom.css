@@ -1186,7 +1186,7 @@ body .datepicker .datepicker-years .table-condensed{
 
 .webinar-disabled{
     position: relative;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .webinar-disabled::before{

@@ -80,7 +80,7 @@
             timePicker24Hour: false,
             singleDatePicker: true,
             timePickerIncrement: 15,
-            // minDate: moment().startOf('day'),
+            minDate: new Date(),
             // maxDate: moment().startOf('day').add(12, 'hour'),
             locale: {
              format: 'hh:mm A'
@@ -101,7 +101,7 @@
             autoApply: true,
             singleDatePicker: true,
             showDropdowns: true,
-            // minDate: moment().format('YYYY-MM-DD'),
+            minDate: new Date(),
             locale: {
                 format: 'DD-MM-YYYY'
             },
@@ -116,7 +116,7 @@
             timePicker24Hour: false,
             singleDatePicker: true,
             timePickerIncrement: 15,
-            // minDate: moment().startOf('day'),
+            minDate: new Date(),
             // maxDate: moment().startOf('day').add(12, 'hour'),
             locale: {
              format: 'hh:mm A'
@@ -137,7 +137,7 @@
             autoApply: true,
             singleDatePicker: true,
             showDropdowns: true,
-            minDate: moment("{{$end_date}}").format('YYYY-MM-DD'),
+            minDate: new Date(),
             locale: {
                 format: 'DD-MM-YYYY'
             },

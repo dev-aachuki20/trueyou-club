@@ -13,7 +13,7 @@ class SeminarTable extends Component
 
     public $search = null;
 
-    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10;
+    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder="Search By Title, Start Datetime, Venue";
 
     protected $listeners = [
         'refreshTable' => 'render',
@@ -59,9 +59,11 @@ class SeminarTable extends Component
 
         $allSeminar = Seminar::query()->where(function ($query) use ($searchValue, $statusSearch) {
             $query->where('title', 'like', '%' . $searchValue . '%')
-                // ->orWhere('status', $statusSearch)
-                ->orWhereRaw("DATE_FORMAT(CONCAT(date, ' ', time),  '" . config('constants.search_full_datetime_format') . "') = ?", [date(config('constants.full_datetime_format'), strtotime($searchValue))]);
-                // ->orWhereRaw("date_format(created_at, '" . config('constants.search_datetime_format') . "') like ?", ['%' . $searchValue . '%']);
+            ->orWhere('venue', 'like', '%' . $searchValue . '%')
+            ->orWhereRaw("DATE_FORMAT(start_date,  '" . config('constants.search_full_date_format') . "') = ?", [date(config('constants.full_date_format'), strtotime($searchValue))])
+            ->orWhereRaw("DATE_FORMAT(start_time,  '" . config('constants.search_full_time_format') . "') = ?", [date(config('constants.full_time_format'), strtotime($searchValue))]);
+                // ->orWhereRaw("DATE_FORMAT(CONCAT(start_date, ' ', start_time),  '" . config('constants.search_full_datetime_format') . "') = ?", [date(config('constants.full_datetime_format'), strtotime($searchValue))]);
+               
         })
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);

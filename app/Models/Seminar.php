@@ -20,8 +20,11 @@ class Seminar extends Model
 
     protected $fillable = [
         'title',
-        'date',
-        'time',
+        'total_ticket',
+        'start_date',
+        'start_time',
+        'end_date',
+        'end_time',
         'venue',
         'status',
         'created_by',

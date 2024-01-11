@@ -6,11 +6,18 @@
 <form wire:submit.prevent="{{ $updateMode ? 'update' : 'store' }}" class="forms-sample">
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
             <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.seminar.fields.title')}}<i class="fas fa-asterisk"></i></label>
                 <input type="text" class="form-control" wire:model.defer="title" placeholder="{{ __('cruds.seminar.fields.title')}}" autocomplete="off">
                 @error('title') <span class="error text-danger">{{ $message }}</span>@enderror
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="font-weight-bold justify-content-start">{{ __('cruds.seminar.fields.total_ticket')}}<i class="fas fa-asterisk"></i></label>
+                <input type="number" class="form-control" wire:model.defer="total_ticket" placeholder="{{ __('cruds.seminar.fields.total_ticket')}}" autocomplete="off">
+                @error('total_ticket') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
     </div>
@@ -18,20 +25,39 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <label class="font-weight-bold justify-content-start">{{ __('cruds.seminar.fields.date')}}<i class="fas fa-asterisk"></i></label>
-                <input type="text" id="seminar_date" class="form-control" wire:model.defer="date" placeholder="{{ __('cruds.seminar.fields.date')}}" autocomplete="off">
-                @error('date') <span class="error text-danger">{{ $message }}</span>@enderror
+                <label class="font-weight-bold justify-content-start">{{ __('cruds.seminar.fields.start_date')}}<i class="fas fa-asterisk"></i></label>
+                <input type="text" id="start_date" class="form-control" wire:model.defer="start_date" placeholder="{{ __('cruds.seminar.fields.start_date')}}" autocomplete="off" readonly="true">
+                @error('start_date') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="form-group">
-                <label class="font-weight-bold justify-content-start">{{ __('cruds.seminar.fields.time')}}<i class="fas fa-asterisk"></i></label>
-                <input type="text" id="seminar_time" class="form-control" wire:model.defer="time" placeholder="{{ __('cruds.seminar.fields.time')}}" autocomplete="off">
+                <label class="font-weight-bold justify-content-start">{{ __('cruds.seminar.fields.start_time')}}<i class="fas fa-asterisk"></i></label>
+                <input type="text" id="start_time" class="form-control" wire:model.defer="start_time" placeholder="{{ __('cruds.seminar.fields.start_time')}}" autocomplete="off" readonly="true">
                 @error('time') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="font-weight-bold justify-content-start">{{ __('cruds.seminar.fields.end_date')}}<i class="fas fa-asterisk"></i></label>
+                <input type="text" id="end_date" class="form-control" wire:model.defer="end_date" placeholder="{{ __('cruds.seminar.fields.end_date')}}" autocomplete="off" readonly="true">
+                @error('end_date') <span class="error text-danger">{{ $message }}</span>@enderror
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="font-weight-bold justify-content-start">{{ __('cruds.seminar.fields.end_time')}}<i class="fas fa-asterisk"></i></label>
+                <input type="text" id="end_time" class="form-control" wire:model.defer="end_time" placeholder="{{ __('cruds.seminar.fields.end_time')}}" autocomplete="off" readonly="true">
+                @error('end_time') <span class="error text-danger">{{ $message }}</span>@enderror
+            </div>
+        </div>
+    </div>
+
 
 
     <div class="row">
@@ -63,7 +89,7 @@
         </div>
     </div>
 
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-md-12">
             <div class="form-group">
                 <label class="font-weight-bold">{{__('global.status')}}</label>
@@ -76,7 +102,7 @@
                 @error('state.status') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <button type="submit" wire:loading.attr="disabled" class="btn btn-primary mr-2">
         {{ $updateMode ? __('global.update') : __('global.submit') }}

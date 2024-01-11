@@ -1,6 +1,6 @@
 <div class="relative">
 
-    @include('admin.partials.table-show-entries-search-box')
+    @include('admin.partials.table-show-entries-search-box',['searchBoxPlaceholder'=>$searchBoxPlaceholder])
 
     <div class="webinar_listing">
         <div class="row">

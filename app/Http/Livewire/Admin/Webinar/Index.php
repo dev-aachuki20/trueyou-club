@@ -33,6 +33,8 @@ class Index extends Component
 
         $this->start_date = Carbon::now()->format('d-m-Y');
         $this->start_time = Carbon::now()->format('h:i A');
+        $this->end_date = Carbon::now()->format('d-m-Y');
+        $this->end_time = Carbon::now()->format('h:i A');
     }
 
     public function updatedStartDate(){
@@ -68,16 +70,18 @@ class Index extends Component
     public function store(){
         $validatedData = $this->validate([
             'title'        => 'required',
-            'start_date'   => 'required',
-            'start_time'   => 'required',
-            'end_date'     => 'required',
-            'end_time'     => 'required',
+            'start_date'   => 'required|date',
+            'start_time'   => 'required|date_format:h:i A',
+            'end_date'     => 'required|date|after_or_equal:start_date',
+            'end_time'     => 'required|date_format:h:i A|after:start_time',
             'meeting_link' => 'required|url',
             // 'status'      => 'required',
             'image'       => 'nullable|image|max:'.config('constants.img_max_size'),
         ],[
             'meeting_link.strip_tags'=> 'The meeting link field is required',
+            'end_time.after' => 'The end time must be a time after the start time.',
         ]);
+
 
         $validatedData['start_date']   = Carbon::parse($this->start_date)->format('Y-m-d');
         $validatedData['start_time']   = Carbon::parse($this->start_time)->format('H:i');
@@ -125,10 +129,10 @@ class Index extends Component
 
     public function update(){
         $validatedArray['title']        = 'required';
-        $validatedArray['start_date']   = 'required';
-        $validatedArray['start_time']   = 'required';
-        $validatedArray['end_date']     = 'required';
-        $validatedArray['end_time']     = 'required';
+        $validatedArray['start_date']   = 'required|date';
+        $validatedArray['start_time']   = 'required|date_format:h:i A';
+        $validatedArray['end_date']     = 'required|date|after_or_equal:start_date';
+        $validatedArray['end_time']     = 'required|date_format:h:i A|after:start_time';
         $validatedArray['meeting_link'] = 'required|url';
         // $validatedArray['status']       = 'required';
 
@@ -138,6 +142,7 @@ class Index extends Component
 
         $validatedData = $this->validate($validatedArray,[
             'meeting_link.strip_tags'=> 'The meeting link field is required',
+            'end_time.after' => 'The end time must be a time after the start time.',
         ]);
 
         $validatedData['start_date']   = Carbon::parse($this->start_date)->format('Y-m-d');

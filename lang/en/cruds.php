@@ -68,6 +68,8 @@ return [
             'end_date'      => 'End Date',
             'end_time'      => 'End Time',
             'meeting_link' => 'Meeting Link',
+            'start_date_time'   => 'Start Datetime',
+            'end_date_time'     => 'End Datetime',
         ],
     ],
 
@@ -104,10 +106,16 @@ return [
         'title'                 => 'Seminars',
         'title_singular'        => 'Seminar',
         'fields' => [
-            'title'   => 'Title',
-            'date'    => 'Date',
-            'time'    => 'Time',
-            'venue'   => 'Venue',
+            'title'         => 'Title',
+            'total_ticket'  => 'Total Ticket',
+            'start_date'    => 'Start Date',
+            'start_time'    => 'Start Time',
+            'end_date'      => 'End Date',
+            'end_time'      => 'End Time',
+            'venue'         => 'Venue',
+            'start_date_time'   => 'Start Datetime',
+            'end_date_time'     => 'End Datetime',
+
         ],
     ],
 

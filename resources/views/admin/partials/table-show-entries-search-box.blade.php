@@ -1,5 +1,5 @@
  <!-- Show entries & Search box -->
- {{-- <div wire:loading wire:target="search" class="loader"></div> --}}
+ <div wire:loading wire:target="search" class="loader"></div>
 
  <div class="flex items-center justify-between mb-1">
     <div class="w-100 flex items-center">                

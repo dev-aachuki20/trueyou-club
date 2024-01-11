@@ -1,13 +1,13 @@
 <div>
-    @include('admin.partials.table-show-entries-search-box')
+    @include('admin.partials.table-show-entries-search-box',['searchBoxPlaceholder'=>$searchBoxPlaceholder])
     
     <div class="webinar_listing">
         <div class="row">
         @if($allSeminar->count() > 0)
         @foreach($allSeminar as $serialNo => $seminar)
         @php
-            $date = $seminar->date;
-            $time = $seminar->time;
+            $date = $seminar->start_date;
+            $time = $seminar->start_time;
             $dateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date . ' ' . $time);
 
             $now = now();
@@ -55,7 +55,7 @@
                                     <path d="M3.62549 1.41675V3.25008" stroke="#878787" stroke-linecap="round" stroke-linejoin="round"></path>
                                     <path d="M1.3335 5.08337H9.5835" stroke="#878787" stroke-linecap="round" stroke-linejoin="round"></path>
                                 </svg>
-                                {{ convertDateTimeFormat($seminar->date.' '.$seminar->time,'fulldatetime') }}
+                                {{ convertDateTimeFormat($seminar->start_date.' '.$seminar->start_time,'fulldatetime') }}
                             </span>
 
                             {{-- <a href="{{ $seminar->meeting_link }}" class="btn btn-primary joinBtn">
