@@ -44,7 +44,7 @@
                     <td>{{ ucwords($user->first_name) }} {{ ucwords($user->last_name) }}</td>
                     <td>{{ ucwords($user->phone) }}</td>
 
-                    <td>{{ convertDateTimeFormat($user->created_at,'date') }}</td>
+                    <td>{{ convertDateTimeFormat($user->created_at,'date_month_year') }}</td>
                     <td>
                         <label class="toggle-switch">
                             <input type="checkbox" class="toggleSwitch" wire:click.prevent="$emitUp('toggle',{{$user->id}})" {{ $user->is_active == 1 ? 'checked' : '' }}>
@@ -56,13 +56,13 @@
                     <td>
 
                         @can('user_show')
-                        <button title="Show" type="button" wire:click.prevent="$emitUp('show', {{$user->id}})" class="btn btn-primary btn-rounded btn-icon">
+                        <button title="Show" type="button" wire:click.prevent="$emitUp('show', {{$user->id}})" class="btn btn-info view-btn btn-rounded btn-icon">
                             <i class="ti-eye"></i>
                         </button>
                         @endcan
 
                         @can('user_edit')
-                        <button title="Edit" type="button" wire:click.prevent="$emitUp('edit', {{$user->id}})" class="btn btn-primary btn-rounded btn-icon">
+                        <button title="Edit" type="button" wire:click.prevent="$emitUp('edit', {{$user->id}})" class="btn btn-info btn-rounded btn-icon">
                             <i class="ti-pencil"></i>
                         </button>
                         @endcan

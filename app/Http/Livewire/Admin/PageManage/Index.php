@@ -113,17 +113,21 @@ class Index extends Component
     {
         $validatedData = $this->validate([
             'title'             => 'required',
-            'subtitle'       => 'required',
+            'subtitle'          => 'required',
             'status'            => 'required',
             'page_key'          => 'required',
-            'button.*.title'    => 'nullable|string',
-            'link.*.url'        => 'nullable|url',
+            'button.*.title'    => 'required|string',
+            'button.*.link'        => 'required|url',
+        ], [
+            'button.*.title.required' => 'This field is required',
+            'button.*.link.required'     => 'This field is required',
         ]);
 
         if ($this->image) {
             $rules['image'] = 'nullable|image|max:' . config('constants.img_max_size');
         }
 
+        $validatedData['subtitle'] = $this->subtitle;
         $validatedData['status'] = $this->status;
 
         DB::beginTransaction();

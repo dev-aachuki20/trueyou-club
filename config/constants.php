@@ -36,6 +36,7 @@ return [
     // 'owner_email' => 'rohithelpfullinsight@gmail.com',
     
     'date_format' => 'm/d/Y',
+    'date_month_year' => 'd-m-Y',
     'datetime_format' => 'm/d/Y h:i:s A',
     'full_datetime_format' => 'd F Y h:i A',
     'full_date_format'=>'d F Y',

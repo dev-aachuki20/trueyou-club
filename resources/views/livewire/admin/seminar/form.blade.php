@@ -93,15 +93,15 @@
         <div class="col-md-12">
             <div class="form-group">
                 <label class="font-weight-bold">{{__('global.status')}}</label>
-                <div class="form-group">
-                    <label class="toggle-switch">
-                        <input type="checkbox" class="toggleSwitch" wire:change.prevent="changeStatus({{$status}})" value="{{ $status }}" {{ $status ==1 ? 'checked' : '' }}>
-                        <span class="switch-slider"></span>
-                    </label>
-                </div>
-                @error('state.status') <span class="error text-danger">{{ $message }}</span>@enderror
-            </div>
-        </div>
+    <div class="form-group">
+        <label class="toggle-switch">
+            <input type="checkbox" class="toggleSwitch" wire:change.prevent="changeStatus({{$status}})" value="{{ $status }}" {{ $status ==1 ? 'checked' : '' }}>
+            <span class="switch-slider"></span>
+        </label>
+    </div>
+    @error('state.status') <span class="error text-danger">{{ $message }}</span>@enderror
+    </div>
+    </div>
     </div> --}}
 
     <button type="submit" wire:loading.attr="disabled" class="btn btn-primary mr-2">

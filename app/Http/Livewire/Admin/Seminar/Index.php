@@ -19,7 +19,7 @@ class Index extends Component
 
     public $search = '', $formMode = false, $updateMode = false, $viewMode = false;
 
-    public $seminar_id = null, $title, $total_ticket,  $start_date = null, $start_time=null, $end_date = null, $end_time = null,  $venue, $image, $originalImage, $status = 1;
+    public $seminar_id = null, $title, $total_ticket,  $start_date = null, $start_time = null, $end_date = null, $end_time = null,  $venue, $image, $originalImage, $status = 1;
 
     public $removeImage = false;
 
@@ -37,22 +37,25 @@ class Index extends Component
         $this->end_time = Carbon::now()->format('h:i A');
     }
 
-    public function updatedStartDate(){
+    public function updatedStartDate()
+    {
         $this->start_date = Carbon::parse($this->start_date)->format('d-m-Y');
         $this->end_date = Carbon::parse($this->start_date)->format('d-m-Y');
     }
 
-    public function updatedStartTime(){
+    public function updatedStartTime()
+    {
         $this->start_time = Carbon::parse($this->start_time)->format('h:i A');
         $this->end_time = Carbon::parse($this->start_time)->format('h:i A');
-
     }
 
-    public function updatedEndDate(){
+    public function updatedEndDate()
+    {
         $this->end_date = Carbon::parse($this->end_date)->format('d-m-Y');
     }
 
-    public function updatedEndTime(){
+    public function updatedEndTime()
+    {
         $this->end_time = Carbon::parse($this->end_time)->format('h:i A');
     }
 

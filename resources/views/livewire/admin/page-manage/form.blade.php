@@ -79,14 +79,14 @@
             <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.pages.fields.button')}}</label>
                 <input type="text" class="form-control" wire:model.defer="button.{{$index}}.title" placeholder="{{ __('cruds.pages.fields.button')}}" autocomplete="off">
-                @error('button') <span class="error text-danger">{{ $message }}</span>@enderror
+                @error("button.$index.title") <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
         <div class="col-md-7">
             <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.pages.fields.link')}}</label>
                 <input type="text" class="form-control" wire:model.defer="button.{{ $index }}.link" placeholder="{{ __('cruds.pages.fields.link')}}" autocomplete="off">
-                @error('link') <span class="error text-danger">{{ $message }}</span>@enderror
+                @error("button.$index.link") <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
 

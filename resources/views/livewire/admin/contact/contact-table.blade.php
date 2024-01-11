@@ -32,7 +32,7 @@
                     <td>{{ ucwords($contact->first_name) }} {{ ucwords($contact->last_name) }}</td>
                     <td>{{ ucwords($contact->phone_number) }}</td>
 
-                    <td>{{ convertDateTimeFormat($contact->created_at,'date') }}</td>
+                    <td>{{ convertDateTimeFormat($contact->created_at,'date_month_year') }}</td>
                     <td>
 
                         {{-- <button type="button"  class="btn btn-info btn-rounded btn-icon">

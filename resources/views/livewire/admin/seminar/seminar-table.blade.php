@@ -1,14 +1,16 @@
 <div>
     @include('admin.partials.table-show-entries-search-box',['searchBoxPlaceholder'=>$searchBoxPlaceholder])
-    
+
     <div class="webinar_listing">
         <div class="row">
-        @if($allSeminar->count() > 0)
-        @foreach($allSeminar as $serialNo => $seminar)
-        @php
+            @if($allSeminar->count() > 0)
+            @foreach($allSeminar as $serialNo => $seminar)
+            @php
             $date = $seminar->start_date;
             $time = $seminar->start_time;
             $dateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date . ' ' . $time);
+
+            $endDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $seminar->end_date . ' ' . $seminar->end_time);
 
             $now = now();
             $startSeminarTime = \Carbon\Carbon::parse($dateTime);
@@ -25,11 +27,15 @@
                 $startHours = $timeDiff->h;
                 $startMinutes = $timeDiff->i;
                 $startSeconds = $timeDiff->s;
-            }
-        @endphp
-            <div class="col-12 col-md-6">
-                <div class="webinar-item  {{ $diffInSeconds > 0 ? 'webinar-item-active' : '' }}" data-diff_in_seconds="{{ $diffInSeconds }}">
-                    <div class="webinar-item-inner">
+                }
+                @endphp
+                <div class="col-12 col-md-6">
+                    <div class="webinar-item {{ $endDateTime < $now ? 'webinar-disabled' : '' }} {{ $diffInSeconds > 0 ? 'webinar-item-active' : '' }}" data-diff_in_seconds="{{ $diffInSeconds }}">
+                        <div class="webinar-item-inner">
+
+                            @if($endDateTime < $now) <div class="buyer-active-verfiy"><span>Expired Seminar </span></div>
+                        @endif
+
                         <div class="webinar-img">
                             <img class="img-fluid" src="{{ $seminar->image_url ? $seminar->image_url : asset(config('constants.default.no_image')) }}" alt="">
                         </div>
@@ -40,9 +46,9 @@
 
                             <div class="date-time d-flex">
                                 <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10.5 12.3988C8.63627 12.3988 7.11377 10.885 7.11377 9.01251C7.11377 7.14001 8.63627 5.63501 10.5 5.63501C12.3638 5.63501 13.8863 7.14876 13.8863 9.02126C13.8863 10.8938 12.3638 12.3988 10.5 12.3988ZM10.5 6.94751C9.36252 6.94751 8.42627 7.87501 8.42627 9.02126C8.42627 10.1675 9.35377 11.095 10.5 11.095C11.6463 11.095 12.5738 10.1675 12.5738 9.02126C12.5738 7.87501 11.6375 6.94751 10.5 6.94751Z" fill="#DA7821"/>
-                                    <path d="M10.5 19.915C9.20497 19.915 7.90122 19.425 6.88622 18.4537C4.30497 15.9687 1.45247 12.005 2.52872 7.28875C3.49997 3.01 7.23622 1.09375 10.5 1.09375C10.5 1.09375 10.5 1.09375 10.5087 1.09375C13.7725 1.09375 17.5087 3.01 18.48 7.2975C19.5475 12.0137 16.695 15.9687 14.1137 18.4537C13.0987 19.425 11.795 19.915 10.5 19.915ZM10.5 2.40625C7.95372 2.40625 4.68122 3.7625 3.81497 7.5775C2.86997 11.6987 5.45997 15.2512 7.80497 17.5C9.31872 18.9612 11.69 18.9612 13.2037 17.5C15.54 15.2512 18.13 11.6987 17.2025 7.5775C16.3275 3.7625 13.0462 2.40625 10.5 2.40625Z" fill="#DA7821"/>
-                                    </svg>
+                                    <path d="M10.5 12.3988C8.63627 12.3988 7.11377 10.885 7.11377 9.01251C7.11377 7.14001 8.63627 5.63501 10.5 5.63501C12.3638 5.63501 13.8863 7.14876 13.8863 9.02126C13.8863 10.8938 12.3638 12.3988 10.5 12.3988ZM10.5 6.94751C9.36252 6.94751 8.42627 7.87501 8.42627 9.02126C8.42627 10.1675 9.35377 11.095 10.5 11.095C11.6463 11.095 12.5738 10.1675 12.5738 9.02126C12.5738 7.87501 11.6375 6.94751 10.5 6.94751Z" fill="#DA7821" />
+                                    <path d="M10.5 19.915C9.20497 19.915 7.90122 19.425 6.88622 18.4537C4.30497 15.9687 1.45247 12.005 2.52872 7.28875C3.49997 3.01 7.23622 1.09375 10.5 1.09375C10.5 1.09375 10.5 1.09375 10.5087 1.09375C13.7725 1.09375 17.5087 3.01 18.48 7.2975C19.5475 12.0137 16.695 15.9687 14.1137 18.4537C13.0987 19.425 11.795 19.915 10.5 19.915ZM10.5 2.40625C7.95372 2.40625 4.68122 3.7625 3.81497 7.5775C2.86997 11.6987 5.45997 15.2512 7.80497 17.5C9.31872 18.9612 11.69 18.9612 13.2037 17.5C15.54 15.2512 18.13 11.6987 17.2025 7.5775C16.3275 3.7625 13.0462 2.40625 10.5 2.40625Z" fill="#DA7821" />
+                                </svg>
                                 <span>
                                     {{ ucwords($seminar->venue) }}
                                 </span>
@@ -82,7 +88,8 @@
                     </div>
                     <div class="update-webinar">
                         <ul class="d-flex">
-                            @can('seminar_show')
+                            @can('seminar_edit')
+                            @if($endDateTime > $now)
                             <li>
                                 <a href="javascript:void()" wire:click.prevent="$emitUp('edit', {{$seminar->id}})">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -92,9 +99,10 @@
                                     </svg>
                                 </a>
                             </li>
+                            @endif
                             @endcan
 
-                            @can('seminar_edit')
+                            @can('seminar_delete')
                             <li>
                                 <a href="javascript:void()" wire:click.prevent="$emitUp('delete', {{$seminar->id}})">
                                     <svg xmlns="http://www.w3.org/2000/svg" id="Outline" fill="none" viewBox="0 0 24 24" width="20" height="20">
@@ -106,7 +114,8 @@
                             </li>
                             @endcan
 
-                            @can('seminar_delete')
+                            @can('seminar_show')
+                            @if($endDateTime > $now)
                             <li>
                                 <a href="javascript:void()" wire:click.prevent="$emitUp('show', {{$seminar->id}})">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="20" height="20">
@@ -117,17 +126,18 @@
                                     </svg>
                                 </a>
                             </li>
+                            @endif
                             @endcan
                         </ul>
                     </div>
                 </div>
-            </div>
-            @endforeach
-            @else
-                @include('admin.partials.no-record-found')
-            @endif
         </div>
-            {{ $allSeminar->links('vendor.pagination.custom-pagination') }}
+        @endforeach
+        @else
+        @include('admin.partials.no-record-found')
+        @endif
     </div>
+    {{ $allSeminar->links('vendor.pagination.custom-pagination') }}
+</div>
 
 </div>

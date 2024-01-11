@@ -143,8 +143,7 @@ return [
     ],
 
     'pages' => [
-        'title'                 => 'Pages',
-        'title_singular'        => 'Page',
+        'title'                 => 'Page Management',
         'fields' => [
             'page_key'   => 'Page Key',
             'page_name'   => 'Page Name',

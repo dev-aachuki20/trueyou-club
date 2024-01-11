@@ -41,12 +41,12 @@ if (!function_exists('uploadImage')) {
 	 *
 	 * @return array $input
 	 */
-	function uploadImage($directory, $file, $folder, $type="profile", $fileType="jpg",$actionType="save",$uploadId=null,$orientation=null)
-	{		
+	function uploadImage($directory, $file, $folder, $type = "profile", $fileType = "jpg", $actionType = "save", $uploadId = null, $orientation = null)
+	{
 		$oldFile = null;
-		if($actionType == "save"){
+		if ($actionType == "save") {
 			$upload               		= new Uploads;
-		}else{
+		} else {
 			$upload               		= Uploads::find($uploadId);
 			$oldFile = $upload->file_path;
 		}
@@ -58,7 +58,7 @@ if (!function_exists('uploadImage')) {
 		$upload->orientation 		= $orientation;
 		$response             		= $directory->uploads()->save($upload);
 		// delete old file
-		if($oldFile){
+		if ($oldFile) {
 			Storage::disk('public')->delete($oldFile);
 		}
 		return $upload;
@@ -81,48 +81,47 @@ if (!function_exists('deleteFile')) {
 
 
 if (!function_exists('CurlPostRequest')) {
-	function CurlPostRequest($url,$headers,$postFields)
- 	{
- 		$curl = curl_init();
-	    curl_setopt_array($curl, array(
-	           CURLOPT_URL => $url,
-	           CURLOPT_RETURNTRANSFER => true,
-	           CURLOPT_ENCODING => '',
-	           CURLOPT_MAXREDIRS => 10,
-	           CURLOPT_TIMEOUT => 0,
-	           CURLOPT_FOLLOWLOCATION => true,
-	           CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-	           CURLOPT_CUSTOMREQUEST => 'POST',
-	           CURLOPT_POSTFIELDS => $postFields,
-	           CURLOPT_HTTPHEADER => $headers,
-	    ));
-	    $response = curl_exec($curl);
-	    curl_close($curl);
-	    return json_decode($response);
+	function CurlPostRequest($url, $headers, $postFields)
+	{
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+			CURLOPT_URL => $url,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => '',
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 0,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => 'POST',
+			CURLOPT_POSTFIELDS => $postFields,
+			CURLOPT_HTTPHEADER => $headers,
+		));
+		$response = curl_exec($curl);
+		curl_close($curl);
+		return json_decode($response);
 	}
 }
 
 if (!function_exists('CurlGetRequest')) {
-	function CurlGetRequest($url,$headers)
-	{  
+	function CurlGetRequest($url, $headers)
+	{
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => $url,
-		  CURLOPT_RETURNTRANSFER => true,
-		  CURLOPT_ENCODING => '',
-		  CURLOPT_MAXREDIRS => 10,
-		  CURLOPT_TIMEOUT => 0,
-		  CURLOPT_FOLLOWLOCATION => true,
-		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-		  CURLOPT_CUSTOMREQUEST => 'GET',
-		  CURLOPT_HTTPHEADER => $headers
+			CURLOPT_URL => $url,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => '',
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 0,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => 'GET',
+			CURLOPT_HTTPHEADER => $headers
 		));
 
 		$response = curl_exec($curl);
 		curl_close($curl);
 		return json_decode($response);
-
 	}
 }
 
@@ -143,26 +142,29 @@ if (!function_exists('getCommonValidationRuleMsgs')) {
 }
 
 if (!function_exists('generateRandomString')) {
-	function generateRandomString($length = 20) {
-		
-		$randomString = Str::random($length); 
+	function generateRandomString($length = 20)
+	{
+
+		$randomString = Str::random($length);
 
 		return $randomString;
 	}
 }
 
 if (!function_exists('convertDateTimeFormat')) {
-	function convertDateTimeFormat($value,$type='date')
+	function convertDateTimeFormat($value, $type = 'date')
 	{
 		$changeFormatValue = Carbon::parse($value);
 		if ($type == 'date') {
 			return $changeFormatValue->format(config('constants.date_format'));
-		}else if($type == 'datetime'){
+		} else if ($type == 'datetime') {
 			return $changeFormatValue->format(config('constants.datetime_format'));
-		}else if($type == 'fulldatetime'){
+		} else if ($type == 'fulldatetime') {
 			return $changeFormatValue->format(config('constants.full_datetime_format'));
-		}else if($type == 'fulldate'){
+		} else if ($type == 'fulldate') {
 			return $changeFormatValue->format(config('constants.full_date_format'));
+		} else if ($type == 'date_month_year') {
+			return $changeFormatValue->format(config('constants.date_month_year'));
 		}
 		return $changeFormatValue;
 	}
@@ -170,14 +172,16 @@ if (!function_exists('convertDateTimeFormat')) {
 
 
 if (!function_exists('generateOTP')) {
-	function generateOTP() {
+	function generateOTP()
+	{
 		return rand(1000, 9999);
 	}
 }
 
 if (!function_exists('getDecryptSlug')) {
-	function getDecryptSlug($encryptSlug) {
-		try{
+	function getDecryptSlug($encryptSlug)
+	{
+		try {
 			$id = last(explode('-', $encryptSlug));
 			return decrypt($id);
 		} catch (DecryptException $e) {
@@ -190,13 +194,13 @@ if (!function_exists('getSetting')) {
 	function getSetting($key)
 	{
 		$result = null;
-		$setting = Setting::where('key',$key)->where('status',1)->first();
-		if($setting){
-			if($setting->type == 'image'){
+		$setting = Setting::where('key', $key)->where('status', 1)->first();
+		if ($setting) {
+			if ($setting->type == 'image') {
 				$result = $setting->image_url;
-			}elseif($setting->type == 'video'){
+			} elseif ($setting->type == 'video') {
 				$result = $setting->video_url;
-			}else{
+			} else {
 				$result = $setting->value;
 			}
 		}

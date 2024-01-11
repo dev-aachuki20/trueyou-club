@@ -46,7 +46,7 @@
                     <td>{{ ucwords($page->page_key) }}</td>
                     <td>{{ ucwords($page->title) }}</td>
 
-                    <td>{{ convertDateTimeFormat($page->created_at,'date') }}</td>
+                    <td>{{ convertDateTimeFormat($page->created_at,'date_month_year') }}</td>
                     {{-- <td>
                         <label class="toggle-switch">
                             <input type="checkbox" class="toggleSwitch" wire:click.prevent="$emitUp('toggle',{{$page->id}})" {{ $page->status == 1 ? 'checked' : '' }}>
@@ -57,13 +57,13 @@
                     <td>
 
                         @can('page_show')
-                        <button title="Show" type="button" wire:click.prevent="$emitUp('show', {{$page->id}})" class="btn btn-primary btn-rounded btn-icon">
+                        <button title="Show" type="button" wire:click.prevent="$emitUp('show', {{$page->id}})" class="btn btn-info view-btn btn-rounded btn-icon">
                             <i class="ti-eye"></i>
                         </button>
                         @endcan
 
                         @can('page_edit')
-                        <button title="Edit" type="button" wire:click.prevent="$emitUp('edit', {{$page->id}})" class="btn btn-primary btn-rounded btn-icon">
+                        <button title="Edit" type="button" wire:click.prevent="$emitUp('edit', {{$page->id}})" class="btn btn-info btn-rounded btn-icon">
                             <i class="ti-pencil"></i>
                         </button>
                         @endcan

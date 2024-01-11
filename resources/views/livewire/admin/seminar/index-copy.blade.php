@@ -57,6 +57,101 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script type="text/javascript">
     document.addEventListener('loadPlugins', function(event) {
+        $('input[id="start_date"]').daterangepicker({
+                autoApply: true,
+                singleDatePicker: true,
+                showDropdowns: true,
+                minDate: new Date(),
+                locale: {
+                    format: 'DD-MM-YYYY'
+                },
+            },
+            function(start, end, label) {
+                @this.set('start_date', start.format('YYYY-MM-DD'));
+                updateStartTimeOptions(start);
+            });
+
+
+        function updateStartTimeOptions(selectedDate) {
+            var currentDate = moment();
+            var isToday = selectedDate.isSame(currentDate, 'day');
+            var currentTime = moment();
+
+            var timePickerOptions = {
+                autoApply: true,
+                timePicker: true,
+                timePicker24Hour: false,
+                singleDatePicker: true,
+                timePickerIncrement: 15,
+                locale: {
+                    format: 'hh:mm A'
+                }
+            };
+
+            // Disable AM options if the selected date is today and the current time has passed
+            if (isToday && currentTime.isAfter(selectedDate)) {
+                timePickerOptions.disable = ['am'];
+            } else {
+                timePickerOptions.disable = [];
+                // Clear the input field content
+                $('input[id="start_time"]').val('');
+
+
+                // Reinitialize the time picker with updated options
+                $('input[id="start_time"]').daterangepicker(timePickerOptions, function(start, end, label) {
+                    @this.set('start_time', start.format('HH:mm'));
+                }).on('show.daterangepicker', function(ev, picker) {
+                    picker.container.find(".calendar-table").hide();
+                });
+            }
+
+
+        }
+
+
+
+
+        // function updateStartTimeOptions(selectedDate) {
+        //     var currentDate = moment();
+        //     var isToday = selectedDate.isSame(currentDate, 'day');
+
+        //     var timePickerOptions = {
+        //         enableTime: true,
+        //         noCalendar: true,
+        //         dateFormat: 'H:i',
+        //     };
+
+        //     if (!isToday) {
+        //         timePickerOptions.disable = false; // Enable both AM and PM options
+        //     }
+
+        //     $('input[id="start_time"]').val('');
+
+        //     $('input[id="start_time"]').daterangepicker({
+        //         autoApply: true,
+        //         timePicker: true,
+        //         timePicker24Hour: false,
+        //         singleDatePicker: true,
+        //         timePickerIncrement: 15,
+        //         // minDate: new Date(),
+        //         // maxDate: moment().startOf('day').add(12, 'hour'),
+        //         locale: {
+        //             format: 'hh:mm A'
+        //         }
+
+        //     }, function(start, end, label) {
+        //         // Handle your apply button logic here
+        //         // console.log(start.format('HH:mm'));
+
+        //         @this.set('start_time', start.format('HH:mm'));
+
+
+        //     }).on('show.daterangepicker', function(ev, picker) {
+        //         picker.container.find(".calendar-table").hide();
+        //     });
+        // }
+
+
 
         $('input[id="start_time"]').daterangepicker({
             autoApply: true,
@@ -81,18 +176,7 @@
             picker.container.find(".calendar-table").hide();
         });
 
-        $('input[id="start_date"]').daterangepicker({
-                autoApply: true,
-                singleDatePicker: true,
-                showDropdowns: true,
-                minDate: new Date(),
-                locale: {
-                    format: 'DD-MM-YYYY'
-                },
-            },
-            function(start, end, label) {
-                @this.set('start_date', start.format('YYYY-MM-DD'));
-            });
+
 
         $('input[id="end_time"]').daterangepicker({
             autoApply: true,
@@ -129,6 +213,7 @@
             function(start, end, label) {
                 @this.set('end_date', start.format('YYYY-MM-DD'));
             });
+
 
         $('.dropify').dropify();
         $('.dropify-errors-container').remove();
