@@ -268,6 +268,8 @@ return [
     'loading'                             => 'Loading',
     'active'                              => 'Active',
     'inactive'                            => 'Inactive',
+    'add_button_url'                      => 'Add Button and URL',
+    'add_more'                            => 'Add More',
 
 
 ];

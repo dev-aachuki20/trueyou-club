@@ -2,6 +2,10 @@
 
 namespace App\Http\Livewire\Admin\User;
 
+use App\Models\User;
+use Carbon\Carbon;
+use Gate;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\WithFileUploads;
@@ -13,7 +17,7 @@ class Index extends Component
 
     public $search = '', $formMode = false, $updateMode = false, $viewMode = false;
 
-    public $contact_id = null, $first_name,  $last_name, $phone_number, $email, $message, $status = 1;
+    public $user_id = null, $first_name,  $last_name, $phone, $email, $message, $is_active = 1;
 
     protected $listeners = [
         'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm'
@@ -21,144 +25,82 @@ class Index extends Component
 
     public function mount()
     {
-        abort_if(Gate::denies('contact_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
     }
 
-    // public function updatedPublishDate()
-    // {
-    //     $this->publish_date = Carbon::parse($this->publish_date)->format('d-m-Y');
-    // }
     public function render()
     {
         return view('livewire.admin.user.index');
     }
 
-    // public function create()
-    // {
-    //     $this->initializePlugins();
-    //     $this->formMode = true;
-    // }
+    public function create()
+    {
+        $this->initializePlugins();
+        $this->formMode = true;
+    }
 
-    // public function store()
-    // {
-    //     $validatedData = $this->validate([
-    //         'title'        => 'required',
-    //         'publish_date' => 'required',
-    //         'content'      => 'required|strip_tags',
-    //         'status'       => 'required',
-    //         'image'        => 'nullable|image|max:' . config('constants.img_max_size'),
-    //     ], [
-    //         'content.strip_tags' => 'The content field is required',
-    //     ]);
+    public function edit($id)
+    {
+        $this->initializePlugins();
+        $this->formMode = true;
+        $this->updateMode = true;
 
-    //     DB::beginTransaction();
-    //     try {
+        $user = User::findOrFail($id);
 
-    //         $validatedData['publish_date']   = Carbon::parse($this->publish_date)->format('Y-m-d');
-
-    //         $validatedData['status'] = $this->status;
-
-    //         $blog = Blog::create($validatedData);
-
-    //         if ($this->image) {
-    //             //Upload Image
-    //             uploadImage($blog, $this->image, 'blog/image/', "blog", 'original', 'save', null);
-    //         }
-
-    //         $this->formMode = false;
-
-    //         DB::commit();
-
-    //         $this->reset(['title', 'publish_date', 'content', 'status', 'image']);
-
-    //         $this->flash('success', trans('messages.add_success_message'));
-
-    //         return redirect()->route('admin.blogs');
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-
-    //         $this->alert('error', trans('messages.error_message'));
-    //     }
-    // }
-
-    // public function edit($id)
-    // {
-    //     $this->initializePlugins();
-    //     $this->formMode = true;
-    //     $this->updateMode = true;
-
-    //     $blog = Blog::findOrFail($id);
-    //     $this->blog_id         =  $blog->id;
-    //     $this->title           =  $blog->title;
-    //     $this->publish_date    =  Carbon::parse($blog->publish_date)->format('d-m-Y');
-    //     $this->content         =  $blog->content;
-    //     $this->status          =  $blog->status;
-    //     $this->originalImage   =  $blog->image_url;
-    // }
+        $this->user_id         =  $user->id;
+        $this->first_name      =  $user->first_name;
+        $this->last_name       =  $user->last_name;
+        $this->phone           =  $user->phone;
+        $this->email           =  $user->email;
+        $this->is_active       =  $user->is_active;
+    }
 
 
-    // public function update()
-    // {
-    //     $rules['title']        = 'required';
-    //     $rules['publish_date'] = 'required';
-    //     $rules['content']      = 'required|strip_tags';
-    //     $rules['status']       = 'required';
+    public function update()
+    {
+        $validatedData = $this->validate([
+            'first_name' => 'required',
+            'last_name'  => 'required',
+            'phone'      => 'required|digits:10',
+            'email'      => 'required|email',
+            'is_active'  => 'required',
+        ], [
+            'first_name.required' => 'The first name is required',
+            'last_name.required' => 'The last name is required',
+            'phone.digits' => '10 digit phone number is required',
+        ]);
 
-    //     if ($this->image) {
-    //         $rules['image'] = 'nullable|image|max:' . config('constants.img_max_size');
-    //     }
 
-    //     $validatedData = $this->validate($rules, [
-    //         'meeting_link.strip_tags' => 'The meeting_link field is required',
-    //     ]);
+        $validatedData['first_name'] = $this->first_name;
+        $validatedData['last_name']  = $this->last_name;
+        $validatedData['phone']      = $this->phone;
+        $validatedData['is_active']  = $this->is_active;
 
-    //     $validatedData['publish_date']   = Carbon::parse($this->publish_date)->format('Y-m-d');
-    //     $validatedData['status'] = $this->status;
+        DB::beginTransaction();
+        try {
 
-    //     DB::beginTransaction();
-    //     try {
+            $user = User::find($this->user_id);
+            $user->update($validatedData);
 
-    //         $blog = Blog::find($this->blog_id);
+            $this->formMode = false;
+            $this->updateMode = false;
 
-    //         // Check if the image has been changed
-    //         if ($this->image) {
-    //             if ($blog->blogImage) {
-    //                 $uploadImageId = $blog->blogImage->id;
-    //                 uploadImage($blog, $this->image, 'blog/image/', "blog", 'original', 'update', $uploadImageId);
-    //             } else {
-    //                 uploadImage($blog, $this->image, 'blog/image/', "blog", 'original', 'save', null);
-    //             }
-    //         }
+            DB::commit();
 
-    //         if ($this->removeImage) {
-    //             if ($blog->blogImage) {
-    //                 $uploadImageId = $blog->blogImage->id;
-    //                 deleteFile($uploadImageId);
-    //             }
-    //         }
+            $this->flash('success', trans('messages.edit_success_message'));
 
-    //         $blog->update($validatedData);
+            $this->reset(['first_name', 'last_name', 'phone', 'email', 'is_active']);
 
-    //         $this->formMode = false;
-    //         $this->updateMode = false;
-
-    //         DB::commit();
-
-    //         $this->flash('success', trans('messages.edit_success_message'));
-
-    //         $this->reset(['title', 'publish_date', 'content', 'status', 'image']);
-
-    //         return redirect()->route('admin.blogs');
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-
-    //         $this->alert('error', trans('messages.error_message'));
-    //     }
-    // }
+            return redirect()->route('admin.users');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->alert('error', trans('messages.error_message'));
+        }
+    }
 
     public function show($id)
     {
-        $this->contact_id = $id;
+        $this->user_id = $id;
         $this->formMode = false;
         $this->viewMode = true;
     }
@@ -193,7 +135,7 @@ class Index extends Component
     public function deleteConfirm($event)
     {
         $deleteId = $event['data']['inputAttributes']['deleteId'];
-        $model    = Contact::find($deleteId);
+        $model    = User::find($deleteId);
         $model->delete();
 
         $this->emit('refreshTable');
@@ -213,15 +155,15 @@ class Index extends Component
             'onCancelled' => function () {
                 // Do nothing or perform any desired action
             },
-            'inputAttributes' => ['contactId' => $id],
+            'inputAttributes' => ['userId' => $id],
         ]);
     }
 
     public function confirmedToggleAction($event)
     {
-        $contactId = $event['data']['inputAttributes']['contactId'];
-        $model = Contact::find($contactId);
-        $model->update(['status' => !$model->status]);
+        $userId = $event['data']['inputAttributes']['userId'];
+        $model = User::find($userId);
+        $model->update(['is_active' => !$model->is_active]);
 
         $this->emit('refreshTable');
 
@@ -230,6 +172,6 @@ class Index extends Component
 
     public function changeStatus($statusVal)
     {
-        $this->status = (!$statusVal) ? 1 : 0;
+        $this->is_active = (!$statusVal) ? 1 : 0;
     }
 }

@@ -142,4 +142,18 @@ return [
         ]
     ],
 
+    'pages' => [
+        'title'                 => 'Pages',
+        'title_singular'        => 'Page',
+        'fields' => [
+            'page_key'   => 'Page Key',
+            'page_name'   => 'Page Name',
+            'title'   => 'Title',
+            'subtitle'   => 'Sub Title',
+            'description'   => 'Description',
+            'button' => 'Button Title',
+            'link' => 'Link',
+        ]
+    ],
+
 ];

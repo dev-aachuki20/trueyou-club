@@ -68,5 +68,7 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
         Route::view('contacts', 'admin.contact.index')->name('contacts');
 
         Route::view('users', 'admin.user.index')->name('users');
+
+        Route::view('page-manage', 'admin.page-manage.index')->name('page-manage');
     });
 });

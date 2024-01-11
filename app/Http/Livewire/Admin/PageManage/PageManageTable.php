@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Livewire\Admin\User;
+namespace App\Http\Livewire\Admin\PageManage;
 
+use App\Models\Page;
 use Livewire\Component;
-use Livewire\WithPagination;
-use App\Models\User;
 use Illuminate\Support\Str;
+use Livewire\WithPagination;
 
-class UserTable extends Component
+class PageManageTable extends Component
 {
     use WithPagination;
 
@@ -17,13 +17,11 @@ class UserTable extends Component
 
     protected $listeners = [
         'refreshTable' => 'render',
-        'updatePaginationLength',
     ];
 
-    public function updatePaginationLength($length)
+    public function updatedPaginationLength()
     {
         $this->resetPage();
-        $this->paginationLength = $length;
     }
 
     public function updatedSearch()
@@ -58,19 +56,14 @@ class UserTable extends Component
             $statusSearch = 0;
         }
 
-        $allUsers = User::query()->where(function ($query) use ($searchValue, $statusSearch) {
-            $query
-                ->whereRaw("CONCAT(first_name, ' ', last_name) like ?", ['%' . $searchValue . '%'])
-                ->orWhere('email', 'like', '%' . $searchValue . '%')
-                ->orWhere('phone', 'like', '%' . $searchValue . '%')
-                ->orWhere('is_active', $statusSearch)
+        $allPages = Page::query()->where(function ($query) use ($searchValue, $statusSearch) {
+            $query->where('title', 'like', '%' . $searchValue . '%')
+                ->orWhere('page_key', 'like', '%' . $searchValue . '%')
+                ->orWhere('status', $statusSearch)
                 ->orWhereRaw("date_format(created_at, '" . config('constants.search_datetime_format') . "') like ?", ['%' . $searchValue . '%']);
         })
-            ->whereHas('roles', function ($query) {
-                $query->where('id', 2);
-            })
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);
-        return view('livewire.admin.user.user-table', compact('allUsers'));
+        return view('livewire.admin.page-manage.page-manage-table', compact('allPages'));
     }
 }
