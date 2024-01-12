@@ -8,7 +8,7 @@ class BaseComponent extends Component
 {
     public $profileImageUrlUpdated = false;
     public $isConfirmed = false,$isLoader = false;
-    protected $listeners = ['profileImageUpdated' => 'updateProfileImage'];
+    protected $listeners = ['updateProfileImage'];
     
     public function updateProfileImage($flag){
         // Update header component with the updated image URL

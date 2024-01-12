@@ -1,4 +1,6 @@
 <div class="profile-image-change">
+    <div wire:loading wire:target="profile_image" class="loader"></div>
+    
     <div class="left-imag-col">
         @if ($profile_image)  
             <img src="{{ $profile_image->temporaryUrl() }}" alt="avatar" class="rounded-circle img-fluid">

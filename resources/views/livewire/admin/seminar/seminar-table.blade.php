@@ -84,6 +84,7 @@
                                 </div>
                             </div>
                             @endif
+                            <a href="javascript:;" class="btn btn-primary joinBtn ">Join The Webinar</a>
                         </div>
                     </div>
                     <div class="update-webinar">

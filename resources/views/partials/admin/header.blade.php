@@ -84,10 +84,10 @@
             <div class="dropdown user-dropdown">
                 <button class="btn dropdown-toggle ms-auto" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="dropdown-data">
-                        <div class="img-user"><img src="{{ isset(auth()->user()->profile_image_url) && !empty(auth()->user()->profile_image_url) ? auth()->user()->profile_image_url : asset(config('constants.default.profile_image')) }}"  class="img-fluid" alt=""></div>
+                        <div class="img-user refresh-profile-image"><img src="{{ isset(auth()->user()->profile_image_url) && !empty(auth()->user()->profile_image_url) ? auth()->user()->profile_image_url : asset(config('constants.default.profile_image')) }}"  class="img-fluid" alt=""></div>
                         <div class="welcome-user">
                             <span class="welcome">welcome</span>
-                            <span class="user-name-title">{{ auth()->user()->name }}</span>
+                            <span class="user-name-title auth-user-name">{{ auth()->user()->name }}</span>
                         </div>
                     </div>
                     <span class="arrow-icon">

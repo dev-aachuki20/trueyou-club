@@ -50,6 +50,16 @@
 </div>
 @push('scripts')
     <script>
+        
+        document.addEventListener('refreshProfileImages', function(event) {
+            $('.refresh-profile-image img').attr('src',event.detail.imgUrl);
+        });
+
+        document.addEventListener('refreshDocument', function(event) {
+            $('.auth-user-name').html(event.detail.authUserName);
+        });
+
+
         $(document).ready(function(){
             $(document).on('click','#changepassword',function(){
             $('#changePasswordModal').modal('show');

@@ -73,10 +73,16 @@ class Index extends Component
 
         $this->authUser->profile_image_url = $response->file_url;
 
+        $profileUrl = auth()->user()->profile_image_url;
         $this->render();
         if ($response) {
+        
+            $this->dispatchBrowserEvent('refreshProfileImages',['imgUrl'=>$profileUrl]);
+        
             // Set Flash Message
             $this->alert('success', 'Profile image has been updated.');
+
+
         } else {
             $this->alert(trans('panel.alert-type.error'), trans('panel.message.error'));
         }
@@ -109,7 +115,7 @@ class Index extends Component
         $validatedDate = $this->validate([
             'first_name'  => 'required',
             'last_name'   => 'required',
-            'phone'         => 'nullable|digits:10'
+            'phone'       => 'nullable|digits:10|integer|not_in:-'
         ]);
 
         $userDetails = [];
@@ -120,8 +126,11 @@ class Index extends Component
 
         $this->authUser->update($userDetails);
 
+        $fullName = $userDetails['name'];
         
         $this->resetInputFields();
+
+        $this->dispatchBrowserEvent('refreshDocument',['authUserName'=>$fullName]);
 
         // $this->closedEditSection();
         $this->alert('success', 'Profile has been updated.');

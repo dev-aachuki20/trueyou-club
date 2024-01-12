@@ -21,7 +21,7 @@ return [
         'admin_logo' => 'default/favicon.svg',
         'transparent_logo' => 'assets/logo/logo-transparent.png',
         'profile_image' => 'default/default-user.svg',
-        'email_logo' => 'default/logo.svg',
+        'email_logo' => 'default/email-logo.png',
         'no_image' => 'default/no-image.jpg',
     ],
 

@@ -57,7 +57,7 @@ class LoginRegisterController extends Controller
             //Success Response Send
             $responseData = [
                 'status'        => true,
-                'message'       => 'Register successfully!',
+                'message'       => 'Registration successful! Please check your email for a verification link.',
             ];  
             return response()->json($responseData, 200);
 
@@ -236,7 +236,9 @@ class LoginRegisterController extends Controller
             $userDetails = array();
             $userDetails['name'] = ucwords($user->first_name.' '.$user->last_name);
 
-            $userDetails['reset_password_url'] = env('FRONTEND_URL').'reset-password/'.$token.'/'.encrypt($email_id);
+            $userDetails['reset_password_url'] = env('FRONTEND_URL').'reset-password/'.$token;
+
+            // $userDetails['reset_password_url'] = env('FRONTEND_URL').'reset-password/'.$token.'/'.encrypt($email_id);
             
             DB::table('password_resets')->insert([
                 'email'         => $email_id, 
@@ -273,6 +275,7 @@ class LoginRegisterController extends Controller
         $validator = Validator::make($request->all(), [
             'password'                  => 'required|min:8|confirmed',
             'password_confirmation'     => 'required',
+            'token'                     => 'required',
         ]);
         if($validator->fails()){
             //Error Response Send
@@ -286,9 +289,11 @@ class LoginRegisterController extends Controller
         DB::beginTransaction();
         try {
             $token = $request->token;
-            $email = decrypt($request->hash);
+            // $email = decrypt($request->hash);
 
-            $updatePassword = DB::table('password_resets')->where(['email' => $email,'token' => $token])->first();
+            // $updatePassword = DB::table('password_resets')->where(['email' => $email,'token' => $token])->first();
+
+            $updatePassword = DB::table('password_resets')->where(['token' => $token])->first();
 
             if(!$updatePassword){
                 //Error Response Send
@@ -300,10 +305,10 @@ class LoginRegisterController extends Controller
 
             }else{
 
-                $user = User::where('email', $email)
+                $user = User::where('email', $updatePassword->email)
                 ->update(['password' => bcrypt($request->password)]);
 
-                DB::table('password_resets')->where(['email'=> $email])->delete();
+                DB::table('password_resets')->where(['token' => $token])->delete();
 
                 DB::commit();
 
@@ -322,7 +327,7 @@ class LoginRegisterController extends Controller
             //Return Error Response
             $responseData = [
                 'status'        => false,
-                'error'         => trans('messages.error_message'),
+                'error'         => trans('messages.error_message').$e->getMessage().'->'.$e->getLine(),
             ];
             return response()->json($responseData, 401);
         }

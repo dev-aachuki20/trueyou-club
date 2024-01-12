@@ -1,13 +1,13 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <div class="user-profile-box">
-        <div class="profile-img">
+        <div class="profile-img refresh-profile-image">
             <img class="img-fluid" src="{{ isset(auth()->user()->profile_image_url) && !empty(auth()->user()->profile_image_url) ? auth()->user()->profile_image_url : asset(config('constants.default.profile_image')) }}" alt="">
         </div>
         <div class="title-profile">
             <h2>
                 Welcome Back!
             </h2>
-            <p>
+            <p class="auth-user-name">
                 {{ auth()->user()->name }}
             </p>
         </div>

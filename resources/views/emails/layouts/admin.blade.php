@@ -14,8 +14,8 @@
 	<div class="mail-template" style="max-width: 100%; margin: 0 auto;">
 		<table cellpadding="0" cellspacing="0" width="100%">
 			<thead>
-				<tr>
-					<th style="text-align: center;padding: 34px 0; background-color: #F5F7F9;"><img src="{{ asset(config('constants.default.email_logo')) }}" alt="" title="" /></th>
+				<tr style="background-image:url('{{ asset("default/email-bg.png") }}'); height:250px; width:100%; background-size:cover;background-repeat:no-repeat;">
+					<th style="text-align: center;padding: 34px 0;"><img style="padding:30px;" src="{{ asset(config('constants.default.email_logo')) }}" alt="" title="" /></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -28,13 +28,12 @@
 			<tfoot>
 				<tr>
 					<td>
-						<p class="copyright" style="margin: 0; background-color: #121639; padding:22px 0; text-align:center; font-size: 20px; font-weight: 600; font-family: 'Nunito Sans', sans-serif; color:#fff;">© {{ date('Y') }} All Copyrights Reserved By {{config('app.name')}}</p>
+						<p class="copyright" style="margin: 0; background-color: #121639; padding:22px 0; text-align:center; font-size: 16px; font-weight: 400; font-family: 'Nunito Sans', sans-serif; color:#fff;">© {{ date('Y') }} All Copyrights Reserved By {{config('app.name')}}</p>
 					</td>
 				</tr>
 			</tfoot>
 		</table>
 	</div>
-	<!--  -->
-
+	
 </body>
 </html>
