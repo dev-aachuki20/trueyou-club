@@ -7,19 +7,19 @@
                     <div wire:loading wire:target="create" class="loader"></div>
                     <div class="card-title top-box-set">
                         <h4 class="card-title-heading">Today Quote </h4>
-                            @can('quote_create')
-                            @if(!$todayQuote)
-                                <div class="card-top-box-item">
-                                    <button wire:click="create()" type="button" class="btn joinBtn btn-sm btn-icon-text btn-header">
-                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M8.73956 14.3355C8.55177 14.5232 8.2948 14.6418 7.99829 14.6418C7.42503 14.6418 6.95062 14.1674 6.95062 13.5942L6.95062 2.40586C6.95062 1.8326 7.42503 1.35819 7.99828 1.35819C8.57154 1.35819 9.04595 1.8326 9.04595 2.40586L9.04595 13.5942C9.05584 13.8808 8.92735 14.1477 8.73956 14.3355Z" fill="#0A2540" />
-                                            <path d="M14.3337 8.74129C14.1459 8.92908 13.889 9.04769 13.5924 9.04769L2.40412 9.04769C1.83087 9.04769 1.35645 8.57327 1.35645 8.00002C1.35645 7.42676 1.83087 6.95235 2.40412 6.95235L13.5924 6.95235C14.1657 6.95235 14.6401 7.42676 14.6401 8.00002C14.6401 8.29653 14.5215 8.5535 14.3337 8.74129Z" fill="#0A2540" />
-                                        </svg>
-                                        {{__('global.add')}}
-                                    </button>
-                                </div>
-                            @endif
-                            @endcan
+                        @can('quote_create')
+                        @if(!$todayQuote)
+                        <div class="card-top-box-item">
+                            <button wire:click="create()" type="button" class="btn joinBtn btn-sm btn-icon-text btn-header">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8.73956 14.3355C8.55177 14.5232 8.2948 14.6418 7.99829 14.6418C7.42503 14.6418 6.95062 14.1674 6.95062 13.5942L6.95062 2.40586C6.95062 1.8326 7.42503 1.35819 7.99828 1.35819C8.57154 1.35819 9.04595 1.8326 9.04595 2.40586L9.04595 13.5942C9.05584 13.8808 8.92735 14.1477 8.73956 14.3355Z" fill="#0A2540" />
+                                    <path d="M14.3337 8.74129C14.1459 8.92908 13.889 9.04769 13.5924 9.04769L2.40412 9.04769C1.83087 9.04769 1.35645 8.57327 1.35645 8.00002C1.35645 7.42676 1.83087 6.95235 2.40412 6.95235L13.5924 6.95235C14.1657 6.95235 14.6401 7.42676 14.6401 8.00002C14.6401 8.29653 14.5215 8.5535 14.3337 8.74129Z" fill="#0A2540" />
+                                </svg>
+                                {{__('global.add')}}
+                            </button>
+                        </div>
+                        @endif
+                        @endcan
                     </div>
 
                     <div class="search-table-data">
@@ -55,7 +55,7 @@
                                                 </li>
                                                 @endif
                                                 @endcan
-                    
+
                                                 @can('quote_delete')
                                                 <li>
                                                     <a href="javascript:void()" wire:click.prevent="$emit('delete', {{$todayQuote->id}})">
@@ -67,14 +67,14 @@
                                                     </a>
                                                 </li>
                                                 @endcan
-                    
+
                                             </ul>
                                         </div>
                                     </div>
                                 </li>
                             </ul>
                             @else
-                                @include('admin.partials.no-record-found')
+                            @include('admin.partials.no-record-found')
                             @endif
                         </div>
                     </div>
@@ -102,14 +102,14 @@
         </div>
     </div>
 
-    <div class="modal fade" id="quote_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div wire:ignore.self class="modal fade" id="quote_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">{{ $modalType }} @lang('cruds.quote.fields.message')</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                
+
                 <form wire:submit.prevent="{{ $updateMode ? 'update' : 'store' }}" class="forms-sample">
                     <div class="modal-body">
                         <div class="row">
@@ -137,7 +137,7 @@
                         </button>
                     </div>
                 </form>
-               
+
 
             </div>
         </div>

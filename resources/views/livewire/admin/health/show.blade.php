@@ -7,7 +7,7 @@
             <div class="card-body-">
                 <div class="inner-show-content">
                 <div class="show-d-img">
-                    <img class="img-fuild" src="{{ $detail->image_url ? $detail->image_url : asset(config('constants.default.no_image')) }}" />
+                    <img class="img-fuild" src="{{ $detail->health_image_url ? $detail->health_image_url : asset(config('constants.default.no_image')) }}" />
                 </div>
                 <h3>
                     {{ ucwords($detail->title) }}

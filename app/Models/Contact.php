@@ -28,4 +28,9 @@ class Contact extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    // public function getFullNameAttribute()
+    // {
+    //     return $this->first_name . ' ' . $this->last_name;
+    // }
 }

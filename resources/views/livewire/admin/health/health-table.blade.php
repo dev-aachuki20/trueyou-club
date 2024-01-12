@@ -11,7 +11,7 @@
                     <div class="webinar-item">
                         <div class="webinar-item-inner">
                             <div class="webinar-img">
-                                <img class="img-fluid" src="{{ $health->image_url ? $health->image_url : asset(config('constants.default.no_image')) }}" alt="">
+                                <img class="img-fluid" src="{{ $health->health_image_url ? $health->health_image_url : asset(config('constants.default.no_image')) }}" alt="">
                             </div>
                             <div class="webinar-content">
                                 <h3>

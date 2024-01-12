@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Admin\Health;
 
-use App\Models\Health;
+use App\Models\Post;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
@@ -14,7 +14,9 @@ class HealthTable extends Component
 
     public $search = null;
 
-    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder="Search By Title, Publish Date";
+    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Title, Publish Date";
+
+    public $type = 'health';
 
     protected $listeners = [
         'refreshTable' => 'render',
@@ -57,11 +59,11 @@ class HealthTable extends Component
             $statusSearch = 0;
         }
 
-        $allHealth = Health::query()->where(function ($query) use ($searchValue, $statusSearch) {
+        $allHealth = Post::query()->where('type', $this->type)->where(function ($query) use ($searchValue, $statusSearch) {
             $query->where('title', 'like', '%' . $searchValue . '%')
                 // ->orWhere('status', $statusSearch)
                 ->orWhereRaw("DATE_FORMAT(publish_date,  '" . config('constants.search_full_datetime_format') . "') = ?", [date(config('constants.full_datetime_format'), strtotime($searchValue))]);
-                // ->orWhereRaw("date_format(created_at, '" . config('constants.search_datetime_format') . "') like ?", ['%' . $searchValue . '%']);
+            // ->orWhereRaw("date_format(created_at, '" . config('constants.search_datetime_format') . "') like ?", ['%' . $searchValue . '%']);
         })
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);

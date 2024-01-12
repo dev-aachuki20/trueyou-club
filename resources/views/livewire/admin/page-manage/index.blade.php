@@ -61,7 +61,7 @@
         });
 
         // $('textarea#summernote').summernote({
-        //     placeholder: 'Type somthing...',
+        //     placeholder: 'Type something...',
         //     tabsize: 2,
         //     height: 200,
         //     fontNames: ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'sans-serif'],

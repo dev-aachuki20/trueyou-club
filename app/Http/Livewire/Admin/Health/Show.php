@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Admin\Health;
 
-use App\Models\Health;
+use App\Models\Post;
 use Livewire\Component;
 
 class Show extends Component
@@ -13,7 +13,7 @@ class Show extends Component
 
     public function mount($health_id)
     {
-        $this->detail = Health::find($health_id);
+        $this->detail = Post::find($health_id);
     }
     public function render()
     {

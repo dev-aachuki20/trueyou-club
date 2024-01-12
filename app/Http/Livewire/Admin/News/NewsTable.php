@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Admin\News;
 
 use Carbon\Carbon;
 use Livewire\Component;
-use App\Models\News;
+use App\Models\Post;
 use Illuminate\Support\Str;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
@@ -17,8 +17,8 @@ class NewsTable extends Component
 
     public $search = null;
 
-    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder="Search By Title, Publish Date";
-
+    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Title, Publish Date";
+    public $type = 'news';
     protected $listeners = [
         'refreshTable' => 'render',
     ];
@@ -62,11 +62,11 @@ class NewsTable extends Component
             $statusSearch = 0;
         }
 
-        $allNews = News::query()->where(function ($query) use ($searchValue, $statusSearch) {
+        $allNews = Post::query()->where('type', $this->type)->where(function ($query) use ($searchValue, $statusSearch) {
             $query->where('title', 'like', '%' . $searchValue . '%')
                 // ->orWhere('status', $statusSearch)
                 ->orWhereRaw("DATE_FORMAT(publish_date,  '" . config('constants.search_full_datetime_format') . "') = ?", [date(config('constants.full_datetime_format'), strtotime($searchValue))]);
-                // ->orWhereRaw("date_format(created_at, '" . config('constants.search_datetime_format') . "') like ?", ['%' . $searchValue . '%']);
+            // ->orWhereRaw("date_format(created_at, '" . config('constants.search_datetime_format') . "') like ?", ['%' . $searchValue . '%']);
         })
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);

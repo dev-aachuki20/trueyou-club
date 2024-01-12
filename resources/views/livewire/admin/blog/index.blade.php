@@ -65,6 +65,7 @@
                 autoApply: true,
                 singleDatePicker: true,
                 showDropdowns: true,
+                minDate: new Date(),
                 locale: {
                     format: 'DD-MM-YYYY'
                 },
@@ -86,7 +87,7 @@
         });
 
         $('textarea#summernote').summernote({
-            placeholder: 'Type somthing...',
+            placeholder: 'Type something...',
             tabsize: 2,
             height: 200,
             fontNames: ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'sans-serif'],

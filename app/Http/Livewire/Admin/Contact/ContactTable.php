@@ -14,6 +14,7 @@ class ContactTable extends Component
     public $search = null;
 
     public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10;
+    public $sortColumnFullName = 'full_name';
 
     protected $listeners = [
         'refreshTable' => 'render',
@@ -41,6 +42,16 @@ class ContactTable extends Component
         }
 
         $this->sortColumnName = $columnName;
+    }
+
+    public function sortByName($column)
+    {
+        if ($this->sortColumnFullName === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortColumnFullName = $column;
+            $this->sortDirection = 'asc';
+        }
     }
 
     public function swapSortDirection()

@@ -10,7 +10,7 @@
                 <div class="webinar-item">
                     <div class="webinar-item-inner">
                         <div class="webinar-img">
-                            <img class="img-fluid" src="{{ $blog->image_url ? $blog->image_url : asset(config('constants.default.no_image')) }}" alt="">
+                            <img class="img-fluid" src="{{ $blog->blog_image_url ? $blog->blog_image_url : asset(config('constants.default.no_image')) }}" alt="">
                         </div>
                         <div class="webinar-content">
                             <h3>
@@ -78,10 +78,10 @@
             </div>
             @endforeach
             @else
-                @include('admin.partials.no-record-found')
+            @include('admin.partials.no-record-found')
             @endif
         </div>
-        
+
         {{ $allBlogs->links('vendor.pagination.custom-pagination') }}
     </div>
 

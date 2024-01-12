@@ -5,8 +5,7 @@ namespace App\Http\Livewire\Admin\News;
 use Gate;
 use Carbon\Carbon;
 use Livewire\Component;
-use App\Models\News;
-use Illuminate\Support\Str;
+use App\Models\Post;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -21,6 +20,7 @@ class Index extends Component
     public $news_id = null, $title,  $publish_date = null,  $content, $image, $originalImage, $status = 1;
 
     public $removeImage = false;
+    public $type = 'news';
 
     protected $listeners = [
         'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm'
@@ -67,8 +67,10 @@ class Index extends Component
             $validatedData['publish_date']   = Carbon::parse($this->publish_date)->format('Y-m-d');
 
             $validatedData['status'] = $this->status;
+            $validatedData['type'] = $this->type;
 
-            $news = News::create($validatedData);
+
+            $news = Post::create($validatedData);
 
             if ($this->image) {
                 uploadImage($news, $this->image, 'news/image/', "news", 'original', 'save', null);
@@ -78,7 +80,7 @@ class Index extends Component
 
             DB::commit();
 
-            $this->reset(['title', 'publish_date', 'content', 'status', 'image']);
+            $this->reset(['title', 'publish_date', 'content', 'status', 'image', 'type']);
 
             $this->flash('success', trans('messages.add_success_message'));
 
@@ -96,13 +98,14 @@ class Index extends Component
         $this->formMode = true;
         $this->updateMode = true;
 
-        $news = News::findOrFail($id);
+        $news = Post::findOrFail($id);
         $this->news_id         =  $news->id;
         $this->title           =  $news->title;
         $this->publish_date    =  Carbon::parse($news->publish_date)->format('d-m-Y');
         $this->content         =  $news->content;
         $this->status          =  $news->status;
-        $this->originalImage   =  $news->image_url;
+        $this->originalImage   =  $news->news_image_url;
+        $this->type            =  $news->type;
     }
 
 
@@ -123,11 +126,12 @@ class Index extends Component
 
         $validatedData['publish_date']   = Carbon::parse($this->publish_date)->format('Y-m-d');
         $validatedData['status'] = $this->status;
+        $validatedData['type']   = $this->type;
 
         DB::beginTransaction();
         try {
 
-            $news = News::find($this->news_id);
+            $news = Post::find($this->news_id);
 
             // Check if the image has been changed
             if ($this->image) {
@@ -155,7 +159,7 @@ class Index extends Component
 
             $this->flash('success', trans('messages.edit_success_message'));
 
-            $this->reset(['title', 'publish_date', 'content', 'status', 'image']);
+            $this->reset(['title', 'publish_date', 'content', 'status', 'image', 'type']);
 
             return redirect()->route('admin.news');
         } catch (\Exception $e) {
@@ -202,7 +206,7 @@ class Index extends Component
     public function deleteConfirm($event)
     {
         $deleteId = $event['data']['inputAttributes']['deleteId'];
-        $model    = News::find($deleteId);
+        $model    = Post::find($deleteId);
         $model->delete();
 
         $this->emit('refreshTable');
@@ -229,7 +233,7 @@ class Index extends Component
     public function confirmedToggleAction($event)
     {
         $newsId = $event['data']['inputAttributes']['newsId'];
-        $model = News::find($newsId);
+        $model = Post::find($newsId);
         $model->update(['status' => !$model->status]);
 
         $this->emit('refreshTable');

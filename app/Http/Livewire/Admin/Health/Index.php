@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Admin\Health;
 
-use App\Models\Health;
+use App\Models\Post;
 use Gate;
 use Carbon\Carbon;
 use Livewire\Component;
@@ -20,6 +20,8 @@ class Index extends Component
     public $health_id = null, $title,  $publish_date = null,  $content, $image, $originalImage, $status = 1;
 
     public $removeImage = false;
+    public $type = 'health';
+
 
     protected $listeners = [
         'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm'
@@ -64,8 +66,9 @@ class Index extends Component
             $validatedData['publish_date']   = Carbon::parse($this->publish_date)->format('Y-m-d');
 
             $validatedData['status'] = $this->status;
+            $validatedData['type'] = $this->type;
 
-            $health = Health::create($validatedData);
+            $health = Post::create($validatedData);
 
             if ($this->image) {
                 uploadImage($health, $this->image, 'health/image/', "health", 'original', 'save', null);
@@ -75,7 +78,7 @@ class Index extends Component
 
             DB::commit();
 
-            $this->reset(['title', 'publish_date', 'content', 'status', 'image']);
+            $this->reset(['title', 'publish_date', 'content', 'status', 'image', 'type']);
 
             $this->flash('success', trans('messages.add_success_message'));
 
@@ -93,13 +96,14 @@ class Index extends Component
         $this->formMode = true;
         $this->updateMode = true;
 
-        $health = Health::findOrFail($id);
+        $health = Post::findOrFail($id);
         $this->health_id       =  $health->id;
         $this->title           =  $health->title;
         $this->publish_date    =  Carbon::parse($health->publish_date)->format('d-m-Y');
         $this->content         =  $health->content;
         $this->status          =  $health->status;
-        $this->originalImage   =  $health->image_url;
+        $this->originalImage   =  $health->health_image_url;
+        $this->type            =  $health->type;
     }
 
 
@@ -120,11 +124,12 @@ class Index extends Component
 
         $validatedData['publish_date']   = Carbon::parse($this->publish_date)->format('Y-m-d');
         $validatedData['status'] = $this->status;
+        $validatedData['type']   = $this->type;
 
         DB::beginTransaction();
         try {
 
-            $health = Health::find($this->health_id);
+            $health = Post::find($this->health_id);
 
             // Check if the image has been changed
             if ($this->image) {
@@ -152,7 +157,7 @@ class Index extends Component
 
             $this->flash('success', trans('messages.edit_success_message'));
 
-            $this->reset(['title', 'publish_date', 'content', 'status', 'image']);
+            $this->reset(['title', 'publish_date', 'content', 'status', 'image', 'type']);
 
             return redirect()->route('admin.health');
         } catch (\Exception $e) {
@@ -199,7 +204,7 @@ class Index extends Component
     public function deleteConfirm($event)
     {
         $deleteId = $event['data']['inputAttributes']['deleteId'];
-        $model    = Health::find($deleteId);
+        $model    = Post::find($deleteId);
         $model->delete();
 
         $this->emit('refreshTable');
@@ -226,7 +231,7 @@ class Index extends Component
     public function confirmedToggleAction($event)
     {
         $healthId = $event['data']['inputAttributes']['healthId'];
-        $model = Health::find($healthId);
+        $model = Post::find($healthId);
         $model->update(['status' => !$model->status]);
 
         $this->emit('refreshTable');
