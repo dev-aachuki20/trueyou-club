@@ -273,17 +273,19 @@ class LoginRegisterController extends Controller
 
     public function resetPassword(Request $request){
         $validator = Validator::make($request->all(), [
-            'password'                  => 'required|min:8|confirmed',
-            'password_confirmation'     => 'required',
+            'password'                  => 'required|min:8',
+            'password_confirmation'     => 'required|same:password',
             'token'                     => 'required',
         ]);
         if($validator->fails()){
+            $errors = (object) $validator->errors()->messages();
+
             //Error Response Send
             $responseData = [
                 'status'        => false,
-                'validation_errors' => $validator->errors(),
+                'validation_errors' => $errors,
             ];
-            return response()->json($responseData, 422);
+            return response()->json($responseData, 401);
         }
 
         DB::beginTransaction();

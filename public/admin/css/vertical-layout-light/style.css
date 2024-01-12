@@ -20574,11 +20574,12 @@ code {
 /* Badges */
 .badge {
   border-radius: 60px;
-  font-size: 14px;
-  line-height: 1;
-  padding: 15px 30px;
-  font-weight: normal;
-  box-shadow: rgb(87 182 87 / 11%) 0px 7px 6px 0px;
+  /* font-size: 14px; */
+  /* line-height: 1; */
+  padding: 7px 20px;
+  /* font-weight: normal; */
+  /* box-shadow: rgb(87 182 87 / 11%) 0px 7px 6px 0px; */
+  font-weight: 500;
 }
 
 .badge.badge-pill {
@@ -28777,7 +28778,7 @@ div.tagsinput span.tag a {
     bottom: 0;
         border-left: 1px solid #EAECEB;
     overflow: auto;
-    right: -270px;
+    right: -330px;
     -webkit-transition: all 0.25s ease-out;
     -o-transition: all 0.25s ease-out;
     transition: all 0.25s ease-out;
@@ -28835,7 +28836,7 @@ div.tagsinput span.tag a {
 
 .navbar .navbar-brand-wrapper .navbar-brand img {
   max-width: 100%;
-  height: 34px;
+  height: 60px;
   margin: auto;
   vertical-align: middle;
 }

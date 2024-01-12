@@ -1,6 +1,6 @@
 <div>
    
-    <h4 class="card-title">@lang('global.view') @lang('cruds.news.title_singular')</h4>
+    <h4 class="card-title blog-title">@lang('global.view') @lang('cruds.news.title_singular')</h4>
     
     <div class="show-wrapper mt-4">
             <div class="card">

@@ -80,7 +80,7 @@
             timePicker24Hour: false,
             singleDatePicker: true,
             // timePickerIncrement: 15,
-            minDate: new Date(),
+            //minDate: new Date(),
             // maxDate: moment().startOf('day').add(12, 'hour'),
             locale: {
              format: 'hh:mm A'
@@ -116,7 +116,7 @@
             timePicker24Hour: false,
             singleDatePicker: true,
             // timePickerIncrement: 15,
-            minDate: new Date(),
+            // minDate: new Date(),
             // maxDate: moment().startOf('day').add(12, 'hour'),
             locale: {
              format: 'hh:mm A'

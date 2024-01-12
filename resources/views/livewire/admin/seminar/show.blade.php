@@ -58,6 +58,13 @@
                         @lang('cruds.seminar.fields.end_date_time') :-  {{ convertDateTimeFormat($detail->end_date.' '.$detail->end_time,'fulldatetime') }}
                     </div>
 
+                    <a href="javascript:voide(0);" class="btn btn-primary joinBtn book-seats">
+                        <span>
+                            0 / {{$detail->total_ticket}}
+                        </span>
+                        Avilable Tickets
+                    </a>
+
                    
 
                 <div class="show-btn-box mt-5 text-center">

@@ -22,7 +22,7 @@
                             @endcan
                     </div>
 
-                    <div class="table-responsive search-table-data">
+                    <div class="search-table-data">
                         <div class="single-quotes">
                             @if($todayQuote)
                             <ul>
@@ -92,7 +92,7 @@
                     <div class="card-title top-box-set">
                         <h4 class="card-title-heading">@lang('cruds.quote.title') @lang('global.list') </h4>
                     </div>
-                    <div class="table-responsive search-table-data">
+                    <div class="search-table-data">
                         @livewire('admin.quote.quote-table')
                     </div>
                 </div>

@@ -70,6 +70,7 @@ return [
             'meeting_link' => 'Meeting Link',
             'start_date_time'   => 'Start Datetime',
             'end_date_time'     => 'End Datetime',
+            'join_meeting'      => 'Join Meeting',
         ],
     ],
 
@@ -143,9 +144,10 @@ return [
     ],
 
     'pages' => [
-        'title'                 => 'Page Management',
+        'title'      => 'Pages',
+        'title_singular' => 'Page',
         'fields' => [
-            'page_key'   => 'Page Key',
+            'page_key'   => 'Page Name',
             'page_name'   => 'Page Name',
             'title'   => 'Title',
             'subtitle'   => 'Sub Title',

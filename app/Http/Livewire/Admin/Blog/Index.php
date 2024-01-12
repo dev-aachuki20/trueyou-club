@@ -51,7 +51,7 @@ class Index extends Component
             'title'        => 'required',
             'publish_date' => 'required',
             'content'      => 'required|strip_tags',
-            'status'       => 'required',
+            // 'status'       => 'required',
             'image'        => 'nullable|image|max:'.config('constants.img_max_size'),
         ],[
             'content.strip_tags'=> 'The content field is required',
@@ -62,7 +62,7 @@ class Index extends Component
 
             $validatedData['publish_date']   = Carbon::parse($this->publish_date)->format('Y-m-d');
           
-            $validatedData['status'] = $this->status;
+            // $validatedData['status'] = $this->status;
     
             $blog = Blog::create($validatedData);
     
@@ -101,7 +101,7 @@ class Index extends Component
         $this->title           =  $blog->title;
         $this->publish_date    =  Carbon::parse($blog->publish_date)->format('d-m-Y');
         $this->content         =  $blog->content;
-        $this->status          =  $blog->status;
+        // $this->status          =  $blog->status;
         $this->originalImage   =  $blog->image_url;
 
     }
@@ -111,7 +111,7 @@ class Index extends Component
         $rules['title']        = 'required';
         $rules['publish_date'] = 'required';
         $rules['content']      = 'required|strip_tags';
-        $rules['status']       = 'required';
+        // $rules['status']       = 'required';
 
         if($this->image){
             $rules['image'] = 'nullable|image|max:'.config('constants.img_max_size');
@@ -122,7 +122,7 @@ class Index extends Component
         ]);
 
         $validatedData['publish_date']   = Carbon::parse($this->publish_date)->format('Y-m-d');
-        $validatedData['status'] = $this->status;
+        // $validatedData['status'] = $this->status;
 
         DB::beginTransaction();
         try{

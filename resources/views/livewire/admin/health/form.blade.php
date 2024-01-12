@@ -50,7 +50,7 @@
                 @error('publish_date') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
-        <div class="col-md-6">
+        {{--<div class="col-md-6">
             <div class="form-group">
                 <label class="font-weight-bold">{{__('global.status')}}</label>
                 <div class="form-group">
@@ -61,7 +61,7 @@
                 </div>
                 @error('state.status') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
-        </div>
+        </div>--}}
     </div>
 
     <button type="submit" wire:loading.attr="disabled" class="btn btn-primary mr-2">
