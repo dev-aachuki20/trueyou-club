@@ -24,7 +24,7 @@
                     </th>
 
                     <th class="text-gray-500 text-xs">
-                        @lang('global.status')
+                        Want A Break ?
                         <span wire:click="sortBy('is_active')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'is_active' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
                             <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'is_active' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>

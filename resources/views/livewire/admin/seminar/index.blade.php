@@ -81,19 +81,7 @@
             picker.container.find(".calendar-table").hide();
         });
 
-        $('input[id="start_date"]').daterangepicker({
-                autoApply: true,
-                singleDatePicker: true,
-                showDropdowns: true,
-                minDate: new Date(),
-                locale: {
-                    format: 'DD-MM-YYYY'
-                },
-            },
-            function(start, end, label) {
-                @this.set('start_date', start.format('YYYY-MM-DD'));
-            });
-
+       
         $('input[id="end_time"]').daterangepicker({
             autoApply: true,
             timePicker: true,

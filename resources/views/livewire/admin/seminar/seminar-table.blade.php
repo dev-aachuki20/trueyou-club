@@ -1,8 +1,8 @@
 <div>
     @include('admin.partials.table-show-entries-search-box',['searchBoxPlaceholder'=>$searchBoxPlaceholder])
 
-    <div class="webinar_listing">
-        <div class="row">
+    <div class="webinar_listing seminar-tab-list">
+        <ul class="row-list">
             @if($allSeminar->count() > 0)
             @foreach($allSeminar as $serialNo => $seminar)
             @php
@@ -10,7 +10,7 @@
             $time = $seminar->start_time;
             $dateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date . ' ' . $time);
 
-            $endDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $seminar->end_date . ' ' . $seminar->end_time);
+            $endDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s',  $date . ' ' .$seminar->end_time);
 
             $now = now();
             $startSeminarTime = \Carbon\Carbon::parse($dateTime);
@@ -29,7 +29,7 @@
                 $startSeconds = $timeDiff->s;
                 }
                 @endphp
-                <div class="col-12 col-md-6">
+                <li class="col-list">
                     <div class="webinar-item {{ $endDateTime < $now ? 'webinar-disabled' : '' }} {{ $diffInSeconds > 0 ? 'webinar-item-active' : '' }}" data-diff_in_seconds="{{ $diffInSeconds }}">
                         <div class="webinar-item-inner seminar-wrapper">
 
@@ -62,7 +62,7 @@
                                         <path d="M3.62549 1.41675V3.25008" stroke="#878787" stroke-linecap="round" stroke-linejoin="round"></path>
                                         <path d="M1.3335 5.08337H9.5835" stroke="#878787" stroke-linecap="round" stroke-linejoin="round"></path>
                                     </svg>
-                                    {{ convertDateTimeFormat($seminar->start_date.' '.$seminar->start_time,'fulldatetime') }}
+                                    {{ convertDateTimeFormat($seminar->start_date.' '.$seminar->start_time,'fulldatetime') }} - {{ \Carbon\Carbon::parse($seminar->end_time)->format('h:i A') }}
                                 </span>
 
                                 {{-- <a href="{{ $seminar->meeting_link }}" class="btn btn-primary joinBtn">
@@ -139,12 +139,15 @@
                         </ul>
                     </div>
                 </div>
-        </div>
+            </li>
         @endforeach
-        @else
-        @include('admin.partials.no-record-found')
+        
         @endif
-    </div>
+            </ul>
+
+            @if(!($allSeminar->count() > 0))
+            @include('admin.partials.no-record-found')
+            @endif
     {{ $allSeminar->links('vendor.pagination.custom-pagination') }}
 </div>
 

@@ -11,7 +11,7 @@
                         $time = $webinar->start_time; 
                         $dateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date . ' ' . $time);
                     
-                        $endDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $webinar->end_date . ' ' . $webinar->end_time);
+                        $endDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date .' '.$webinar->end_time);
 
                         $now = now();
                         $startWebinarTime = \Carbon\Carbon::parse($dateTime);
@@ -61,7 +61,7 @@
                                             <path d="M12 17.5625H6C3.2625 17.5625 1.6875 15.9875 1.6875 13.25V6.875C1.6875 4.1375 3.2625 2.5625 6 2.5625H12C14.7375 2.5625 16.3125 4.1375 16.3125 6.875V13.25C16.3125 15.9875 14.7375 17.5625 12 17.5625ZM6 3.6875C3.855 3.6875 2.8125 4.73 2.8125 6.875V13.25C2.8125 15.395 3.855 16.4375 6 16.4375H12C14.145 16.4375 15.1875 15.395 15.1875 13.25V6.875C15.1875 4.73 14.145 3.6875 12 3.6875H6Z" fill="#DA7821"/>
                                         </svg>
                                         <span>
-                                            {{ convertDateTimeFormat($webinar->start_date.' '.$webinar->start_time,'fulldatetime') }}
+                                            {{ convertDateTimeFormat($webinar->start_date.' '.$webinar->start_time,'fulldatetime') }} - {{ \Carbon\Carbon::parse($webinar->end_time)->format('h:i A') }}
                                         </span>
                                     </div>
                                     <a href="{{ $endDateTime < $now ? 'javascript:void(0)' : $webinar->meeting_link }}" class="btn btn-primary joinBtn {{ $diffInSeconds != 0 ? 'd-none' : '' }}">

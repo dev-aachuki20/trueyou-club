@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\User\CommanController;
 use App\Http\Controllers\Api\User\TwilioController;
 use App\Http\Controllers\Api\User\PaymentController;
 use App\Http\Controllers\Api\User\StripeWebhookController;
+use App\Http\Controllers\Api\User\SeminarController;
 
 
 
@@ -26,7 +27,7 @@ use App\Http\Controllers\Api\User\StripeWebhookController;
 |
 */
 
-Route::controller(LoginRegisterController::class)->group(function(){
+Route::controller(LoginRegisterController::class)->group(function () {
 
     Route::post('register', 'register');
 
@@ -41,22 +42,20 @@ Route::controller(LoginRegisterController::class)->group(function(){
     Route::post('verify-set-password', 'verifyBuyerEmailAndSetPassword');
 
     Route::get('get-email/{id}', 'getEmail');
-    
 });
 
-Route::controller(SocialMediaController::class)->group(function(){
+Route::controller(SocialMediaController::class)->group(function () {
 
     Route::post('handle-google', 'handleGoogle');
 
     Route::post('handle-facebook', 'handleFacebook');
-
 });
 
 
-Route::group(['middleware' => ['api','auth:sanctum']],function () { 
+Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
 
     Route::post('logout', [LogoutController::class, 'logout']);
-    
+
     Route::get('user-details', [ProfileController::class, 'userDetails']);
 
     Route::post('update-profile', [ProfileController::class, 'updateProfile']);
@@ -69,12 +68,11 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     // Route::post('send-sms', [TwilioController::class, 'sendSms']);
 
- 
+
     // Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
 
     // Route::post('/checkout-success', [PaymentController::class, 'checkoutSuccess']);
-
-
+    Route::get('/get-all-seminars', [SeminarController::class, 'getAllSeminar']);
 });
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleStripeWebhook']);

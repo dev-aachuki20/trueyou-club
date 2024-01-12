@@ -63,7 +63,7 @@ return [
         'title_singular'        => 'Webinar',
         'fields' => [
             'title'   => 'Title',
-            'start_date'    => 'Start Date',
+            'start_date'    => 'Webinar Date',
             'start_time'    => 'Start Time',
             'end_date'      => 'End Date',
             'end_time'      => 'End Time',
@@ -109,7 +109,7 @@ return [
         'fields' => [
             'title'         => 'Title',
             'total_ticket'  => 'Total Ticket',
-            'start_date'    => 'Start Date',
+            'start_date'    => 'Seminar Date',
             'start_time'    => 'Start Time',
             'end_date'      => 'End Date',
             'end_time'      => 'End Time',

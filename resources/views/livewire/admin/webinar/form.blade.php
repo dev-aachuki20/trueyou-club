@@ -16,7 +16,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.webinar.fields.start_date')}}<i class="fas fa-asterisk"></i></label>
                 <input type="text" id="start_date" class="form-control" wire:model.defer="start_date" placeholder="{{ __('cruds.webinar.fields.start_date')}}" autocomplete="off" readonly="true">
@@ -24,16 +24,23 @@
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.webinar.fields.start_time')}}<i class="fas fa-asterisk"></i></label>
                 <input type="text" id="start_time" class="form-control" wire:model.defer="start_time" placeholder="{{ __('cruds.webinar.fields.start_time')}}" autocomplete="off" readonly="true">
                 @error('time') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="font-weight-bold justify-content-start">{{ __('cruds.webinar.fields.end_time')}}<i class="fas fa-asterisk"></i></label>
+                <input type="text" id="end_time" class="form-control" wire:model.defer="end_time" placeholder="{{ __('cruds.webinar.fields.end_time')}}" autocomplete="off" readonly="true">
+                @error('end_time') <span class="error text-danger">{{ $message }}</span>@enderror
+            </div>
+        </div>
     </div>
 
-    <div class="row">
+   {{-- <div class="row">
         <div class="col-md-6">
             <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.webinar.fields.end_date')}}<i class="fas fa-asterisk"></i></label>
@@ -49,7 +56,7 @@
                 @error('end_time') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
-    </div>
+    </div>--}}
 
 
     <div class="row">

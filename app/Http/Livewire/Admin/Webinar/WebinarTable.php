@@ -15,7 +15,7 @@ class WebinarTable extends Component
 
     public $search = null;
 
-    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder="Search By Title, Start Datetime";
+    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder="Search By Title, Date";
 
     protected $listeners = [
         'refreshTable' => 'render',
@@ -53,17 +53,18 @@ class WebinarTable extends Component
     {
         $statusSearch = null;
         $searchValue = $this->search;
-        if (Str::contains('active', strtolower($searchValue))) {
-            $statusSearch = 1;
-        } else if (Str::contains('inactive', strtolower($searchValue))) {
-            $statusSearch = 0;
-        }
+        // if (Str::contains('active', strtolower($searchValue))) {
+        //     $statusSearch = 1;
+        // } else if (Str::contains('inactive', strtolower($searchValue))) {
+        //     $statusSearch = 0;
+        // }
 
+        
         $allWebinar = Webinar::query()->where(function ($query) use ($searchValue, $statusSearch) {
             $query->where('title', 'like', '%' . $searchValue . '%')
-            ->orWhereRaw("DATE_FORMAT(start_date,  '" . config('constants.search_full_date_format') . "') = ?", [date(config('constants.full_date_format'), strtotime($searchValue))])
-            ->orWhereRaw("DATE_FORMAT(start_time,  '" . config('constants.search_full_time_format') . "') = ?", [date(config('constants.full_time_format'), strtotime($searchValue))]);
-                // ->orWhereRaw("DATE_FORMAT(CONCAT(start_date, ' ', start_time),  '" . config('constants.search_full_datetime_format') . "') = ?", [date(config('constants.full_datetime_format'), strtotime($searchValue))]);
+            ->orWhereRaw("DATE_FORMAT(start_date,  '" . config('constants.search_full_date_format') . "') = ?", [date(config('constants.full_date_format'), strtotime($searchValue))]);
+            // ->orWhereRaw("DATE_FORMAT(start_time,  '" . config('constants.search_full_time_format') . "') = ?", [date(config('constants.full_time_format'), strtotime($searchValue))])
+            // ->orWhereRaw("DATE_FORMAT(end_time,  '" . config('constants.search_full_time_format') . "') = ?", [date(config('constants.full_time_format'), strtotime($searchValue))]);
         })
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);

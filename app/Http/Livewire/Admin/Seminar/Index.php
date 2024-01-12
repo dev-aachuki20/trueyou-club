@@ -19,7 +19,7 @@ class Index extends Component
 
     public $search = '', $formMode = false, $updateMode = false, $viewMode = false;
 
-    public $seminar_id = null, $title, $total_ticket,  $start_date = null, $start_time = null, $end_date = null, $end_time = null,  $venue, $image, $originalImage, $status = 1;
+    public $seminar_id = null, $title, $total_ticket,  $start_date = null, $start_time = null,  $end_time = null,  $venue, $image, $originalImage, $status = 1;
 
     public $removeImage = false;
 
@@ -33,14 +33,12 @@ class Index extends Component
 
         $this->start_date = Carbon::now()->format('d-m-Y');
         $this->start_time = Carbon::now()->format('h:i A');
-        $this->end_date = Carbon::now()->format('d-m-Y');
         $this->end_time = Carbon::now()->format('h:i A');
     }
 
     public function updatedStartDate()
     {
         $this->start_date = Carbon::parse($this->start_date)->format('d-m-Y');
-        $this->end_date = Carbon::parse($this->start_date)->format('d-m-Y');
     }
 
     public function updatedStartTime()
@@ -49,10 +47,6 @@ class Index extends Component
         $this->end_time = Carbon::parse($this->start_time)->format('h:i A');
     }
 
-    public function updatedEndDate()
-    {
-        $this->end_date = Carbon::parse($this->end_date)->format('d-m-Y');
-    }
 
     public function updatedEndTime()
     {
@@ -77,20 +71,12 @@ class Index extends Component
             'total_ticket' => 'required|integer|min:0',
             'start_date'   => 'required|date',
             'start_time'   => 'required|date_format:h:i A',
-            'end_date'     => 'required|date|after_or_equal:start_date',
             'end_time'     => 'required|date_format:h:i A|after:start_time',
             'venue'        => 'required',
             // 'status'       => 'required',
             'image'        => 'nullable|image|max:' . config('constants.img_max_size'),
         ];
         
-        $endDate = Carbon::parse($this->end_date)->format('Y-m-d');
-
-        // Check if end_date is today
-        if ($endDate == now()->toDateString()) {
-            // If it is today, add the 'after:start_time' rule to end_time
-            $rules['end_time'] .= '|after:start_time';
-        }
 
         $validatedData = $this->validate($rules,
             [
@@ -101,7 +87,6 @@ class Index extends Component
         $validatedData['start_date']   = Carbon::parse($this->start_date)->format('Y-m-d');
         $validatedData['start_time']   = Carbon::parse($this->start_time)->format('H:i');
 
-        $validatedData['end_date']   = $endDate;
         $validatedData['end_time']   = Carbon::parse($this->end_time)->format('H:i');
 
         $validatedData['status'] = $this->status;
@@ -135,7 +120,6 @@ class Index extends Component
         $this->total_ticket    =  $seminar->total_ticket;
         $this->start_date      =  Carbon::parse($seminar->start_date)->format('d-m-Y');
         $this->start_time      =  Carbon::parse($seminar->start_time)->format('h:i A');
-        $this->end_date        =  Carbon::parse($seminar->end_date)->format('d-m-Y');
         $this->end_time        =  Carbon::parse($seminar->end_time)->format('h:i A');
         $this->venue           =  $seminar->venue;
         // $this->status          =  $seminar->status;
@@ -150,8 +134,7 @@ class Index extends Component
 
         $validatedArray['start_date']   = 'required|date';
         $validatedArray['start_time']   = 'required|date_format:h:i A';
-        $validatedArray['end_date']     = 'required|date|after_or_equal:start_date';
-        $validatedArray['end_time']     = 'required|date_format:h:i A';
+        $validatedArray['end_time']     = 'required|date_format:h:i A|after:start_time';
         $validatedArray['venue']        = 'required';
         // $validatedArray['status']       = 'required';
 
@@ -159,13 +142,6 @@ class Index extends Component
             $validatedArray['image'] = 'nullable|image|max:' . config('constants.img_max_size');
         }
 
-        $endDate = Carbon::parse($this->end_date)->format('Y-m-d');
-
-        // Check if end_date is today
-        if ($endDate == now()->toDateString()) {
-            // If it is today, add the 'after:start_time' rule to end_time
-            $validatedArray['end_time'] .= '|after:start_time';
-        }
 
         $validatedData = $this->validate($validatedArray, [
             'end_time.after' => 'The end time must be a time after the start time.',
@@ -177,7 +153,6 @@ class Index extends Component
         $validatedData['start_date']   = Carbon::parse($this->start_date)->format('Y-m-d');
         $validatedData['start_time']   = Carbon::parse($this->start_time)->format('H:i');
 
-        $validatedData['end_date']   = $endDate;
         $validatedData['end_time']   = Carbon::parse($this->end_time)->format('H:i');
 
         // $validatedData['status'] = $this->status;

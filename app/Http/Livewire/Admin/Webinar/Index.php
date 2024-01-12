@@ -20,7 +20,7 @@ class Index extends Component
 
     public $search = '', $formMode = false , $updateMode = false, $viewMode = false;
 
-    public $webinar_id=null, $title,  $start_date = null, $start_time=null, $end_date = null, $end_time = null, $meeting_link, $image, $originalImage, $status=1;
+    public $webinar_id=null, $title,  $start_date = null, $start_time=null,  $end_time = null, $meeting_link, $image, $originalImage, $status=1;
 
     public $removeImage = false, $showJoinBtn = false;
 
@@ -33,24 +33,18 @@ class Index extends Component
 
         $this->start_date = Carbon::now()->format('d-m-Y');
         $this->start_time = Carbon::now()->format('h:i A');
-        $this->end_date = Carbon::now()->format('d-m-Y');
         $this->end_time = Carbon::now()->format('h:i A');
     }
 
     public function updatedStartDate(){
         $this->start_date = Carbon::parse($this->start_date)->format('d-m-Y');
-        $this->end_date = Carbon::parse($this->start_date)->format('d-m-Y');
     }
 
     public function updatedStartTime(){
         $this->start_time = Carbon::parse($this->start_time)->format('h:i A');
         $this->end_time = Carbon::parse($this->start_time)->format('h:i A');
-
     }
 
-    public function updatedEndDate(){
-        $this->end_date = Carbon::parse($this->end_date)->format('d-m-Y');
-    }
 
     public function updatedEndTime(){
         $this->end_time = Carbon::parse($this->end_time)->format('h:i A');
@@ -73,20 +67,12 @@ class Index extends Component
             'title'        => 'required',
             'start_date'   => 'required|date',
             'start_time'   => 'required|date_format:h:i A',
-            'end_date'     => 'required|date|after_or_equal:start_date',
-            'end_time'     => 'required|date_format:h:i A',
+            'end_time'     => 'required|date_format:h:i A|after:start_time',
             'meeting_link' => 'required|url',
             // 'status'      => 'required',
             'image'       => 'nullable|image|max:'.config('constants.img_max_size'),
         ];
         
-        $endDate = Carbon::parse($this->end_date)->format('Y-m-d');
-
-        // Check if end_date is today
-        if ($endDate == now()->toDateString()) {
-            // If it is today, add the 'after:start_time' rule to end_time
-            $rules['end_time'] .= '|after:start_time';
-        }
 
         $validatedData = $this->validate($rules,[
             'meeting_link.strip_tags'=> 'The meeting link field is required',
@@ -96,8 +82,6 @@ class Index extends Component
 
         $validatedData['start_date']   = Carbon::parse($this->start_date)->format('Y-m-d');
         $validatedData['start_time']   = Carbon::parse($this->start_time)->format('H:i');
-
-        $validatedData['end_date']   = $endDate;
         $validatedData['end_time']   = Carbon::parse($this->end_time)->format('H:i');
 
         // $validatedData['status'] = $this->status;
@@ -129,7 +113,6 @@ class Index extends Component
         $this->title           =  $webinar->title;
         $this->start_date      =  Carbon::parse($webinar->start_date)->format('d-m-Y');
         $this->start_time      =  Carbon::parse($webinar->start_time)->format('h:i A');
-        $this->end_date        =  Carbon::parse($webinar->end_date)->format('d-m-Y');
         $this->end_time        =  Carbon::parse($webinar->end_time)->format('h:i A');
         $this->meeting_link    =  $webinar->meeting_link;
         $this->status          =  $webinar->status;
@@ -142,8 +125,7 @@ class Index extends Component
         $rules['title']        = 'required';
         $rules['start_date']   = 'required|date';
         $rules['start_time']   = 'required|date_format:h:i A';
-        $rules['end_date']     = 'required|date|after_or_equal:start_date';
-        $rules['end_time']     = 'required|date_format:h:i A';
+        $rules['end_time']     = 'required|date_format:h:i A|after:start_time';
         $rules['meeting_link'] = 'required|url';
         // $validatedArray['status']       = 'required';
 
@@ -151,13 +133,6 @@ class Index extends Component
             $rules['image'] = 'nullable|image|max:'.config('constants.img_max_size');
         }
 
-        $endDate = Carbon::parse($this->end_date)->format('Y-m-d');
-
-        // Check if end_date is today
-        if ($endDate == now()->toDateString()) {
-            // If it is today, add the 'after:start_time' rule to end_time
-            $rules['end_time'] .= '|after:start_time';
-        }
 
         $validatedData = $this->validate($rules,[
             'meeting_link.strip_tags'=> 'The meeting link field is required',
@@ -167,7 +142,6 @@ class Index extends Component
         $validatedData['start_date']   = Carbon::parse($this->start_date)->format('Y-m-d');
         $validatedData['start_time']   = Carbon::parse($this->start_time)->format('H:i');
 
-        $validatedData['end_date']   = $endDate;
         $validatedData['end_time']   = Carbon::parse($this->end_time)->format('H:i');
 
         // $validatedData['status'] = $this->status;

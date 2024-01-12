@@ -109,14 +109,14 @@ class LoginRegisterController extends Controller
                     return response()->json($responseData, 401);
                 }
 
-                if(!$checkUserStatus->is_active && $checkUserStatus->is_user){
-                    //Error Response Send
-                    $responseData = [
-                        'status'        => false,
-                        'error'         => 'Your account has been blocked!',
-                    ];
-                    return response()->json($responseData, 401);
-                }
+                // if(!$checkUserStatus->is_active && $checkUserStatus->is_user){
+                //     //Error Response Send
+                //     $responseData = [
+                //         'status'        => false,
+                //         'error'         => 'Your account has been blocked!',
+                //     ];
+                //     return response()->json($responseData, 401);
+                // }
 
                 if($checkUserStatus->is_buyer && is_null($checkUserStatus->email_verified_at)){
 
@@ -147,7 +147,7 @@ class LoginRegisterController extends Controller
                     return response()->json($responseData, 401);
                 }
 
-                $accessToken = $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
+                $accessToken = $user->createToken(env('APP_NAME', 'trueyouclub'))->plainTextToken;
 
                 DB::commit();
 
@@ -224,14 +224,14 @@ class LoginRegisterController extends Controller
                 return response()->json($responseData, 401);
             }
 
-            if(!$user->is_active){
-                //Error Response Send
-                $responseData = [
-                    'status'        => false,
-                    'error'         => 'Your account has been blocked!',
-                ];
-                return response()->json($responseData, 401);
-            }
+            // if(!$user->is_active){
+            //     //Error Response Send
+            //     $responseData = [
+            //         'status'        => false,
+            //         'error'         => 'Your account has been blocked!',
+            //     ];
+            //     return response()->json($responseData, 401);
+            // }
 
             $userDetails = array();
             $userDetails['name'] = ucwords($user->first_name.' '.$user->last_name);

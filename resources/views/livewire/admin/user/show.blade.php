@@ -26,13 +26,13 @@
 
 
     <div class="form-group row">
-        <label class="col-sm-2 col-form-label font-weight-bold">@lang('global.status')</label>
+        <label class="col-sm-2 col-form-label font-weight-bold">Want A Break ?</label>
         <div class="col-sm-9 col-form-label">
 
             @if($detail->is_active)
-            <div class="badge badge-success">@lang('global.active')</div>
+            <div class="badge badge-success">Continue</div>
             @else
-            <div class="badge badge-danger">@lang('global.inactive')</div>
+            <div class="badge badge-danger">Break</div>
             @endif
 
         </div>

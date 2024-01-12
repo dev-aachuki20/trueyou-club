@@ -1,7 +1,7 @@
 .toggle-switch {
     position: relative;
     display: inline-block;
-    width: 80px;
+    width: 90px;
     height: 24px;
     margin-bottom: 0;
 }
@@ -23,7 +23,7 @@
   content: "";
   height: 16px;
   width: 16px;
-  left: 4px;
+  left: 13px;
   bottom: 4px;
   background-color: white;
   -webkit-transition: .4s;
@@ -47,7 +47,7 @@ input:checked + .switch-slider:before {
 
 /*------ ADDED CSS ---------*/
 .switch-slider:after {
- content: 'Inactive';
+ content: 'Break';
  color: white;
  display: block;
  position: absolute;
@@ -59,7 +59,7 @@ input:checked + .switch-slider:before {
 }
 
 input:checked + .switch-slider:after {  
-  content: 'Active';
+  content: 'Continue';
   left: 40%;
 }
 /*--------- END --------*/
@@ -1236,6 +1236,7 @@ body .datepicker .datepicker-years .table-condensed{
     border-radius: 10px;
     background:  #F5F7F9;
     min-width: 55px;
+    height: 55px;
 }
 .time-item b{
     font-size: 16px;
@@ -1698,7 +1699,7 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
 .show-btn-box.mt-5 {
     margin-top: 6rem !important;
 }
-
+/*
 .seminar-wrapper>.webinar-img{
     width: 160px;
     height: 110px;
@@ -1706,15 +1707,19 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
 .seminar-wrapper>.webinar-img>img{
     height: 110px;
 }
-
+*/
 .seminar-wrapper .webinar-content {
     width: 100%;
-    display: flex;
+    /* display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
+    flex-direction: column;
     row-gap: 20px;
-    column-gap: 10px;
+    column-gap: 10px; */
+}
+
+.seminar-wrapper .webinar-content .book-seats {
+    margin-top: 1.3rem;
 }
 
 .book-seats span{
@@ -1764,10 +1769,27 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
     gap: 10px;
 }
 
+.seminar-tab-list .row-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 30px;
+    column-gap: 25px;
+    padding-left: 0;
+}
+
+.seminar-tab-list .row-list .webinar-item {
+    margin: 0;
+    height: 100%;
+}
+
 @media(max-width:1440px){
     .webinar_listing .row .col-12.col-md-6 {
         max-width: 100%;
         flex: 0 0 100%;
+    }
+
+    .seminar-tab-list .row-list{
+        grid-template-columns: 1fr;
     }
 }
 
@@ -1812,7 +1834,7 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
     .btn.joinBtn,
     .btn-primary,
     .btn-secondary{
-        padding: 10px 20px !important;
+        padding: 10px 15px !important;
         font-size: 14px !important;
     }
 }
