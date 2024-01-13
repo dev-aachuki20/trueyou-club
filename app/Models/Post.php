@@ -119,8 +119,12 @@ class Post extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    // public function getEncryptSlugAttribute()
-    // {
-    //     return Str::slug($this->title) . '-' . encrypt($this->getAttribute('id'));
-    // }
+    public function getEncryptSlugAttribute()
+    {
+        // return Str::slug($this->title) . '-' . encrypt($this->getAttribute('id'));
+
+        return Str::slug($this->title) . '-' . hash('sha256', $this->getAttribute('id'));
+        
+    }
+    
 }

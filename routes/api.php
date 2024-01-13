@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\User\TwilioController;
 use App\Http\Controllers\Api\User\PaymentController;
 use App\Http\Controllers\Api\User\StripeWebhookController;
 use App\Http\Controllers\Api\User\SeminarController;
+use App\Http\Controllers\Api\User\WebinarController;
+use App\Http\Controllers\Api\User\PostController;
 
 
 
@@ -72,7 +74,16 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
     // Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
 
     // Route::post('/checkout-success', [PaymentController::class, 'checkoutSuccess']);
+
+    Route::get('/get-all-webinars', [WebinarController::class, 'index']);
+
 });
-Route::get('/get-all-seminars', [SeminarController::class, 'getAllSeminar']);
+
+Route::get('/get-all-seminars', [SeminarController::class, 'index']);
+
+Route::get('/get-posts/{postType}', [PostController::class, 'index']);
+Route::get('/post/{slug}', [PostController::class, 'show']);
+
+
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleStripeWebhook']);

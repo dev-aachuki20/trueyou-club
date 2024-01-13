@@ -3,18 +3,18 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\Seminar;
+use App\Models\Webinar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
-class SeminarController extends Controller
+class WebinarController extends Controller
 {
     public function index()
     {
 
         try {
-            $getAllRecords = Seminar::paginate(10);
-            
+            $getAllRecords = Webinar::paginate(1);
+
             if ($getAllRecords->count() > 0) {
 
                 foreach($getAllRecords as $record){
@@ -36,6 +36,7 @@ class SeminarController extends Controller
             }
         } catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());
+
             $responseData = [
                 'status'  => false,
                 'error'   => trans('messages.error_message'),

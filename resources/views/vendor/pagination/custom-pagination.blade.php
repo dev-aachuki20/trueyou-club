@@ -1,7 +1,7 @@
 @if ($paginator->hasPages())
-<div class="max-w-screen bg-white  rounded-b-lg  border-4 border-t-0 border-b-0  border-transparent ">
-  <div class="items-center justify-between p-2 sm:flex">
-      <div class="flex justify-end text-gray-600">
+<div class="max-w-screen bg-white pagination-wrapper  rounded-b-lg  border-4 border-t-0 border-b-0  border-transparent ">
+  <div class="items-center justify-between sm:flex">
+      <div class="flex justify-start text-gray-600">
           Showing {{ $paginator->firstItem() }} to {{ $paginator->lastItem() }} of {{ $paginator->total() }} entries
       </div>
 

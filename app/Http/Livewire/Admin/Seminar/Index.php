@@ -70,20 +70,24 @@ class Index extends Component
             'total_ticket' => 'required|integer|min:0',
             'start_date'   => 'required|date',
             'start_time'   => 'required|date_format:h:i A',
-            'end_time'     => 'required|date_format:h:i A|after:start_time',
+            'end_time'     => 'required|date_format:h:i A',
             'venue'        => 'required',
             // 'status'       => 'required',
             'image'        => 'nullable|image|max:' . config('constants.img_max_size'),
         ];
         
-        $startDate = Carbon::parse($this->start_date);
-        $currentDate = Carbon::now();
+        $starDateTime = Carbon::parse($this->start_date.' '.$this->start_time);
+        $endDateTime = Carbon::parse($this->start_date.' '.$this->end_time);
+        $currentDateTime = Carbon::now();
 
-        if ($startDate->isSameDay($currentDate)) {
-            $startTime = Carbon::parse($this->start_time);
-            if (!$startTime->gt($currentDate)) {
-                $rules['start_time'] .='|after:now';
-            }
+        // Check if start time is greater than current time
+        if ($starDateTime->lt($currentDateTime)) {
+            $rules['start_time'] = '|after:now';
+        }
+
+        // Check if end time is greater than start time
+        if ($endDateTime->lt($starDateTime)) {
+            $rules['end_time'] = '|after:start_time';
         }
 
         $validatedData = $this->validate($rules,
@@ -142,7 +146,7 @@ class Index extends Component
 
         $validatedArray['start_date']   = 'required|date';
         $validatedArray['start_time']   = 'required|date_format:h:i A';
-        $validatedArray['end_time']     = 'required|date_format:h:i A|after:start_time';
+        $validatedArray['end_time']     = 'required|date_format:h:i A';
         $validatedArray['venue']        = 'required';
         // $validatedArray['status']       = 'required';
 
@@ -150,14 +154,18 @@ class Index extends Component
             $validatedArray['image'] = 'nullable|image|max:' . config('constants.img_max_size');
         }
 
-        $startDate = Carbon::parse($this->start_date);
-        $currentDate = Carbon::now();
+        $starDateTime = Carbon::parse($this->start_date.' '.$this->start_time);
+        $endDateTime = Carbon::parse($this->start_date.' '.$this->end_time);
+        $currentDateTime = Carbon::now();
 
-        if ($startDate->isSameDay($currentDate)) {
-            $startTime = Carbon::parse($this->start_time);
-            if (!$startTime->gt($currentDate)) {
-                $validatedArray['start_time'] .='|after:now';
-            }
+        // Check if start time is greater than current time
+        if ($starDateTime->lt($currentDateTime)) {
+            $validatedArray['start_time'] = '|after:now';
+        }
+
+        // Check if end time is greater than start time
+        if ($endDateTime->lt($starDateTime)) {
+            $validatedArray['end_time'] = '|after:start_time';
         }
 
         $validatedData = $this->validate($validatedArray, [
