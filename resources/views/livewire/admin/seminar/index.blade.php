@@ -58,6 +58,20 @@
 <script type="text/javascript">
     document.addEventListener('loadPlugins', function(event) {
 
+        
+        $('input[id="start_date"]').daterangepicker({
+                autoApply: true,
+                singleDatePicker: true,
+                showDropdowns: true,
+                minDate: new Date(),
+                locale: {
+                    format: 'DD-MM-YYYY'
+                },
+            },
+            function(start, end, label) {
+                @this.set('start_date', start.format('YYYY-MM-DD'));
+        });
+
         $('input[id="start_time"]').daterangepicker({
             autoApply: true,
             timePicker: true,
@@ -105,18 +119,6 @@
             picker.container.find(".calendar-table").hide();
         });
 
-        $('input[id="end_date"]').daterangepicker({
-                autoApply: true,
-                singleDatePicker: true,
-                showDropdowns: true,
-                minDate: new Date(),
-                locale: {
-                    format: 'DD-MM-YYYY'
-                },
-            },
-            function(start, end, label) {
-                @this.set('end_date', start.format('YYYY-MM-DD'));
-            });
 
         $('.dropify').dropify();
         $('.dropify-errors-container').remove();

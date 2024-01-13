@@ -72,7 +72,7 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
     // Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
 
     // Route::post('/checkout-success', [PaymentController::class, 'checkoutSuccess']);
-    Route::get('/get-all-seminars', [SeminarController::class, 'getAllSeminar']);
 });
+Route::get('/get-all-seminars', [SeminarController::class, 'getAllSeminar']);
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleStripeWebhook']);

@@ -13,16 +13,11 @@ class SeminarController extends Controller
     {
 
         try {
-            $getAllSeminar = Seminar::all();
-
-            // where('start_date', '>', Carbon::now())
-            // ->orderBy('start_date', 'asc')
-            // ->get()
+            $getAllSeminar = Seminar::paginate(10);
 
             if ($getAllSeminar->count() > 0) {
                 $responseData = [
                     'status'  => true,
-                    'message' => 'All Seminar',
                     'data'    => $getAllSeminar,
                 ];
                 return response()->json($responseData, 200);
@@ -35,11 +30,10 @@ class SeminarController extends Controller
             }
         } catch (\Exception $e) {
             $responseData = [
-                'status'  => 500,
-                'message' => 'Internal Server Error',
-                'error'   => $e->getMessage(),
+                'status'  => false,
+                'error'   => trans('messages.error_message'),
             ];
-            return response()->json($responseData, 500);
+            return response()->json($responseData, 402);
         }
     }
 }

@@ -52,9 +52,9 @@ class ProfileController extends Controller
             $validatedData['confirm_password'] = ['required','min:8','same:new_password'];
         }
        
-        if(!auth()->user()->email){
-            $validatedData['email']  = ['required', 'string', 'email', 'max:255', Rule::unique((new User)->getTable(), 'email')->ignore($userId)->whereNull('deleted_at')];
-        }
+        // if(!auth()->user()->email){
+        //     $validatedData['email']  = ['required', 'string', 'email', 'max:255', Rule::unique((new User)->getTable(), 'email')->ignore($userId)->whereNull('deleted_at')];
+        // }
 
         if($request->hasFile('profile_image')){
             $validatedData['profile_image'] = ['image','mimes:jpeg,jpg,png','max:'.config('constants.profile_image_size')];
@@ -73,9 +73,9 @@ class ProfileController extends Controller
                 'phone' => $request->phone,
             ];
 
-            if($request->email){
-                $updateRecords['email'] = $request->email;
-            }
+            // if($request->email){
+            //     $updateRecords['email'] = $request->email;
+            // }
 
             if($request->new_password){
                 $updateRecords['password'] = Hash::make($request->new_password);

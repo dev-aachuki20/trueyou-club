@@ -10,7 +10,6 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\Response;
 
-
 class Index extends Component
 {
     use  LivewireAlert, WithFileUploads;
@@ -77,6 +76,15 @@ class Index extends Component
             'image'        => 'nullable|image|max:' . config('constants.img_max_size'),
         ];
         
+        $startDate = Carbon::parse($this->start_date);
+        $currentDate = Carbon::now();
+
+        if ($startDate->isSameDay($currentDate)) {
+            $startTime = Carbon::parse($this->start_time);
+            if (!$startTime->gt($currentDate)) {
+                $rules['start_time'] .='|after:now';
+            }
+        }
 
         $validatedData = $this->validate($rules,
             [
@@ -142,6 +150,15 @@ class Index extends Component
             $validatedArray['image'] = 'nullable|image|max:' . config('constants.img_max_size');
         }
 
+        $startDate = Carbon::parse($this->start_date);
+        $currentDate = Carbon::now();
+
+        if ($startDate->isSameDay($currentDate)) {
+            $startTime = Carbon::parse($this->start_time);
+            if (!$startTime->gt($currentDate)) {
+                $validatedArray['start_time'] .='|after:now';
+            }
+        }
 
         $validatedData = $this->validate($validatedArray, [
             'end_time.after' => 'The end time must be a time after the start time.',

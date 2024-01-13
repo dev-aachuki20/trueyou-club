@@ -70,7 +70,7 @@ return [
             'meeting_link' => 'Meeting Link',
             'start_date_time'   => 'Start Datetime',
             'end_date_time'     => 'End Datetime',
-            'join_meeting'      => 'Join Meeting',
+            'join_meeting'      => 'Join The Webinar',
         ],
     ],
 

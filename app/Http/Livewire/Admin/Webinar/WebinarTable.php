@@ -61,10 +61,16 @@ class WebinarTable extends Component
 
         
         $allWebinar = Webinar::query()->where(function ($query) use ($searchValue, $statusSearch) {
+          
             $query->where('title', 'like', '%' . $searchValue . '%')
             ->orWhereRaw("DATE_FORMAT(start_date,  '" . config('constants.search_full_date_format') . "') = ?", [date(config('constants.full_date_format'), strtotime($searchValue))]);
-            // ->orWhereRaw("DATE_FORMAT(start_time,  '" . config('constants.search_full_time_format') . "') = ?", [date(config('constants.full_time_format'), strtotime($searchValue))])
-            // ->orWhereRaw("DATE_FORMAT(end_time,  '" . config('constants.search_full_time_format') . "') = ?", [date(config('constants.full_time_format'), strtotime($searchValue))]);
+
+            // Check for month name (e.g., January)
+            $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
+
+            // Check for day and month (e.g., 13 January)
+            $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%e %M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
+
         })
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);

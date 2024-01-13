@@ -73,6 +73,15 @@ class Index extends Component
             'image'       => 'nullable|image|max:'.config('constants.img_max_size'),
         ];
         
+        $startDate = Carbon::parse($this->start_date);
+        $currentDate = Carbon::now();
+
+        if ($startDate->isSameDay($currentDate)) {
+            $startTime = Carbon::parse($this->start_time);
+            if (!$startTime->gt($currentDate)) {
+                $rules['start_time'] .='|after:now';
+            }
+        }
 
         $validatedData = $this->validate($rules,[
             'meeting_link.strip_tags'=> 'The meeting link field is required',
@@ -133,6 +142,15 @@ class Index extends Component
             $rules['image'] = 'nullable|image|max:'.config('constants.img_max_size');
         }
 
+        $startDate = Carbon::parse($this->start_date);
+        $currentDate = Carbon::now();
+
+        if ($startDate->isSameDay($currentDate)) {
+            $startTime = Carbon::parse($this->start_time);
+            if (!$startTime->gt($currentDate)) {
+                $rules['start_time'] .='|after:now';
+            }
+        }
 
         $validatedData = $this->validate($rules,[
             'meeting_link.strip_tags'=> 'The meeting link field is required',
