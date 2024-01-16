@@ -36,7 +36,12 @@ class Post extends Model
     {
         parent::boot();
         static::creating(function (Post $model) {
+            $model->slug = Str::slug($model->title) . '-' . bin2hex(random_bytes(10));
             $model->created_by = auth()->user()->id;
+        });
+
+        static::updating(function (Post $model) {
+            $model->slug = Str::slug($model->title) . '-' . bin2hex(random_bytes(10));
         });
 
         static::deleting(function ($model) {
@@ -119,11 +124,11 @@ class Post extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function getEncryptSlugAttribute()
+    public function entryptedSlug()
     {
         // return Str::slug($this->title) . '-' . encrypt($this->getAttribute('id'));
 
-        return Str::slug($this->title) . '-' . hash('sha256', $this->getAttribute('id'));
+        return Str::slug($this->title) . '-' . bin2hex(random_bytes(10));
         
     }
     

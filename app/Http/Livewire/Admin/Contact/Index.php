@@ -10,6 +10,9 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Symfony\Component\HttpFoundation\Response;
+use App\Mail\ContactReplyNotification;
+use Illuminate\Support\Facades\Mail;
+
 
 class Index extends Component
 {
@@ -19,16 +22,19 @@ class Index extends Component
 
     public $contact_id = null, $first_name,  $last_name, $phone_number, $email, $message, $status = 1;
 
+    public $fullname, $reply, $reply_id;
+
     protected $listeners = [
-        'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm'
+        'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm', 'reply'
     ];
+
 
     public function mount()
     {
         abort_if(Gate::denies('contact_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
     }
 
-   
+
     public function render()
     {
         return view('livewire.admin.contact.index');
@@ -109,5 +115,46 @@ class Index extends Component
     public function changeStatus($statusVal)
     {
         $this->status = (!$statusVal) ? 1 : 0;
+    }
+
+    public function reply($id)
+    {
+        $getContactDetail = Contact::where('id', $id)->first();
+        $this->fullname     = $getContactDetail->first_name . ' ' . $getContactDetail->last_name;
+        // $this->first_name   = $getContactDetail->first_name;
+        // $this->last_name    = $getContactDetail->last_name;
+        $this->email        = $getContactDetail->email;
+        $this->reply_id     = $getContactDetail->id;
+        $this->reply        = $getContactDetail->reply;
+
+        $this->formMode     = true;
+        $this->updateMode   = true;
+    }
+
+    public function draftReply($draft_id)
+    {
+        $draftDetail = Contact::find($draft_id);
+
+        $draftDetail->update(['is_draft' => 1, 'reply' => $this->reply]);
+
+        $this->alert('success', trans('messages.message_in_draft'));
+    }
+
+    public function sendReply($id)
+    {
+        $detail = Contact::find($id);
+
+        $detail->update(['is_draft' => 0, 'reply' => $this->reply]);
+
+        // Send email notification
+        $name     = $detail->first_name . ' ' . $detail->last_name;
+        $subject  = 'Assistance with Your Inquiry';
+        $reply    = $detail->reply;
+
+        Mail::to($detail->email)->send(new ContactReplyNotification($name, $subject, $reply));
+
+        $this->alert('success', trans('messages.mail_sent'));
+
+        return redirect()->to('/admin/contacts');
     }
 }

@@ -18,14 +18,17 @@ class PostController extends Controller
 
             $postType = explode('-',$postType);
             
-            $getAllRecords = Post::select(['title','content','type','publish_date'])->whereIn('type',$postType)->paginate(10);
+            $getAllRecords = Post::whereIn('type', $postType)
+            ->select('id','title', 'slug', 'content','publish_date', 'type')
+            ->orderBy('publish_date','desc')
+            ->paginate(10);
 
             if ($getAllRecords->count() > 0) {
 
                 foreach($getAllRecords as $record){
-                    $record->slug = $record->encrypt_slug;
-                    $record->publish_date = convertDateTimeFormat($record->start_date . ' ' . $record->start_time, 'fulldate');
-                    
+                    $record->slug = $record->slug;
+                    $record->publish_date = convertDateTimeFormat($record->publish_date, 'fulldate');
+                
                     if($record->type == 'blog'){
 
                         $record->image_url = $record->blog_image_url ? $record->blog_image_url : asset(config('constants.default.no_image'));
@@ -67,15 +70,12 @@ class PostController extends Controller
 
     public function show($slug){
 
-        $hasedValue = last(explode('-',$slug));
-
-        dd($hasedValue);
         try {
-            $record = Post::select(['title','content','publish_date'])->where('id',$decryptedId)->first();
+            $record = Post::select('id','title', 'slug', 'content','publish_date', 'type')->where('slug',$slug)->first();
 
             if($record){
            
-                $record->publish_date = convertDateTimeFormat($record->start_date . ' ' . $record->start_time, 'fulldate');
+                $record->publish_date = convertDateTimeFormat($record->publish_date, 'fulldate');
                 
                 if($record->type == 'blog'){
 
@@ -93,7 +93,7 @@ class PostController extends Controller
                 
                 $responseData = [
                     'status'  => true,
-                    'data'    => $getAllRecords,
+                    'data'    => $record,
                 ];
                 return response()->json($responseData, 200);
             } else {

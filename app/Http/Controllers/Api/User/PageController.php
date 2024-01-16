@@ -3,34 +3,40 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\Webinar;
+use App\Models\Page;
+use App\Models\Uploads;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
-class WebinarController extends Controller
+class PageController extends Controller
 {
-    public function index()
+    public function getPageDetails($page_key)
     {
-
         try {
-            $getAllRecords = Webinar::paginate(10);
+            $record = Page::select('id','title', 'subtitle', 'button')->where('page_key',$page_key)->first();
 
-            if ($getAllRecords->count() > 0) {
+            if ($record) {
+               
+                $pageRecords['title'] = $record->title;
+                $pageRecords['subtitle'] = $record->subtitle;
+                $pageRecords['button'] = $record->button;
 
-                foreach($getAllRecords as $record){
-                    $record->image_url = $record->image_url ? $record->image_url : asset(config('constants.default.no_image'));
-                    $record->datetime = convertDateTimeFormat($record->start_date.' '.$record->start_time,'fulldatetime') .'-'. Carbon::parse($record->end_time)->format('h:i A');
-                }
+                $imageUrl = $record->image_url ? $record->image_url : asset(config('constants.default.no_image'));
+
+                $pageRecords['image_url'] = $imageUrl;
+               
+                // dd($record);
 
                 $responseData = [
                     'status'  => true,
-                    'data'    => $getAllRecords,
+                    'data'    => $pageRecords,
                 ];
                 return response()->json($responseData, 200);
             } else {
+
                 $responseData = [
                     'status'  => false,
-                    'message' => 'No Record Found',
+                    'data'    => $record,
                 ];
                 return response()->json($responseData, 404);
             }

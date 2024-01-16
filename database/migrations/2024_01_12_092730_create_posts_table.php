@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable();
-            $table->string('slug')->nullable();
+            $table->text('slug')->nullable();
             $table->longText('content')->nullable()->default(null);
             $table->date('publish_date')->nullable()->default(null);
             $table->enum('type', ['blog', 'news', 'health'])->nullable();

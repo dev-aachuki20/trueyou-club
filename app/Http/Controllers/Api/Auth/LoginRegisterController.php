@@ -31,7 +31,7 @@ class LoginRegisterController extends Controller
              //Error Response Send
              $responseData = [
                 'status'        => false,
-                'validation_errors' => $validator->errors(),
+                'errors' => $validator->errors(),
             ];
             return response()->json($responseData, 401);
         }
@@ -83,7 +83,7 @@ class LoginRegisterController extends Controller
             //Error Response Send
             $responseData = [
                 'status'        => false,
-                'validation_errors' => $validator->errors(),
+                'errors' => $validator->errors(),
             ];
             return response()->json($responseData, 401);
         }
@@ -97,17 +97,19 @@ class LoginRegisterController extends Controller
                 'password' => $request->password,
             ]; 
 
-            $checkUserStatus = User::where('email',$request->email)->withTrashed()->first();
+            // $checkUserStatus = User::where('email',$request->email)->withTrashed()->first();
+
+            $checkUserStatus = User::where('email',$request->email)->first();
 
             if($checkUserStatus){
-                if(!is_null($checkUserStatus->deleted_at)){
-                    //Error Response Send
-                    $responseData = [
-                        'status'        => false,
-                        'error'         => 'Your account has been deactivated!',
-                    ];
-                    return response()->json($responseData, 401);
-                }
+                // if(!is_null($checkUserStatus->deleted_at)){
+                //     //Error Response Send
+                //     $responseData = [
+                //         'status'        => false,
+                //         'error'         => 'Your account has been deactivated!',
+                //     ];
+                //     return response()->json($responseData, 401);
+                // }
 
                 // if(!$checkUserStatus->is_active && $checkUserStatus->is_user){
                 //     //Error Response Send
@@ -135,6 +137,22 @@ class LoginRegisterController extends Controller
 
             if(Auth::attempt($credentialsOnly, $remember_me)){
                 $user = Auth::user();
+
+                // Check if the authenticated user has the 'user' role
+                if (!$user->is_user) {
+                  
+                    $user = $request->user();
+       
+                    // Revoke all user's tokens to logout
+                    $user->tokens()->delete();
+
+                    //Error Response Send
+                    $responseData = [
+                        'status'        => false,
+                        'error'         => 'These credentials do not match our records!',
+                    ];
+                    return response()->json($responseData, 401);
+                }
 
                 if(is_null($user->email_verified_at)){
                     $user->NotificationSendToVerifyEmail();
@@ -204,7 +222,7 @@ class LoginRegisterController extends Controller
             //Error Response Send
             $responseData = [
                 'status'        => false,
-                'validation_errors' => $validator->errors(),
+                'errors' => $validator->errors(),
             ];
             return response()->json($responseData, 401);
         }
@@ -283,7 +301,7 @@ class LoginRegisterController extends Controller
             //Error Response Send
             $responseData = [
                 'status'        => false,
-                'validation_errors' => $errors,
+                'errors' => $errors,
             ];
             return response()->json($responseData, 401);
         }
@@ -378,7 +396,7 @@ class LoginRegisterController extends Controller
             //Error Response Send
             $responseData = [
                 'status'        => false,
-                'validation_errors' => $validator->errors(),
+                'errors' => $validator->errors(),
             ];
             return response()->json($responseData, 422);
         }

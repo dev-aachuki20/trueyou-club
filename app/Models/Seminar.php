@@ -13,6 +13,7 @@ class Seminar extends Model
     public $table = 'seminars';
 
     protected $appends = ['image_url'];
+
     
     protected $dates = [
         'created_at',

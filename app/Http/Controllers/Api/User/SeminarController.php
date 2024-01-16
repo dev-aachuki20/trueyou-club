@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Seminar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB; 
 
 class SeminarController extends Controller
 {
@@ -13,7 +14,9 @@ class SeminarController extends Controller
     {
 
         try {
-            $getAllRecords = Seminar::paginate(10);
+            $getAllRecords = Seminar::orderByRaw('
+                ABS(TIME_TO_SEC(TIMEDIFF(CONCAT(start_date, " ", start_time), NOW()))) ASC
+            ')->paginate(10);
             
             if ($getAllRecords->count() > 0) {
 

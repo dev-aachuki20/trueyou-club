@@ -41,24 +41,15 @@ class ProfileController extends Controller
         $userId = auth()->user()->id;
 
         $validatedData = [
-            'first_name'  => 'required',
-            'last_name'   => 'required',
-            'phone'       => 'required',
+            'name'  => 'required',
+            'phone' => 'required',
         ];
 
-        if($request->old_password || $request->new_password || $request->confirm_password){
-            $validatedData['old_password'] = ['required', 'string','min:8',new MatchOldPassword];
-            $validatedData['new_password'] =  ['required', 'string', 'min:8', 'different:old_password'];
-            $validatedData['confirm_password'] = ['required','min:8','same:new_password'];
-        }
        
         // if(!auth()->user()->email){
         //     $validatedData['email']  = ['required', 'string', 'email', 'max:255', Rule::unique((new User)->getTable(), 'email')->ignore($userId)->whereNull('deleted_at')];
         // }
 
-        if($request->hasFile('profile_image')){
-            $validatedData['profile_image'] = ['image','mimes:jpeg,jpg,png','max:'.config('constants.profile_image_size')];
-        }
 
         $request->validate($validatedData,[
             'confirm_password.same' => 'The confirm password and new password must match.'
@@ -66,10 +57,12 @@ class ProfileController extends Controller
 
         DB::beginTransaction();
         try {
+            $fullName = explode(' ',$request->name);
+
             $updateRecords = [
-                'first_name'  => $request->first_name,
-                'last_name'  => $request->last_name,
-                'name'  => $request->first_name.' '.$request->last_name ,
+                'first_name'  => $fullName[0],
+                'last_name'  => isset($fullName[1]) ? $fullName[1] : null ,
+                'name'  => $request->name,
                 'phone' => $request->phone,
             ];
 
@@ -77,29 +70,11 @@ class ProfileController extends Controller
             //     $updateRecords['email'] = $request->email;
             // }
 
-            if($request->new_password){
-                $updateRecords['password'] = Hash::make($request->new_password);
-            }
-
             $updatedUserRecord = User::find($userId)->update($updateRecords);
 
             DB::commit();
 
             if($updatedUserRecord){
-                // Start to Update Profile Image
-                if($request->hasFile('profile_image')){
-                   
-                    $actionType = 'save';
-                    $uploadId = null;
-                    $updatedUser= User::find($userId);
-                    if($updatedUser->profileImage){
-                        $uploadId = $updatedUser->profileImage->id;
-                        $actionType = 'update';
-                    }
-                    uploadImage($updatedUser, $request->file('profile_image'), 'user/profile-images',"profile", 'original', $actionType, $uploadId);
-                }
-                // End to Update Profile Image
-
                 //Return Success Response
                 $responseData = [
                     'status'        => true,
@@ -110,7 +85,7 @@ class ProfileController extends Controller
             }
 
 
-        }catch (\Exception $e) {
+        }catch (\Exception $e) { 
             DB::rollBack();
             //  dd($e->getMessage().'->'.$e->getLine());
             
@@ -119,8 +94,139 @@ class ProfileController extends Controller
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
             ];
-            return response()->json($responseData, 400);
+            return response()->json($responseData, 500);
         }
 
+    }
+
+    public function changeProfileImage(Request $request){
+        $userId = auth()->user()->id;
+
+        $validatedData['profile_image'] = ['required','image','mimes:jpeg,jpg,png','max:'.config('constants.profile_image_size')];
+        
+        $request->validate($validatedData);
+
+        DB::beginTransaction();
+        try {
+           
+            $fetchUser = User::find($userId);
+
+            DB::commit();
+            if($fetchUser){
+                // Start to Update Profile Image
+                if($request->hasFile('profile_image')){
+                   
+                    $actionType = 'save';
+                    $uploadId = null;
+                    if($fetchUser->profileImage){
+                        $uploadId = $fetchUser->profileImage->id;
+                        $actionType = 'update';
+                    }
+                    uploadImage($fetchUser, $request->file('profile_image'), 'user/profile-images',"profile", 'original', $actionType, $uploadId);
+                }
+                // End to Update Profile Image
+
+                //Return Success Response
+                $responseData = [
+                    'status'        => true,
+                    'message'       => 'Profile Image Uploaded Successfully!',
+                ];
+
+                return response()->json($responseData, 200);
+            }
+
+
+        }catch (\Exception $e) { 
+            DB::rollBack();
+            //  dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 500);
+        }
+    }
+
+    public function updateStatus(Request $request){
+        $userId = auth()->user()->id;
+
+        $validatedData['status'] = ['required','in:0,1'];
+        
+        $request->validate($validatedData);
+
+        DB::beginTransaction();
+        try {
+           
+            $fetchUser = User::where('id',$userId)->update(['is_active'=>$request->status]);
+
+            DB::commit();
+            if($fetchUser){
+               
+                //Return Success Response
+                $responseData = [
+                    'status'        => true,
+                    'message'       => 'Status Updated Successfully!',
+                ];
+
+                return response()->json($responseData, 200);
+            }
+
+
+        }catch (\Exception $e) { 
+            DB::rollBack();
+            //  dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 500);
+        }
+    }
+
+    public function updatePassword(Request $request){
+        $userId = auth()->user()->id;
+
+        $validatedData['old_password'] = ['required', 'string','min:8',new MatchOldPassword];
+        $validatedData['new_password'] =  ['required', 'string', 'min:8', 'different:old_password'];
+        $validatedData['confirm_password'] = ['required','min:8','same:new_password'];
+        
+        $request->validate($validatedData,[
+            'confirm_password.same' => 'The confirm password and new password must match.'
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $updateRecords['password'] = Hash::make($request->new_password);
+
+            $updatedUserRecord = User::find($userId)->update($updateRecords);
+
+            DB::commit();
+
+            if($updatedUserRecord){
+                //Return Success Response
+                $responseData = [
+                    'status'        => true,
+                    'message'       => 'Password Changed Successfully!',
+                ];
+
+                return response()->json($responseData, 200);
+            }
+
+
+        }catch (\Exception $e) { 
+            DB::rollBack();
+            //  dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 500);
+        }
     }
 }

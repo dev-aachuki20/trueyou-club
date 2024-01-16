@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\User\StripeWebhookController;
 use App\Http\Controllers\Api\User\SeminarController;
 use App\Http\Controllers\Api\User\WebinarController;
 use App\Http\Controllers\Api\User\PostController;
+use App\Http\Controllers\Api\User\PageController;
 
 
 
@@ -62,14 +63,14 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
 
     Route::post('update-profile', [ProfileController::class, 'updateProfile']);
 
-    Route::post('update-buyer-search-status', [ProfileController::class, 'updateBuyerSearchStatus']);
+    Route::post('update-profile-image', [ProfileController::class, 'changeProfileImage']);
 
-    Route::post('update-buyer-contact-pref', [ProfileController::class, 'updateBuyerContactPreference']);
+    Route::post('update-user-status', [ProfileController::class, 'updateStatus']);
 
-    Route::post('update-buyer-profile-image', [ProfileController::class, 'updateBuyerProfileImage']);
+    Route::post('update-password', [ProfileController::class, 'updatePassword']);
 
+    
     // Route::post('send-sms', [TwilioController::class, 'sendSms']);
-
 
     // Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
 
@@ -84,6 +85,7 @@ Route::get('/get-all-seminars', [SeminarController::class, 'index']);
 Route::get('/get-posts/{postType}', [PostController::class, 'index']);
 Route::get('/post/{slug}', [PostController::class, 'show']);
 
+Route::get('/page/{page_key}', [PageController::class, 'getPageDetails']);
 
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleStripeWebhook']);

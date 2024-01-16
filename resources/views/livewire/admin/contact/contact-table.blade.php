@@ -55,6 +55,12 @@
                         </button>
                         @endcan
 
+                        @if($contact->is_draft == 1)
+                        <button title="Reply" type="button" wire:click.prevent="$emitUp('reply', {{$contact->id}})" class="btn btn-success btn-rounded btn-icon">
+                            <i class="fa fa-reply" aria-hidden="true"></i>
+                        </button>
+                        @endif
+
                     </td>
                 </tr>
                 @endforeach

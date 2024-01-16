@@ -22,6 +22,8 @@ class Contact extends Model
         'phone_number',
         'email',
         'message',
+        'reply',
+        'is_draft',
         'status',
         'created_by',
         'created_at',
