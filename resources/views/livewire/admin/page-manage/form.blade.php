@@ -9,8 +9,8 @@
         <div class="col-md-12">
             <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.pages.fields.page_name')}}<i class="fas fa-asterisk"></i></label>
-                <input disabled type="text" class="form-control" wire:model.defer="page_key" placeholder="{{ __('cruds.pages.fields.page_name')}}" autocomplete="off">
-                @error('page_key') <span class="error text-danger">{{ $message }}</span>@enderror
+                <input disabled type="text" class="form-control" wire:model.defer="page_name" placeholder="{{ __('cruds.pages.fields.page_name')}}" autocomplete="off">
+                @error('page_name') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
     </div>

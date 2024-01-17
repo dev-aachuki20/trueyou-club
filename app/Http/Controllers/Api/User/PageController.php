@@ -10,13 +10,13 @@ use Illuminate\Support\Carbon;
 
 class PageController extends Controller
 {
-    public function getPageDetails($page_key)
+    public function getPageDetails($slug)
     {
         try {
-            $record = Page::select('id','title', 'subtitle', 'button')->where('page_key',$page_key)->first();
+            $record = Page::select('id', 'title', 'subtitle', 'button')->where('slug', $slug)->first();
 
             if ($record) {
-               
+
                 $pageRecords['title'] = $record->title;
                 $pageRecords['subtitle'] = $record->subtitle;
                 $pageRecords['button'] = $record->button;
@@ -24,8 +24,6 @@ class PageController extends Controller
                 $imageUrl = $record->image_url ? $record->image_url : asset(config('constants.default.no_image'));
 
                 $pageRecords['image_url'] = $imageUrl;
-               
-                // dd($record);
 
                 $responseData = [
                     'status'  => true,

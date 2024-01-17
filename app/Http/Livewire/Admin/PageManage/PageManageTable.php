@@ -58,7 +58,7 @@ class PageManageTable extends Component
 
         $allPages = Page::query()->where(function ($query) use ($searchValue, $statusSearch) {
             $query->where('title', 'like', '%' . $searchValue . '%')
-                ->orWhere('page_key', 'like', '%' . $searchValue . '%')
+                ->orWhere('page_name', 'like', '%' . $searchValue . '%')
                 ->orWhere('status', $statusSearch)
                 ->orWhereRaw("date_format(created_at, '" . config('constants.search_datetime_format') . "') like ?", ['%' . $searchValue . '%']);
         })

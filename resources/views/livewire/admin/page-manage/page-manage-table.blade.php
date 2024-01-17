@@ -11,7 +11,7 @@
                     <th class="text-gray-500 text-xs font-medium">{{ trans('global.sno') }}</th>
 
                     <th class="text-gray-500 text-xs">
-                        {{ __('cruds.pages.fields.page_key')}}
+                        {{ __('cruds.pages.fields.page_name')}}
                     </th>
 
                     <th class="text-gray-500 text-xs">
@@ -43,7 +43,7 @@
                 @foreach($allPages as $serialNo => $page)
                 <tr>
                     <td>{{ $serialNo+1 }}</td>
-                    <td>{{ ucwords($page->page_key) }}</td>
+                    <td>{{ ucwords($page->page_name) }}</td>
                     <td>{{ ucwords($page->title) }}</td>
 
                     <td>{{ convertDateTimeFormat($page->created_at,'date_month_year') }}</td>

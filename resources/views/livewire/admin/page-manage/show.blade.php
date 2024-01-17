@@ -1,6 +1,6 @@
 <div>
 
-    <h4 class="card-title blog-title">@lang('global.view') {{ ucwords($detail->page_key) }} @lang('cruds.pages.title_singular')</h4>
+    <h4 class="card-title blog-title">@lang('global.view') {{ ucwords($detail->page_name) }} @lang('cruds.pages.title_singular')</h4>
 
     <div class="show-wrapper mt-4">
         <div class="card">

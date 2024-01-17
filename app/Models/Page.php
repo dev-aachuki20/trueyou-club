@@ -28,20 +28,18 @@ class Page extends Model
         'created_by'
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(function (Page $model) {
-            $model->created_by = auth()->user()->id;
-            $model->slug = $model->generateSlug($model->title);
-        });
+    // protected static function boot()
+    // {
+    //     parent::boot();
+    //     static::creating(function (Page $model) {
+    //         $model->created_by = auth()->user()->id;
+    //         $model->slug = $model->generateSlug($model->page_name);
+    //     });
 
-        static::updating(function (Page $model) {
-            if ($model->type != 3) {
-                $model->slug = $model->generateSlug($model->title);
-            }
-        });
-    }
+    //     static::updating(function (Page $model) {
+    //         $model->slug = $model->generateSlug($model->page_name);
+    //     });
+    // }
 
     public function uploads()
     {

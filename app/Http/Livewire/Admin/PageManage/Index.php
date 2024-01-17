@@ -16,7 +16,7 @@ class Index extends Component
 
     public $search = '', $formMode = false, $updateMode = false, $viewMode = false;
 
-    public $page_id = null, $title, $page_key, $subtitle, $image, $originalImage, $status = 1;
+    public $page_id = null, $title, $page_name, $subtitle, $image, $originalImage, $status = 1;
 
     public $showAddMore = false, $button = [['title' => '', 'link' => '']], $link = [];
 
@@ -48,7 +48,7 @@ class Index extends Component
     //         'title'        => 'required',
     //         'subtitle'  => 'required|strip_tags',
     //         'status'       => 'required',
-    //         'page_key'     => 'required',
+    //         'page_name'     => 'required',
     //         'image'        => 'nullable|image|max:' . config('constants.img_max_size'),
     //         'button'       => 'nullable',
     //     ], [
@@ -62,7 +62,7 @@ class Index extends Component
     //         $validatedData['subtitle']   = $this->subtitle;
     //         $validatedData['status']        = $this->status;
     //         $validatedData['button']        = $this->button;
-    //         $validatedData['page_key']      = $this->page_key;
+    //         $validatedData['page_name']      = $this->page_name;
 
     //         $page = Page::create($validatedData);
 
@@ -75,7 +75,7 @@ class Index extends Component
 
     //         DB::commit();
 
-    //         $this->reset(['title', 'page_key', 'subtitle', 'button', 'status', 'image']);
+    //         $this->reset(['title', 'page_name', 'subtitle', 'button', 'status', 'image']);
 
     //         $this->flash('success', trans('messages.add_success_message'));
 
@@ -95,7 +95,7 @@ class Index extends Component
 
         $page = Page::findOrFail($id);
         $this->page_id          =  $page->id;
-        $this->page_key         =  $page->page_key;
+        $this->page_name         =  $page->page_name;
         $this->title            =  $page->title;
         // $this->type             =  $page->type;
         $this->subtitle         =  $page->subtitle;
@@ -115,7 +115,7 @@ class Index extends Component
             'title'             => 'required',
             'subtitle'          => 'required',
             'status'            => 'required',
-            'page_key'          => 'required',
+            'page_name'          => 'required',
             'button.*.title'    => 'required|string',
             'button.*.link'        => 'required|url',
         ], [
@@ -164,7 +164,7 @@ class Index extends Component
 
             $this->flash('success', trans('messages.edit_success_message'));
 
-            $this->reset(['title', 'page_key', 'subtitle', 'button', 'status', 'image']);
+            $this->reset(['title', 'page_name', 'subtitle', 'button', 'status', 'image']);
 
             return redirect()->route('admin.page-manage');
         } catch (\Exception $e) {

@@ -90,7 +90,7 @@ Route::get('/get-all-seminars', [SeminarController::class, 'index']);
 Route::get('/get-posts/{postType}', [PostController::class, 'index']);
 Route::get('/post/{slug}', [PostController::class, 'show']);
 
-Route::get('/page/{page_key}', [PageController::class, 'getPageDetails']);
+Route::get('/page/{slug}', [PageController::class, 'getPageDetails']);
 
 Route::post('/contact-us', [ContactController::class, 'store']);
 

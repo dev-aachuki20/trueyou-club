@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Page;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class PageTableSeeder extends Seeder
 {
@@ -14,10 +15,12 @@ class PageTableSeeder extends Seeder
      */
     public function run()
     {
+
+        DB::table('pages')->truncate();
         $pages = [
             [
                 'id'             => 1,
-                'page_key'       => 'Home',
+                'page_name'       => 'Home',
                 'title'          => 'Trueyou realize your potential',
                 'slug'           => 'home',
                 'type'           => 'header',
@@ -30,7 +33,7 @@ class PageTableSeeder extends Seeder
 
             [
                 'id'             => 2,
-                'page_key'       => 'Health',
+                'page_name'       => 'Health',
                 'title'          => 'Trueyou realize your potential',
                 'slug'           => 'health',
                 'type'           => 'header',
@@ -43,7 +46,7 @@ class PageTableSeeder extends Seeder
 
             [
                 'id'             => 3,
-                'page_key'       => 'Seminar',
+                'page_name'       => 'Seminar',
                 'title'          => 'Trueyou realize your potential',
                 'slug'           => 'seminar',
                 'type'           => 'header',
@@ -56,7 +59,7 @@ class PageTableSeeder extends Seeder
 
             [
                 'id'             => 4,
-                'page_key'       => 'News',
+                'page_name'       => 'News',
                 'title'          => 'Trueyou realize your potential',
                 'slug'           => 'news',
                 'type'           => 'header',
@@ -69,11 +72,11 @@ class PageTableSeeder extends Seeder
 
             [
                 'id'             => 5,
-                'page_key'       => 'Contact-us',
+                'page_name'       => 'Contact Us',
                 'title'          => 'Trueyou realize your potential',
                 'slug'           => 'contact-us',
                 'type'           => 'header',
-                'subtitle'      => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
+                'subtitle'    => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
                 'button'         =>  null,
                 'status'         =>  1,
                 'created_at'     => date('Y-m-d H:i:s'),
@@ -82,9 +85,9 @@ class PageTableSeeder extends Seeder
 
             [
                 'id'             => 6,
-                'page_key'       => 'login-register',
-                'title'          => 'Login & Register',
-                'slug'           => 'login-register',
+                'page_name'       => 'Login',
+                'title'          => 'Login Now',
+                'slug'           => 'login',
                 'type'           => 'header',
                 'subtitle'    => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
                 'button'         =>  null,

@@ -147,7 +147,7 @@ return [
         'title'      => 'Pages',
         'title_singular' => 'Page',
         'fields' => [
-            'page_key'   => 'Page Name',
+            'page_name'   => 'Page Name',
             'page_name'   => 'Page Name',
             'title'   => 'Title',
             'subtitle'   => 'Sub Title',
