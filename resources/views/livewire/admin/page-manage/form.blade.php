@@ -34,16 +34,7 @@
             @error('subtitle') <span class="error text-danger">{{ $message }}</span>@enderror
         </div>
     </div>
-
-    {{-- <div class="row">
-        <div class="col-md-12 mb-4">
-            <div class="form-group mb-0" wire:ignore>
-                <label class="font-weight-bold justify-content-start">{{ __('cruds.pages.fields.description')}}<i class="fas fa-asterisk"></i></label>
-    <textarea class="form-control" id="summernote" wire:model.defer="description" rows="4"></textarea>
-    </div>
-    @error('description') <span class="error text-danger">{{ $message }}</span>@enderror
-    </div>
-    </div> --}}
+           
 
     <div class="row logo-section">
         <div class="col-md-12 mb-4">
@@ -63,11 +54,15 @@
     </div>
 
     <!-- add button for button title and link -->
-    {{-- @livewire('admin.button-form.button-form') --}}
     <div class="row mb-2">
         <div class="col-md-10"></div>
         <div class="col-md-2">
-            <button type="button" wire:click="addMore" wire:loading.attr="disabled" class="btn btn-primary mr-2">{{ __('global.add_more') }} </button>
+            <button type="button" wire:click="addMore" wire:loading.attr="disabled" class="btn btn-primary mr-2">
+                {{ __('global.add_more') }} 
+                <span wire:loading wire:target="addMore">
+                    <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                </span>
+            </button>
         </div>
 
     </div>
@@ -90,11 +85,11 @@
             </div>
         </div>
 
-        <div class="col-md-1">
-            <div class="form-group">
-                <button type="button" wire:click="remove({{ $index }})" wire:loading.attr="disabled" class="btn btn-danger"><i class="fas fa-subtract"></i>
-                </button>
-            </div>
+        <div class="col-md-1 mt-5">
+           
+            <button type="button" wire:click="remove({{ $index }})" wire:loading.attr="disabled" class="btn btn-danger"><i class="fas fa-subtract"></i>
+            </button>
+            
         </div>
 
 

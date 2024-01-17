@@ -207,3 +207,21 @@ if (!function_exists('getSetting')) {
 		return $result;
 	}
 }
+
+if (!function_exists('getSettingByGroup')) {
+	function getSettingByGroup($groupkey)
+	{
+		$settings = Setting::select('id','key','value')->where('group', $groupkey)->where('status', 1)->get();
+		if ($settings->count()> 0) {
+			foreach($settings as $setting){
+				if ($setting->type == 'image') {
+					$setting->image_url = $setting->image_url;
+				} elseif ($setting->type == 'video') {
+					$setting->image_url = $setting->video_url;
+				} 
+			}
+			
+		}
+		return $settings;
+	}
+}

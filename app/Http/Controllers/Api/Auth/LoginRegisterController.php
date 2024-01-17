@@ -33,7 +33,7 @@ class LoginRegisterController extends Controller
                 'status'        => false,
                 'errors' => $validator->errors(),
             ];
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 422);
         }
 
         DB::beginTransaction();
@@ -70,7 +70,7 @@ class LoginRegisterController extends Controller
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
             ];
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 500);
         }
     }
 
@@ -85,7 +85,7 @@ class LoginRegisterController extends Controller
                 'status'        => false,
                 'errors' => $validator->errors(),
             ];
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 422);
         }
 
         DB::beginTransaction();
@@ -209,7 +209,7 @@ class LoginRegisterController extends Controller
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
             ];
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 500);
         }
     }
 
@@ -224,15 +224,17 @@ class LoginRegisterController extends Controller
                 'status'        => false,
                 'errors' => $validator->errors(),
             ];
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 422);
         }
         
         DB::beginTransaction();
         try {
             $token = Str::random(64);
             $email_id = $request->email;
-            $user = User::where('email', $email_id)->withTrashed()->first();
+            // $user = User::where('email', $email_id)->withTrashed()->first();
+            $user = User::where('email', $email_id)->first();
 
+            /*
             if(!is_null($user->deleted_at)){
                 //Error Response Send
                 $responseData = [
@@ -240,7 +242,7 @@ class LoginRegisterController extends Controller
                     'error'         => 'Your account has been deactivated!',
                 ];
                 return response()->json($responseData, 401);
-            }
+            }*/
 
             // if(!$user->is_active){
             //     //Error Response Send
@@ -285,7 +287,7 @@ class LoginRegisterController extends Controller
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
             ];
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 500);
         }
     }
 
@@ -295,6 +297,7 @@ class LoginRegisterController extends Controller
             'password_confirmation'     => 'required|same:password',
             'token'                     => 'required',
         ]);
+
         if($validator->fails()){
             $errors = (object) $validator->errors()->messages();
 
@@ -303,7 +306,7 @@ class LoginRegisterController extends Controller
                 'status'        => false,
                 'errors' => $errors,
             ];
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 422);
         }
 
         DB::beginTransaction();
@@ -321,7 +324,7 @@ class LoginRegisterController extends Controller
                     'status'        => false,
                     'error'         => trans('passwords.token'),
                 ];
-                return response()->json($responseData, 401);
+                return response()->json($responseData, 422);
 
             }else{
 
@@ -347,9 +350,9 @@ class LoginRegisterController extends Controller
             //Return Error Response
             $responseData = [
                 'status'        => false,
-                'error'         => trans('messages.error_message').$e->getMessage().'->'.$e->getLine(),
+                'error'         => trans('messages.error_message'),
             ];
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 500);
         }
     }
 
