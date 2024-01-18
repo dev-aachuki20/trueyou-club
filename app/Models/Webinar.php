@@ -21,7 +21,6 @@ class Webinar extends Model
         'title',
         'start_date',
         'start_time',
-        'end_date',
         'end_time',
         'meeting_link',
         'status',

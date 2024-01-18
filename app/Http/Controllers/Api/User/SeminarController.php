@@ -14,15 +14,20 @@ class SeminarController extends Controller
     {
 
         try {
-            $getAllRecords = Seminar::orderByRaw('
-                ABS(TIME_TO_SEC(TIMEDIFF(CONCAT(start_date, " ", start_time), NOW()))) ASC
-            ')->paginate(10);
+           
+            $getAllRecords = Seminar::select('id','title','total_ticket','ticket_price','start_date','start_time','end_time','venue')
+            ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+            ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+            ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
+            ->paginate(10);
             
             if ($getAllRecords->count() > 0) {
 
                 foreach($getAllRecords as $record){
-                    $record->image_url = $record->image_url ? $record->image_url : asset(config('constants.default.no_image'));
                     $record->datetime = convertDateTimeFormat($record->start_date.' '.$record->start_time,'fulldatetime') .'-'. Carbon::parse($record->end_time)->format('h:i A');
+
+                    $record->imageUrl = $record->image_url ? $record->image_url : asset(config('constants.default.no_image'));
+
                 }
 
                 $responseData = [

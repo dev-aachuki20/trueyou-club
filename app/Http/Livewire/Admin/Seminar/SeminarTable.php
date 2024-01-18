@@ -57,10 +57,9 @@ class SeminarTable extends Component
         //     $statusSearch = 0;
         // }
 
-        $currentDate = now()->toDateString();
-        $currentTime = now()->toTimeString();
 
-        $allSeminar = Seminar::query()->where(function ($query) use ($searchValue, $statusSearch) {
+        $allSeminar = Seminar::query()->select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+        ->where(function ($query) use ($searchValue, $statusSearch) {
             $query->where('title', 'like', '%' . $searchValue . '%')
                 ->orWhere('venue', 'like', '%' . $searchValue . '%')
                 ->orWhereRaw("DATE_FORMAT(start_date,  '" . config('constants.search_full_date_format') . "') = ?", [date(config('constants.full_date_format'), strtotime($searchValue))]);
@@ -71,16 +70,14 @@ class SeminarTable extends Component
             // Check for day and month (e.g., 13 January)
             $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%e %M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
         })
-            ->orderByRaw('CASE 
-            WHEN start_date >= ? AND start_time <= ? THEN 0 -- Ongoing seminars
-            WHEN start_date > ? AND start_time > ? THEN 1 -- Future seminars
-            WHEN start_date <= ? AND end_time >= ? THEN 2 -- Past seminars
-            END', [$currentDate, $currentTime, $currentDate, $currentTime, $currentDate, $currentTime])
-            // ->orderBy('start_time', 'desc')
+            
+        ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+        ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
+        
+    
+        // ->orderBy($this->sortColumnName, $this->sortDirection)
+        ->paginate($this->paginationLength);
 
-
-            // ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate($this->paginationLength);
         return view('livewire.admin.seminar.seminar-table', compact('allSeminar'));
     }
 

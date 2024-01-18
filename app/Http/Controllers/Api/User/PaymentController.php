@@ -8,15 +8,9 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Stripe\Stripe;
 use Stripe\Customer;
-use App\Models\Plan;
-use App\Models\Addon;
+use App\Models\Seminar;
 use App\Models\User;
 use App\Models\Transaction;
-use App\Models\Buyer;
-use App\Models\BuyerPlan;
-use App\Models\BuyerTransaction;
-use App\Models\Subscription;
-use App\Models\UserToken;
 use Stripe\Checkout\Session as StripeSession;
 use Stripe\Subscription as StripeSubscription;
 use Illuminate\Support\Str;
@@ -28,7 +22,6 @@ class PaymentController extends Controller
     public function __construct(Request $request)
     {
         $this->default_currency = config('constants.default_currency');
-        $this->currency = $request->currency;
         $this->stripeSecret = Stripe::setApiKey(config('app.stripe_secret_key')); // test stripe pub key
     }
 

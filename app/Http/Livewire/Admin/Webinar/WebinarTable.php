@@ -59,11 +59,10 @@ class WebinarTable extends Component
         //     $statusSearch = 0;
         // }
 
-        $currentDate = now()->toDateString();
-        $currentTime = now()->toTimeString();
-
-
-        $allWebinar = Webinar::query()->where(function ($query) use ($searchValue, $statusSearch) {
+      
+        $allWebinar = Webinar::query()
+        ->select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+        ->where(function ($query) use ($searchValue, $statusSearch) {
 
             $query->where('title', 'like', '%' . $searchValue . '%')
                 ->orWhereRaw("DATE_FORMAT(start_date,  '" . config('constants.search_full_date_format') . "') = ?", [date(config('constants.full_date_format'), strtotime($searchValue))]);
@@ -75,12 +74,8 @@ class WebinarTable extends Component
             $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%e %M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
         })
 
-            ->orderByRaw('CASE 
-    WHEN start_date <= ? AND end_time >= ? THEN 0 
-    WHEN start_date > ? AND start_time > ? THEN 1
-    WHEN start_date >= ? AND start_time <= ? THEN 2
-    END', [$currentDate, $currentTime, $currentDate, $currentTime, $currentDate, $currentTime])
-            // ->orderBy('start_time', 'asc')
+        ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+        ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
 
             // ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);

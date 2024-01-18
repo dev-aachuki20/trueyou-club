@@ -16,32 +16,31 @@ class PostController extends Controller
 
         try {
 
-            $postType = explode('-',$postType);
-            
-            $getAllRecords = Post::whereIn('type', $postType)
-            ->select('id','title', 'slug', 'content','publish_date', 'type')
-            ->orderBy('publish_date','desc')
-            ->paginate(10);
+            $currentDate = now()->toDateString();
+
+            $getAllRecords = Post::where('type', $postType)
+                ->select('id', 'title', 'slug', 'content', 'publish_date', 'type', 'created_by')
+                ->where('publish_date', '<', $currentDate)
+                ->orWhereDate('publish_date', $currentDate)
+                ->orderBy('publish_date', 'desc')
+                ->paginate(10);
 
             if ($getAllRecords->count() > 0) {
 
-                foreach($getAllRecords as $record){
-                    $record->slug = $record->slug;
+                foreach ($getAllRecords as $key=>$record) {
+                   
                     $record->publish_date = convertDateTimeFormat($record->publish_date, 'fulldate');
-                
-                    if($record->type == 'blog'){
 
-                        $record->image_url = $record->blog_image_url ? $record->blog_image_url : asset(config('constants.default.no_image'));
-                       
-                    }else if($record->type == 'news'){
+                    if ($record->type == 'news') {
 
                         $record->image_url = $record->news_image_url ? $record->news_image_url : asset(config('constants.default.no_image'));
-                      
-                    }else if($record->type == 'health'){
+
+                    } else if ($record->type == 'health') {
 
                         $record->image_url = $record->health_image_url ? $record->health_image_url : asset(config('constants.default.no_image'));
-    
                     }
+
+                    $record->created_by  = $record->user->name ?? null;
                 }
 
 
@@ -68,29 +67,27 @@ class PostController extends Controller
         }
     }
 
-    public function show($slug){
+    public function show($slug)
+    {
 
         try {
-            $record = Post::select('id','title', 'slug', 'content','publish_date', 'type')->where('slug',$slug)->first();
+            $record = Post::select('id', 'title', 'slug', 'content', 'publish_date', 'type', 'created_by')->where('slug', $slug)->first();
 
-            if($record){
-           
+            if ($record) {
+
                 $record->publish_date = convertDateTimeFormat($record->publish_date, 'fulldate');
-                
-                if($record->type == 'blog'){
 
-                    $record->image_url = $record->blog_image_url ? $record->blog_image_url : asset(config('constants.default.no_image'));
-                    
-                }else if($record->type == 'news'){
+                if ($record->type == 'news') {
 
                     $record->image_url = $record->news_image_url ? $record->news_image_url : asset(config('constants.default.no_image'));
                     
-                }else if($record->type == 'health'){
+                } else if ($record->type == 'health') {
 
                     $record->image_url = $record->health_image_url ? $record->health_image_url : asset(config('constants.default.no_image'));
-
                 }
-                
+
+                $record->created_by  = $record->user->name ?? null;
+
                 $responseData = [
                     'status'  => true,
                     'data'    => $record,

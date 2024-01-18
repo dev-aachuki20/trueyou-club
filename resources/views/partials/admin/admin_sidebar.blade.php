@@ -112,7 +112,7 @@
         @endcan
 
         @can('blog_access')
-        <li class="nav-item {{ request()->is('admin/blogs') ? 'active' : '' }}">
+        {{-- <li class="nav-item {{ request()->is('admin/blogs') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.blogs') }}">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M7.25997 2H16.73C17.38 2 17.96 2.02003 18.48 2.09003C21.25 2.40003 22 3.70001 22 7.26001V13.58C22 17.14 21.25 18.44 18.48 18.75C17.96 18.82 17.39 18.84 16.73 18.84H7.25997C6.60997 18.84 6.02997 18.82 5.50997 18.75C2.73997 18.44 1.98999 17.14 1.98999 13.58V7.26001C1.98999 3.70001 2.73997 2.40003 5.50997 2.09003C6.02997 2.02003 6.60997 2 7.25997 2Z" stroke="#0A2540" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -124,7 +124,7 @@
                 </svg>
                 <span class="menu-title"> {{ __('cruds.blog.title') }} </span>
             </a>
-        </li>
+        </li> --}}
         @endcan
 
         @can('news_access')

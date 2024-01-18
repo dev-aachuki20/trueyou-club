@@ -6,11 +6,21 @@
 <form wire:submit.prevent="{{ $updateMode ? 'update' : 'store' }}" class="forms-sample">
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.seminar.fields.title')}}<i class="fas fa-asterisk"></i></label>
                 <input type="text" class="form-control" wire:model.defer="title" placeholder="{{ __('cruds.seminar.fields.title')}}" autocomplete="off">
                 @error('title') <span class="error text-danger">{{ $message }}</span>@enderror
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="font-weight-bold justify-content-start">{{ __('cruds.seminar.fields.ticket_price')}}<i class="fas fa-asterisk"></i></label>
+                <input type="number" step="any" class="form-control" wire:model.defer="ticket_price" placeholder="{{ __('cruds.seminar.fields.ticket_price')}}" autocomplete="off">
+                @error('ticket_price') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
         <div class="col-md-6">

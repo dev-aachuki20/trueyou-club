@@ -18,7 +18,7 @@ class Index extends Component
 
     public $search = '', $formMode = false, $updateMode = false, $viewMode = false;
 
-    public $seminar_id = null, $title, $total_ticket,  $start_date = null, $start_time = null,  $end_time = null,  $venue, $image, $originalImage, $status = 1;
+    public $seminar_id = null, $title, $total_ticket, $ticket_price=null, $start_date = null, $start_time = null,  $end_time = null,  $venue, $image, $originalImage, $status = 1;
 
     public $removeImage = false;
 
@@ -68,6 +68,7 @@ class Index extends Component
         $rules = [
             'title'        => 'required',
             'total_ticket' => 'required|integer|min:0',
+            'ticket_price' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
             'start_date'   => 'required|date',
             'start_time'   => 'required|date_format:h:i A',
             'end_time'     => 'required|date_format:h:i A',
@@ -130,6 +131,7 @@ class Index extends Component
         $this->seminar_id      =  $seminar->id;
         $this->title           =  $seminar->title;
         $this->total_ticket    =  $seminar->total_ticket;
+        $this->ticket_price     =  $seminar->ticket_price;
         $this->start_date      =  Carbon::parse($seminar->start_date)->format('d-m-Y');
         $this->start_time      =  Carbon::parse($seminar->start_time)->format('h:i A');
         $this->end_time        =  Carbon::parse($seminar->end_time)->format('h:i A');
@@ -143,6 +145,7 @@ class Index extends Component
     {
         $validatedArray['title']        = 'required';
         $validatedArray['total_ticket'] = 'required|integer|min:0';
+        $validatedArray['ticket_price']  = 'required|numeric|regex:/^\d+(\.\d{1,2})?$/';
 
         $validatedArray['start_date']   = 'required|date';
         $validatedArray['start_time']   = 'required|date_format:h:i A';

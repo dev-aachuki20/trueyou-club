@@ -48,7 +48,7 @@
                     <td>
                         <label class="toggle-switch">
                             <input type="checkbox" class="toggleSwitch" wire:click.prevent="$emitUp('toggle',{{$user->id}})" {{ $user->is_active == 1 ? 'checked' : '' }}>
-                            <div class="switch-slider round"></div>
+                            <div class="switch-slider-other round"></div>
                         </label>
 
                     </td>

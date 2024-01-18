@@ -106,6 +106,19 @@ class SettingSeeder extends Seeder
                 'created_by' => 1,
             ],
 
+            [
+
+                'key'    => 'support_location',
+                'value'  => '132, My Street,Kingston, New York 12401 United States',
+                'type'   => 'text',
+                'display_name'  => 'Location',
+                'group'  => 'support',
+                'details' => null,
+                'status' => 1,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'created_by' => 1,
+            ],
+
 
             [
 
@@ -152,6 +165,30 @@ class SettingSeeder extends Seeder
                 'value'  => null,
                 'type'   => 'text',
                 'display_name'  => 'Stripe Secret Key',
+                'group'  => 'payment',
+                'details' => '',
+                'status' => 1,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'created_by' => 1,
+            ],
+
+            [
+                'key'    => 'stripe_publishable_key',
+                'value'  => null,
+                'type'   => 'text',
+                'display_name'  => 'Stripe Publishable Key',
+                'group'  => 'payment',
+                'details' => '',
+                'status' => 1,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'created_by' => 1,
+            ],
+
+            [
+                'key'    => 'stripe_webhook_secret_key',
+                'value'  => null,
+                'type'   => 'text',
+                'display_name'  => 'Stripe Webhook Secret Key',
                 'group'  => 'payment',
                 'details' => '',
                 'status' => 1,

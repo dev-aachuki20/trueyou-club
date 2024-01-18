@@ -20,8 +20,17 @@ class CommanController extends Controller
             'site_logo'   =>  getSetting('site_logo'),
             'footer_logo' =>  getSetting('footer_logo'),
             'short_logo'  =>  getSetting('short_logo'),
-            'support'     => getSettingByGroup('support'),
-            'social_media' => getSettingByGroup('social media'),
+            'support'     =>  [
+                'email' => getSetting('support_email'),
+                'phone' => getSetting('support_phone'),
+                'location' => getSetting('support_location'),
+            ],
+            'social_media' => [
+                'youtube'   => getSetting('youtube'),
+                'instagram' => getSetting('instagram'),
+                'twitter'   => getSetting('twitter'),
+                'facebook'  => getSetting('facebook'),
+            ],
         ];
         // Return response
         $responseData = [
@@ -33,70 +42,61 @@ class CommanController extends Controller
 
     public function getLatestRecords($pageName){
         try {
+            $currentDate = now()->format('Y-m-d');
+            $currentTime = now()->format('H:i');
+
             $currentDateTime = Carbon::now();
 
             $latestRecords = null;
             if($pageName == 'login'){
 
+                // Start Latest News Details
+                $latestNews = Post::where('type','news')->where('publish_date','<=',$currentDate)->orderBy('publish_date', 'desc')->limit(2)->get();
+
+                foreach($latestNews as $key=>$news){
+                    $latestRecords['news'][$key]['title']   = $news->title;
+                    $latestRecords['news'][$key]['slug']    = $news->slug;
+                    $latestRecords['news'][$key]['content'] = $news->content;
+                    $latestRecords['news'][$key]['type']    = $news->type;
+    
+                    $latestRecords['news'][$key]['publish_date'] = convertDateTimeFormat($news->publish_date,'fulldate');
+    
+                    $latestRecords['news'][$key]['image_url'] = $news->news_image_url ? $news->news_image_url : asset(config('constants.default.no_image'));
+
+                    $latestRecords['news'][$key]['created_by'] = $news->user->name ?? null;
+
+                }
+                // End Latest News Details
+
                 // Start Latest Seminar Details
-                $latestSeminar = Seminar::where('start_date', '>=', $currentDateTime->toDateString())
-                ->where(function ($query) use ($currentDateTime) {
-                    $query->where('end_time', '>', $currentDateTime->toTimeString())
-                        ->orWhere('start_date', '>', $currentDateTime->toDateString());
-                })
-                ->orderBy('start_date', 'asc')
-                ->orderBy('start_time', 'asc')
+                $latestSeminar = Seminar::select('*')
+                ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+                ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+                ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
                 ->limit(1)
                 ->first();
 
-              
+            
                 $latestRecords['seminar']['title'] = $latestSeminar->title;
+                $latestRecords['seminar']['ticket_price'] = $latestSeminar->ticket_price;
                 $latestRecords['seminar']['total_ticket'] = $latestSeminar->total_ticket;
                 $latestRecords['seminar']['venue'] = $latestSeminar->venue;
+                $latestRecords['seminar']['start_date'] = $latestSeminar->start_date;
+                $latestRecords['seminar']['start_time'] = $latestSeminar->start_time;
+                $latestRecords['seminar']['end_time'] = $latestSeminar->end_time;
 
                 $latestRecords['seminar']['datetime'] = convertDateTimeFormat($latestSeminar->start_date.' '.$latestSeminar->start_time,'fulldatetime') .'-'. Carbon::parse($latestSeminar->end_time)->format('h:i A');
 
-                $latestRecords['seminar']['image_url'] = $latestSeminar->image_url ? $latestSeminar->image_url : asset(config('constants.default.no_image'));
+                $latestRecords['seminar']['imageUrl'] = $latestSeminar->image_url ? $latestSeminar->image_url : asset(config('constants.default.no_image'));
                 // End Latest Seminar Details
-
-                // Start Latest Blog Details
-                $latestBlog = Post::where('type','blog')->orderBy('publish_date', 'desc')->limit(1)->first();
-
-                $latestRecords['blog']['title']   = $latestBlog->title;
-                $latestRecords['blog']['slug']    = $latestBlog->slug;
-                $latestRecords['blog']['content'] = $latestBlog->content;
-                $latestRecords['blog']['type']    = $latestBlog->type;
-
-                $latestRecords['blog']['publish_date'] = convertDateTimeFormat($latestBlog->publish_date,'fulldate');
-
-                $latestRecords['blog']['image_url'] = $latestBlog->blog_image_url ? $latestBlog->blog_image_url : asset(config('constants.default.no_image'));
-
-                // End Latest Blog Details
-
-                // Start Latest News Details
-                $latestNews = Post::where('type','news')->orderBy('publish_date', 'desc')->limit(1)->first();
-
-                $latestRecords['news']['title']   = $latestNews->title;
-                $latestRecords['news']['slug']    = $latestNews->slug;
-                $latestRecords['news']['content'] = $latestNews->content;
-                $latestRecords['news']['type']    = $latestNews->type;
-
-                $latestRecords['news']['publish_date'] = convertDateTimeFormat($latestNews->publish_date,'fulldate');
-
-                $latestRecords['news']['image_url'] = $latestNews->news_image_url ? $latestNews->news_image_url : asset(config('constants.default.no_image'));
-
-                // End Latest News Details
 
 
             }elseif($pageName == 'home'){
                 // Start upcomming Seminar Details
-                $upcomingSeminars = Seminar::select('id','title','venue','start_date','start_time','end_time')->where('start_date', '>=', $currentDateTime->toDateString())
-                ->where(function ($query) use ($currentDateTime) {
-                    $query->where('end_time', '>', $currentDateTime->toTimeString())
-                        ->orWhere('start_date', '>', $currentDateTime->toDateString());
-                })
-                ->orderBy('start_date', 'asc')
-                ->orderBy('start_time', 'asc')
+                $upcomingSeminars = Seminar::select('id','title','venue','start_date','start_time','end_time','ticket_price','total_ticket')
+                ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+                ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+                ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
                 ->limit(3)
                 ->get();
 
@@ -104,7 +104,7 @@ class CommanController extends Controller
                   
                     $seminar->datetime = convertDateTimeFormat($seminar->start_date.' '.$seminar->start_time,'fulldatetime') .'-'. Carbon::parse($seminar->end_time)->format('h:i A');
     
-                    $seminar->image_url = $seminar->image_url ? $seminar->image_url : asset(config('constants.default.no_image'));
+                    $seminar->imageUrl = $seminar->image_url ? $seminar->image_url : asset(config('constants.default.no_image'));
                 }
 
                 $latestRecords['upcomingSeminars'] = $upcomingSeminars;
@@ -113,17 +113,17 @@ class CommanController extends Controller
 
                 // Start Latest Post Details
 
-                $latestPosts = Post::select('id','title','slug','content','publish_date','type')->whereIn('type',['blog','news'])->orderBy('publish_date', 'desc')->limit(3)->get();
+                $latestPosts = Post::select('id','title','slug','content','publish_date','type','created_by')->where('publish_date','<=',$currentDate)->whereIn('type',['news'])->orderBy('publish_date', 'desc')->limit(3)->get();
 
                 foreach($latestPosts as $post){
                   
                     $post->datetime = convertDateTimeFormat($post->publish_date,'fulldate');
     
-                    if($post->type == 'blog'){
-                        $post->image_url = $post->blog_image_url ? $post->blog_image_url : asset(config('constants.default.no_image'));
-                    }elseif($post->type == 'news'){
+                    if($post->type == 'news'){
                         $post->image_url = $post->news_image_url ? $post->news_image_url : asset(config('constants.default.no_image'));
                     }
+
+                    $post->created_by  = $post->user->name ?? null;
                 }
 
                 $latestRecords['latestPosts'] = $latestPosts;

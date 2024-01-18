@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('title')->nullable();
             $table->integer('total_ticket')->default(0);
+            $table->double('ticket_price')->nullable()->default(null);
             $table->date('start_date')->nullable()->default(null);
             $table->time('start_time')->nullable()->default(null);
-            $table->date('end_date')->nullable()->default(null);
             $table->time('end_time')->nullable()->default(null);
             $table->text('venue')->nullable()->default(null);
             $table->tinyInteger('status')->default(1)->comment('0=> inactive, 1=> active');

@@ -5,38 +5,38 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class FlagResolvedMail extends Mailable
+class WelcomeMail extends Mailable 
 {
     use Queueable, SerializesModels;
 
-    public $subject,$name,$message;
-
+    
+    public $name, $subject, $email;
+  
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($subject,$name,$message)
+    public function __construct($subject,$name,$email)
     {
         $this->subject = $subject;
-        $this->name = ucwords($name);
-        $this->message = $message;
+        $this->name    = $name;
+        $this->email   = $email;
     }
 
-   /**
+
+    /**
      * Build the message.
      *
      * @return $this
      */
     public function build()
     {
-        return $this->markdown('emails.flag-resolved-mail', [
-                'name' => $this->name,
-                'message' => $this->message,
+        return $this->markdown('emails.welcome-mail', [
+                'name'  => $this->name,
+                'email' => $this->email
             ])->subject($this->subject);
     }
 }

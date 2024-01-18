@@ -62,7 +62,7 @@ class NewsTable extends Component
             $statusSearch = 0;
         }
 
-        $currentDate = now()->toDateString();
+        $currentDate = now()->format('Y-m-d');
 
         $allNews = Post::query()->where('type', $this->type)->where(function ($query) use ($searchValue, $statusSearch) {
             $query->where('title', 'like', '%' . $searchValue . '%')
@@ -70,13 +70,16 @@ class NewsTable extends Component
                 ->orWhereRaw("DATE_FORMAT(publish_date,  '" . config('constants.search_full_datetime_format') . "') = ?", [date(config('constants.full_datetime_format'), strtotime($searchValue))]);
             // ->orWhereRaw("date_format(created_at, '" . config('constants.search_datetime_format') . "') like ?", ['%' . $searchValue . '%']);
         })
-
+            
             ->orderByRaw('CASE 
-        WHEN publish_date = ? THEN 0
-        WHEN publish_date > ? THEN 1
-        WHEN publish_date < ? THEN 2
-        END', [$currentDate, $currentDate, $currentDate])
-            ->orderBy('publish_date', $this->sortDirection)
+                    WHEN publish_date >= "'.$currentDate.'" THEN 0
+                    WHEN publish_date <= "'.$currentDate.'" THEN 1
+                    ELSE 3
+                END,
+                publish_date'
+            )
+
+            // ->orderBy('publish_date', $this->sortDirection)
 
             // ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);

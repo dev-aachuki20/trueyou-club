@@ -12,9 +12,6 @@ class Seminar extends Model
 
     public $table = 'seminars';
 
-    protected $appends = ['image_url'];
-
-    
     protected $dates = [
         'created_at',
         'updated_at',
@@ -24,9 +21,9 @@ class Seminar extends Model
     protected $fillable = [
         'title',
         'total_ticket',
+        'ticket_price',
         'start_date',
         'start_time',
-        'end_date',
         'end_time',
         'venue',
         'status',

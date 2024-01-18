@@ -23,7 +23,7 @@
   content: "";
   height: 16px;
   width: 16px;
-  left: 13px;
+  left: 8px;
   bottom: 4px;
   background-color: white;
   -webkit-transition: .4s;
@@ -47,7 +47,7 @@ input:checked + .switch-slider:before {
 
 /*------ ADDED CSS ---------*/
 .switch-slider:after {
- content: 'Break';
+ content: 'Inactive';
  color: white;
  display: block;
  position: absolute;
@@ -59,6 +59,65 @@ input:checked + .switch-slider:before {
 }
 
 input:checked + .switch-slider:after {  
+  content: 'Active';
+  left: 40%;
+}
+/*--------- END --------*/
+
+
+.switch-slider-other {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ff4747;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 34px;
+}
+.switch-slider-other:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 13px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .switch-slider-other {
+  background-color: #57b657;
+}
+
+input:focus + .switch-slider-other {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .switch-slider-other:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(55px);
+}
+
+/*------ ADDED CSS ---------*/
+.switch-slider-other:after {
+ content: 'Break';
+ color: white;
+ display: block;
+ position: absolute;
+ transform: translate(-50%,-50%);
+ top: 50%;
+ left: 60%;
+ font-size: 10px;
+ font-family: Verdana, sans-serif;
+}
+
+input:checked + .switch-slider-other:after {  
   content: 'Continue';
   left: 40%;
 }
@@ -308,7 +367,7 @@ button.btn, a.btn {
     box-shadow: none !important;
 }
 
-.switch-slider:after{
+.switch-slider:after,.switch-slider-other:after{
   font-size: 12px;
 }
 .form-group label {

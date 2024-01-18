@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use App\Mail\WelcomeMail;
 
 class LoginRegisterController extends Controller
 {
@@ -19,13 +20,13 @@ class LoginRegisterController extends Controller
         $validator = Validator::make($request->all(), [
             'name'                      => 'required',
             'email'                     => 'required|email|unique:users,email,NULL,id',
-            // 'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id',
+            'phone'                     => 'required|numeric|digits:10|not_in:-|unique:users,phone,NULL,id',
             'password'                  => 'required|min:8',
             'password_confirmation'     => 'required|same:password',
         ],[
-            // 'phone.required'=>'The mobile number field is required',
-            // 'phone.digits' =>'The mobile number must be 10 digits',
-            // 'phone.unique' =>'The mobile number already exists.',
+            'phone.required'=>'The phone field is required',
+            'phone.digits' =>'The phone must be 10 digits',
+            'phone.unique' =>'The phone already exists.',
         ]);
         if($validator->fails()){
              //Error Response Send
@@ -47,6 +48,10 @@ class LoginRegisterController extends Controller
             $input['password'] = bcrypt($input['password']);
             $user = User::create($input);
 
+            //Send welcome mail for user
+            $subject = 'Welcome to ' . config('app.name');
+            Mail::to($user->email)->queue(new WelcomeMail($subject, $user->name, $user->email));
+            
             //Verification mail sent
             $user->NotificationSendToVerifyEmail();
 

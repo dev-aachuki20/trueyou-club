@@ -13,7 +13,11 @@ class WebinarController extends Controller
     {
 
         try {
-            $getAllRecords = Webinar::paginate(10);
+            
+            $getAllRecords = Webinar::select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+            ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+            ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
+            ->paginate(10);
 
             if ($getAllRecords->count() > 0) {
 
