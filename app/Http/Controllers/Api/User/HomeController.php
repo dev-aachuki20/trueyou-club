@@ -31,10 +31,11 @@ class HomeController extends Controller
 
                 $submissionPercentage = $todayQuote->users()->count() / $this->getTotalUsers() * 100;
 
+                $quoteMessage = $todayQuote->message;
                 $responseData = [
                     'status'        => true,
-                    'message'       => $todayQuote,
-                    'submission_percentage' => $submissionPercentage,
+                    'message'       => $quoteMessage,
+                    'submission_percentage' => $submissionPercentage . '%',
                 ];
                 return response()->json($responseData, 200);
             }
@@ -107,5 +108,48 @@ class HomeController extends Controller
         // get the total count of users
         $role = Role::where('title', 'User')->first();
         return $role ? $role->users()->count() : 0;
+    }
+
+    public function leadBoardUser()
+    {
+        try {
+            $today = Carbon::today();
+            $todaysQuote = Quote::whereDate('created_at', $today)->first();
+
+            if ($todaysQuote) {
+                $leadUsersList = $todaysQuote->users->map(function ($user) {
+                    return [
+                        'username' => $user->name,
+                        'image_url' => $user->profile_image_url ? asset($user->profile_image_url) : asset(config('constants.default.no_image')),
+                    ];
+                });
+
+                $responseData = [
+                    'status'        => true,
+                    'message'       => 'Lead Board Users list',
+                    'leadUsersList' => $leadUsersList,
+                ];
+
+                return response()->json($responseData, 200);
+            } else {
+                $responseData = [
+                    'status'        => false,
+                    'message'       => "No user exist",
+                ];
+
+                return response()->json($responseData, 404);
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage() . '->' . $e->getLine());
+
+            // Return Error Response
+            $responseData = [
+                'status' => false,
+                'error'  => trans('messages.error_message'),
+            ];
+
+            return response()->json($responseData, 500);
+        }
     }
 }

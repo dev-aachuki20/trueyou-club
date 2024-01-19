@@ -6,19 +6,40 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Rules\MatchOldPassword;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\Webinar;
+use Carbon\Carbon;
 
 
 class ProfileController extends Controller
 {
     public function userDetails()
     {
+        // get closest webinar
+        $currentDate = now()->toDateString();
+        $currentTime = now()->toTimeString();
+
+
+        $closestWebinar = Webinar::where('start_time', '>=', $currentDate)->where('start_time', '>=', $currentTime)->orderBy('start_date', 'desc')->orderBy('start_time', 'desc')->first();
+
+        if ($closestWebinar) {
+            $closestWebinar->image_url = $closestWebinar->image_url ? $closestWebinar->image_url : asset(config('constants.default.no_image'));
+        }
+
+        $getWebinar = [
+            'title' => $closestWebinar->title ?? null,
+            'start_date' => $closestWebinar->start_date ?? null,
+            'start_time' => $closestWebinar->start_time ?? null,
+            'end_time' => $closestWebinar->end_time ?? null,
+            'image_url' => $closestWebinar->image_url ?? null,
+        ];
+
         // Get the authenticated user
         $user = Auth::user();
-       
+
         $user_details = [
             'first_name' => $user->first_name ?? null,
             'last_name'  => $user->last_name ?? null,
@@ -27,7 +48,9 @@ class ProfileController extends Controller
             'phone'      => $user->phone ?? null,
             'profile_image' => $user->profile_image_url ?? null,
             'is_active'  => $user->is_active ?? 0,
+            'closest_webinar_detail' => $getWebinar ?? null,
         ];
+
         // Return response
         $responseData = [
             'status' => true,
@@ -36,7 +59,8 @@ class ProfileController extends Controller
         return response()->json($responseData, 200);
     }
 
-    public function updateProfile(Request $request){
+    public function updateProfile(Request $request)
+    {
 
         $userId = auth()->user()->id;
 
@@ -45,23 +69,23 @@ class ProfileController extends Controller
             'phone' => 'required',
         ];
 
-       
+
         // if(!auth()->user()->email){
         //     $validatedData['email']  = ['required', 'string', 'email', 'max:255', Rule::unique((new User)->getTable(), 'email')->ignore($userId)->whereNull('deleted_at')];
         // }
 
 
-        $request->validate($validatedData,[
+        $request->validate($validatedData, [
             'confirm_password.same' => 'The confirm password and new password must match.'
         ]);
 
         DB::beginTransaction();
         try {
-            $fullName = explode(' ',$request->name);
+            $fullName = explode(' ', $request->name);
 
             $updateRecords = [
                 'first_name'  => $fullName[0],
-                'last_name'  => isset($fullName[1]) ? $fullName[1] : null ,
+                'last_name'  => isset($fullName[1]) ? $fullName[1] : null,
                 'name'  => $request->name,
                 'phone' => $request->phone,
             ];
@@ -74,7 +98,7 @@ class ProfileController extends Controller
 
             DB::commit();
 
-            if($updatedUserRecord){
+            if ($updatedUserRecord) {
                 //Return Success Response
                 $responseData = [
                     'status'        => true,
@@ -83,12 +107,10 @@ class ProfileController extends Controller
 
                 return response()->json($responseData, 200);
             }
-
-
-        }catch (\Exception $e) { 
+        } catch (\Exception $e) {
             DB::rollBack();
             //  dd($e->getMessage().'->'.$e->getLine());
-            
+
             //Return Error Response
             $responseData = [
                 'status'        => false,
@@ -96,33 +118,33 @@ class ProfileController extends Controller
             ];
             return response()->json($responseData, 500);
         }
-
     }
 
-    public function changeProfileImage(Request $request){
+    public function changeProfileImage(Request $request)
+    {
         $userId = auth()->user()->id;
 
-        $validatedData['profile_image'] = ['required','image','mimes:jpeg,jpg,png','max:'.config('constants.profile_image_size')];
-        
+        $validatedData['profile_image'] = ['required', 'image', 'mimes:jpeg,jpg,png', 'max:' . config('constants.profile_image_size')];
+
         $request->validate($validatedData);
 
         DB::beginTransaction();
         try {
-           
+
             $fetchUser = User::find($userId);
 
             DB::commit();
-            if($fetchUser){
+            if ($fetchUser) {
                 // Start to Update Profile Image
-                if($request->hasFile('profile_image')){
-                   
+                if ($request->hasFile('profile_image')) {
+
                     $actionType = 'save';
                     $uploadId = null;
-                    if($fetchUser->profileImage){
+                    if ($fetchUser->profileImage) {
                         $uploadId = $fetchUser->profileImage->id;
                         $actionType = 'update';
                     }
-                    uploadImage($fetchUser, $request->file('profile_image'), 'user/profile-images',"profile", 'original', $actionType, $uploadId);
+                    uploadImage($fetchUser, $request->file('profile_image'), 'user/profile-images', "profile", 'original', $actionType, $uploadId);
                 }
                 // End to Update Profile Image
 
@@ -134,12 +156,10 @@ class ProfileController extends Controller
 
                 return response()->json($responseData, 200);
             }
-
-
-        }catch (\Exception $e) { 
+        } catch (\Exception $e) {
             DB::rollBack();
             //  dd($e->getMessage().'->'.$e->getLine());
-            
+
             //Return Error Response
             $responseData = [
                 'status'        => false,
@@ -149,21 +169,22 @@ class ProfileController extends Controller
         }
     }
 
-    public function updateStatus(Request $request){
+    public function updateStatus(Request $request)
+    {
         $userId = auth()->user()->id;
 
-        $validatedData['status'] = ['required','in:0,1'];
-        
+        $validatedData['status'] = ['required', 'in:0,1'];
+
         $request->validate($validatedData);
 
         DB::beginTransaction();
         try {
-           
-            $fetchUser = User::where('id',$userId)->update(['is_active'=>$request->status]);
+
+            $fetchUser = User::where('id', $userId)->update(['is_active' => $request->status]);
 
             DB::commit();
-            if($fetchUser){
-               
+            if ($fetchUser) {
+
                 //Return Success Response
                 $responseData = [
                     'status'        => true,
@@ -172,12 +193,10 @@ class ProfileController extends Controller
 
                 return response()->json($responseData, 200);
             }
-
-
-        }catch (\Exception $e) { 
+        } catch (\Exception $e) {
             DB::rollBack();
             //  dd($e->getMessage().'->'.$e->getLine());
-            
+
             //Return Error Response
             $responseData = [
                 'status'        => false,
@@ -187,14 +206,15 @@ class ProfileController extends Controller
         }
     }
 
-    public function updatePassword(Request $request){
+    public function updatePassword(Request $request)
+    {
         $userId = auth()->user()->id;
 
-        $validatedData['old_password'] = ['required', 'string','min:8',new MatchOldPassword];
+        $validatedData['old_password'] = ['required', 'string', 'min:8', new MatchOldPassword];
         $validatedData['new_password'] =  ['required', 'string', 'min:8', 'different:old_password'];
-        $validatedData['confirm_password'] = ['required','min:8','same:new_password'];
-        
-        $request->validate($validatedData,[
+        $validatedData['confirm_password'] = ['required', 'min:8', 'same:new_password'];
+
+        $request->validate($validatedData, [
             'confirm_password.same' => 'The confirm password and new password must match.'
         ]);
 
@@ -206,7 +226,7 @@ class ProfileController extends Controller
 
             DB::commit();
 
-            if($updatedUserRecord){
+            if ($updatedUserRecord) {
                 //Return Success Response
                 $responseData = [
                     'status'        => true,
@@ -215,12 +235,10 @@ class ProfileController extends Controller
 
                 return response()->json($responseData, 200);
             }
-
-
-        }catch (\Exception $e) { 
+        } catch (\Exception $e) {
             DB::rollBack();
             //  dd($e->getMessage().'->'.$e->getLine());
-            
+
             //Return Error Response
             $responseData = [
                 'status'        => false,

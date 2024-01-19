@@ -81,7 +81,9 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
 
     Route::post('/post-task', [HomeController::class, 'store']);
 
-    Route::get('/today-quote', [HomeController::class, 'index']);
+    Route::get('/today-quote-percentage', [HomeController::class, 'index']);
+
+    Route::get('/lead-board-user-list', [HomeController::class, 'leadBoardUser']);
 });
 
 
