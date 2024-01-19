@@ -10141,7 +10141,7 @@ pre code {
 .table th, .jsgrid .jsgrid-table th,
 .table td,
 .jsgrid .jsgrid-table td {
-  padding: 1.125rem 1.375rem;
+  padding: .5rem 1.375rem;
   vertical-align: top;
   border-top: 1px solid #D4DEEB;
 }
@@ -10182,7 +10182,7 @@ pre code {
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-  background-color: #F5F7FF;
+  background-color: #f5f7ff57;
 }
 
 .table-hover tbody tr:hover {
@@ -28472,7 +28472,8 @@ div.tagsinput span.tag a {
 
 /* Sidebar */
 .sidebar {
-  min-height: calc(100vh - 131px);
+  height: calc(100vh - 131px);
+  overflow-y: auto;
   background: #fff;
   font-family: 'Roboto', sans-serif;
   font-weight: 500;

@@ -45,16 +45,21 @@
                     <td>{{ ucwords($user->phone) }}</td>
 
                     <td>{{ convertDateTimeFormat($user->created_at,'date_month_year') }}</td>
+
                     <td>
-                        <label class="toggle-switch">
+                        <div class="toggleSwitch-wrap">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                                <label class="custom-control-label" for="customSwitch1">Continue</label>
+                            </div>
+                        </div>
+                        <!-- <label class="toggle-switch">
                             <input type="checkbox" class="toggleSwitch" wire:click.prevent="$emitUp('toggle',{{$user->id}})" {{ $user->is_active == 1 ? 'checked' : '' }}>
                             <div class="switch-slider-other round"></div>
-                        </label>
-
+                        </label> -->
                     </td>
 
                     <td>
-
                         <div class="update-webinar table-btns">
                             <ul class="d-flex">
                                 @can('user_show')
@@ -96,8 +101,6 @@
                                 @endcan
                             </ul>
                         </div>
-
-
                         {{--
                         @can('user_show')
                         <button title="Show" type="button" wire:click.prevent="$emitUp('show', {{$user->id}})" class="btn btn-info view-btn btn-rounded btn-icon">
