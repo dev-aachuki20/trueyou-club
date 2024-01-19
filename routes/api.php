@@ -78,6 +78,8 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
     // Route::post('/checkout-success', [PaymentController::class, 'checkoutSuccess']);
 
     Route::get('/get-all-webinars', [WebinarController::class, 'index']);
+
+    Route::post('/post-task', [HomeController::class, 'store']);
 });
 
 

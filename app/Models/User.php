@@ -74,7 +74,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->morphMany(Uploads::class, 'uploadsable');
     }
 
-  
+
     public function getIsAdminAttribute()
     {
         return $this->roles()->where('id', 1)->exists();
@@ -87,21 +87,22 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function profileImage()
     {
-        return $this->morphOne(Uploads::class, 'uploadsable')->where('type','profile');
+        return $this->morphOne(Uploads::class, 'uploadsable')->where('type', 'profile');
     }
 
     public function getProfileImageUrlAttribute()
     {
-        if($this->profileImage){
+        if ($this->profileImage) {
             return $this->profileImage->file_url;
         }
         return "";
     }
-   
-    public function NotificationSendToVerifyEmail (){
+
+    public function NotificationSendToVerifyEmail()
+    {
         $user = $this;
-        
-        $url = config('constants.front_end_url').'email/verify/'.$user->id.'/'.sha1($user->email);
+
+        $url = config('constants.front_end_url') . 'email/verify/' . $user->id . '/' . sha1($user->email);
 
         $subject = 'Verify Email Address';
 
@@ -113,4 +114,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Transaction::class);
     }
 
+    public function quotes()
+    {
+        return $this->belongsToMany(Quote::class);
+    }
 }

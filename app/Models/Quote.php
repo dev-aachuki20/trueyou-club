@@ -26,12 +26,12 @@ class Quote extends Model
         'deleted_at',
     ];
 
-    protected static function boot () 
+    protected static function boot()
     {
         parent::boot();
-        static::creating(function(Quote $model) {
+        static::creating(function (Quote $model) {
             $model->created_by = auth()->user()->id;
-        });   
+        });
     }
 
     public function uploads()
@@ -44,5 +44,8 @@ class Quote extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

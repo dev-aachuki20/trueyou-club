@@ -110,6 +110,17 @@
                 }
             }
         });
+        
+        $('#updateButton').on('click', function() {
+            // Get the current code view content
+            var codeViewContent = $('textarea#summernote').summernote('code');
+
+            // Set the content in the code view
+            $('textarea#summernote').summernote('code', codeViewContent);
+
+            // Trigger the Livewire update
+            @this.set('content', codeViewContent);
+        });
 
     });
 </script>

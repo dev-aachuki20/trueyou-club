@@ -27,19 +27,38 @@ class Index extends Component
         $currentTime = now()->toTimeString();
 
         $webinar = Webinar::query()
-            ->where('start_date', '>=', $currentDate)
-            ->where('start_time', '<', $currentTime)
-            ->where('end_time', '>', $currentTime)
-            ->orderBy('start_date', 'desc')
-            ->orderBy('start_time', 'desc')
+            ->where(function ($query) use ($currentDate, $currentTime) {
+                $query->where('start_date', '=', $currentDate)
+                    ->where('start_time', '<=', $currentTime)
+                    ->where('end_time', '>', $currentTime);
+            })
+            ->orWhere(function ($query) use ($currentDate) {
+                $query->where('start_date', '>', $currentDate);
+            })
+            ->orWhere(function ($query) use ($currentDate, $currentTime) {
+                $query->where('start_date', '<=', $currentDate);
+                $query->where('end_time', '<=', $currentTime);
+            })
+
+            // ->orderBy('start_date')
+            // ->orderBy('start_time')
             ->first();
 
         $seminar = Seminar::query()
-            ->where('start_date', '>=', $currentDate)
-            ->where('start_time', '<', $currentTime)
-            ->where('end_time', '>', $currentTime)
-            ->orderBy('start_date', 'desc')
-            ->orderBy('start_time', 'desc')
+            ->where(function ($query) use ($currentDate, $currentTime) {
+                $query->where('start_date', '=', $currentDate)
+                    ->where('start_time', '<=', $currentTime)
+                    ->where('end_time', '>', $currentTime);
+            })
+            ->orWhere(function ($query) use ($currentDate) {
+                $query->where('start_date', '>', $currentDate);
+            })
+            ->orWhere(function ($query) use ($currentDate, $currentTime) {
+                $query->where('start_date', '<=', $currentDate);
+                $query->where('end_time', '<=', $currentTime);
+            })
+            ->orderBy('start_date')
+            ->orderBy('start_time')
             ->first();
 
         $todaysQuote = Quote::whereDate('created_at', today())->first();
