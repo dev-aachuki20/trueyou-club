@@ -159,7 +159,7 @@
                         <li class="col-list">
                            <div class="webinar-item  {{ $endDateTime < $now ? 'webinar-disabled' : '' }} {{ $diffInSeconds > 0 ? 'webinar-item-active' : '' }}" data-diff_in_seconds="{{ $diffInSeconds }}">
                               <div class="webinar-item-inner seminar-wrapper">
-                                 
+
                                  @if($endDateTime < $now) <div class="buyer-active-verfiy"><span>Expired Seminar </span></div>
                               @endif
 
@@ -249,21 +249,28 @@
                      </button>
                   </div> -->
             </div>
-            @if($todaysQuote)
             <div class="qoute-listng">
                <div class="contnet-box">
+                  @if($todaysQuote)
                   <div class="qoute-item blur-qoute">
                      {{ucfirst($todaysQuote->message ?? '')}}
                   </div>
+
                   <span>
-                     25% of people have completed their task few more to go!
+                     {{$submissionPercentage ?? 0}}% of people have completed their task few more to go!
                   </span>
+                  @endif
+
+                  @if(!$todaysQuote)
+                  <div class="qoute-item blur-qoute">
+                     No Quote.
+                  </div>
+                  @endif
                </div>
                <div class="img-box">
                   <img class="img-fluid" src="{{ asset('admin/images/quote-image.svg') }}" alt="">
                </div>
             </div>
-            @endif
          </div>
       </div>
    </div>
@@ -277,13 +284,16 @@
       </div>
       <div class="card-body mt-4">
          <ul>
+
+            @if($leadUsersList && $leadUsersList->count()>0)
+            @foreach($leadUsersList as $leaduser)
             <li>
                <div class="content">
                   <div class="img-box">
-                     <img class="img-fluid" src="{{ asset('admin/images/Lead-Board01.png') }}" alt="">
+                     <img class="img-fluid" src="{{ $leaduser && $leaduser->profile_image_url  ? asset($leaduser->profile_image_url) : asset(config('constants.default.no_image')) }}" alt="">
                   </div>
                   <div class="title">
-                     Cameron Williamson
+                     {{ucwords($leaduser->name) ?? ''}}
                   </div>
                </div>
                <div class="vip-box">
@@ -325,204 +335,11 @@
                </div>
 
             </li>
+            @endforeach
+            @endif
 
-            <li>
-               <div class="content">
-                  <div class="img-box">
-                     <img class="img-fluid" src="{{ asset('admin/images/Lead-Board02.png') }}" alt="">
-                  </div>
-                  <div class="title">
-                     Cameron Williamson
-                  </div>
-               </div>
-               <div class="vip-box">
-                  <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M12.3208 11.1356C12.3208 11.6076 11.9397 12 11.459 12H3.53953C3.06366 12 2.67773 11.6135 2.67773 11.1356C2.67773 10.6672 3.05699 10.2726 3.53953 10.2726H11.459C11.9349 10.2726 12.3208 10.6591 12.3208 11.1356Z" fill="url(#paint0_linear_277_10065)" />
-                     <path d="M13.2584 4.91025L13.0892 5.3577L11.4137 9.79236L11.2317 10.2718H3.76685L3.58496 9.79236L1.90939 5.35773L1.74023 4.91029C1.99236 4.81438 2.20618 4.64181 2.35299 4.42125C2.4998 4.49636 2.64662 4.56188 2.79343 4.62101C4.32534 5.2139 5.85087 4.77763 6.8546 2.93024C6.9296 2.79442 6.9998 2.65059 7.06842 2.49878C7.20407 2.54673 7.34927 2.57228 7.49928 2.57228C7.65086 2.57228 7.79768 2.54673 7.93172 2.49878C8.00034 2.65059 8.07053 2.79445 8.14554 2.93024C9.15088 4.77925 10.6748 5.2139 12.2067 4.62101C12.3535 4.56188 12.5003 4.49636 12.6471 4.42125C12.794 4.64177 13.0062 4.81276 13.2584 4.91025Z" fill="url(#paint1_linear_277_10065)" />
-                     <path d="M8.78459 1.28612C8.78459 1.99642 8.20965 2.57354 7.49908 2.57354C6.78982 2.57354 6.21484 1.99642 6.21484 1.28612C6.21484 0.575817 6.78982 0 7.49908 0C8.20965 3.51322e-05 8.78459 0.575817 8.78459 1.28612Z" fill="url(#paint2_linear_277_10065)" />
-                     <path d="M2.56974 3.70632C2.56974 4.41662 1.99477 4.99374 1.28424 4.99374C0.574975 4.99374 0 4.41662 0 3.70632C0 2.99601 0.574975 2.4202 1.28424 2.4202C1.9948 2.4202 2.56974 2.99601 2.56974 3.70632Z" fill="url(#paint3_linear_277_10065)" />
-                     <path d="M14.9994 3.70632C14.9994 4.41662 14.4245 4.99374 13.7139 4.99374C13.0047 4.99374 12.4297 4.41662 12.4297 3.70632C12.4297 2.99601 13.0047 2.4202 13.7139 2.4202C14.4245 2.4202 14.9994 2.99601 14.9994 3.70632Z" fill="url(#paint4_linear_277_10065)" />
-                     <path d="M8.71391 7.19696C8.71391 8.16861 8.16977 8.95645 7.49955 8.95645C6.82933 8.95645 6.28516 8.16861 6.28516 7.19696C6.28516 6.22534 6.8293 5.43747 7.49955 5.43747C8.16977 5.43747 8.71391 6.22534 8.71391 7.19696Z" fill="url(#paint5_linear_277_10065)" />
-                     <defs>
-                        <linearGradient id="paint0_linear_277_10065" x1="7.49928" y1="12" x2="7.49928" y2="10.2726" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F9403E" />
-                           <stop offset="1" stop-color="#F77953" />
-                        </linearGradient>
-                        <linearGradient id="paint1_linear_277_10065" x1="7.49931" y1="10.2718" x2="7.49931" y2="2.49874" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F79808" />
-                           <stop offset="1" stop-color="#EDBB0B" />
-                        </linearGradient>
-                        <linearGradient id="paint2_linear_277_10065" x1="7.49971" y1="2.57354" x2="7.49971" y2="3.52803e-05" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F79808" />
-                           <stop offset="1" stop-color="#EDBB0B" />
-                        </linearGradient>
-                        <linearGradient id="paint3_linear_277_10065" x1="1.28487" y1="4.99374" x2="1.28487" y2="2.4202" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F79808" />
-                           <stop offset="1" stop-color="#EDBB0B" />
-                        </linearGradient>
-                        <linearGradient id="paint4_linear_277_10065" x1="13.7146" y1="4.99374" x2="13.7146" y2="2.4202" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F79808" />
-                           <stop offset="1" stop-color="#EDBB0B" />
-                        </linearGradient>
-                        <linearGradient id="paint5_linear_277_10065" x1="7.49955" y1="8.95645" x2="7.49955" y2="5.43747" gradientUnits="userSpaceOnUse">
-                           <stop offset="0.0168" stop-color="#CCCCCC" />
-                           <stop offset="1" stop-color="#F2F2F2" />
-                        </linearGradient>
-                     </defs>
-                  </svg>
-                  VIP
-               </div>
 
-            </li>
-
-            <li>
-               <div class="content">
-                  <div class="img-box">
-                     <img class="img-fluid" src="{{ asset('admin/images/Lead-Board03.png') }}" alt="">
-                  </div>
-                  <div class="title">
-                     Cameron Williamson
-                  </div>
-               </div>
-               <div class="vip-box">
-                  <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M12.3208 11.1356C12.3208 11.6076 11.9397 12 11.459 12H3.53953C3.06366 12 2.67773 11.6135 2.67773 11.1356C2.67773 10.6672 3.05699 10.2726 3.53953 10.2726H11.459C11.9349 10.2726 12.3208 10.6591 12.3208 11.1356Z" fill="url(#paint0_linear_277_10065)" />
-                     <path d="M13.2584 4.91025L13.0892 5.3577L11.4137 9.79236L11.2317 10.2718H3.76685L3.58496 9.79236L1.90939 5.35773L1.74023 4.91029C1.99236 4.81438 2.20618 4.64181 2.35299 4.42125C2.4998 4.49636 2.64662 4.56188 2.79343 4.62101C4.32534 5.2139 5.85087 4.77763 6.8546 2.93024C6.9296 2.79442 6.9998 2.65059 7.06842 2.49878C7.20407 2.54673 7.34927 2.57228 7.49928 2.57228C7.65086 2.57228 7.79768 2.54673 7.93172 2.49878C8.00034 2.65059 8.07053 2.79445 8.14554 2.93024C9.15088 4.77925 10.6748 5.2139 12.2067 4.62101C12.3535 4.56188 12.5003 4.49636 12.6471 4.42125C12.794 4.64177 13.0062 4.81276 13.2584 4.91025Z" fill="url(#paint1_linear_277_10065)" />
-                     <path d="M8.78459 1.28612C8.78459 1.99642 8.20965 2.57354 7.49908 2.57354C6.78982 2.57354 6.21484 1.99642 6.21484 1.28612C6.21484 0.575817 6.78982 0 7.49908 0C8.20965 3.51322e-05 8.78459 0.575817 8.78459 1.28612Z" fill="url(#paint2_linear_277_10065)" />
-                     <path d="M2.56974 3.70632C2.56974 4.41662 1.99477 4.99374 1.28424 4.99374C0.574975 4.99374 0 4.41662 0 3.70632C0 2.99601 0.574975 2.4202 1.28424 2.4202C1.9948 2.4202 2.56974 2.99601 2.56974 3.70632Z" fill="url(#paint3_linear_277_10065)" />
-                     <path d="M14.9994 3.70632C14.9994 4.41662 14.4245 4.99374 13.7139 4.99374C13.0047 4.99374 12.4297 4.41662 12.4297 3.70632C12.4297 2.99601 13.0047 2.4202 13.7139 2.4202C14.4245 2.4202 14.9994 2.99601 14.9994 3.70632Z" fill="url(#paint4_linear_277_10065)" />
-                     <path d="M8.71391 7.19696C8.71391 8.16861 8.16977 8.95645 7.49955 8.95645C6.82933 8.95645 6.28516 8.16861 6.28516 7.19696C6.28516 6.22534 6.8293 5.43747 7.49955 5.43747C8.16977 5.43747 8.71391 6.22534 8.71391 7.19696Z" fill="url(#paint5_linear_277_10065)" />
-                     <defs>
-                        <linearGradient id="paint0_linear_277_10065" x1="7.49928" y1="12" x2="7.49928" y2="10.2726" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F9403E" />
-                           <stop offset="1" stop-color="#F77953" />
-                        </linearGradient>
-                        <linearGradient id="paint1_linear_277_10065" x1="7.49931" y1="10.2718" x2="7.49931" y2="2.49874" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F79808" />
-                           <stop offset="1" stop-color="#EDBB0B" />
-                        </linearGradient>
-                        <linearGradient id="paint2_linear_277_10065" x1="7.49971" y1="2.57354" x2="7.49971" y2="3.52803e-05" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F79808" />
-                           <stop offset="1" stop-color="#EDBB0B" />
-                        </linearGradient>
-                        <linearGradient id="paint3_linear_277_10065" x1="1.28487" y1="4.99374" x2="1.28487" y2="2.4202" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F79808" />
-                           <stop offset="1" stop-color="#EDBB0B" />
-                        </linearGradient>
-                        <linearGradient id="paint4_linear_277_10065" x1="13.7146" y1="4.99374" x2="13.7146" y2="2.4202" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F79808" />
-                           <stop offset="1" stop-color="#EDBB0B" />
-                        </linearGradient>
-                        <linearGradient id="paint5_linear_277_10065" x1="7.49955" y1="8.95645" x2="7.49955" y2="5.43747" gradientUnits="userSpaceOnUse">
-                           <stop offset="0.0168" stop-color="#CCCCCC" />
-                           <stop offset="1" stop-color="#F2F2F2" />
-                        </linearGradient>
-                     </defs>
-                  </svg>
-                  VIP
-               </div>
-
-            </li>
-
-            <li>
-               <div class="content">
-                  <div class="img-box">
-                     <img class="img-fluid" src="{{ asset('admin/images/Lead-Board04.png') }}" alt="">
-                  </div>
-                  <div class="title">
-                     Cameron Williamson
-                  </div>
-               </div>
-               <div class="vip-box">
-                  <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M12.3208 11.1356C12.3208 11.6076 11.9397 12 11.459 12H3.53953C3.06366 12 2.67773 11.6135 2.67773 11.1356C2.67773 10.6672 3.05699 10.2726 3.53953 10.2726H11.459C11.9349 10.2726 12.3208 10.6591 12.3208 11.1356Z" fill="url(#paint0_linear_277_10065)" />
-                     <path d="M13.2584 4.91025L13.0892 5.3577L11.4137 9.79236L11.2317 10.2718H3.76685L3.58496 9.79236L1.90939 5.35773L1.74023 4.91029C1.99236 4.81438 2.20618 4.64181 2.35299 4.42125C2.4998 4.49636 2.64662 4.56188 2.79343 4.62101C4.32534 5.2139 5.85087 4.77763 6.8546 2.93024C6.9296 2.79442 6.9998 2.65059 7.06842 2.49878C7.20407 2.54673 7.34927 2.57228 7.49928 2.57228C7.65086 2.57228 7.79768 2.54673 7.93172 2.49878C8.00034 2.65059 8.07053 2.79445 8.14554 2.93024C9.15088 4.77925 10.6748 5.2139 12.2067 4.62101C12.3535 4.56188 12.5003 4.49636 12.6471 4.42125C12.794 4.64177 13.0062 4.81276 13.2584 4.91025Z" fill="url(#paint1_linear_277_10065)" />
-                     <path d="M8.78459 1.28612C8.78459 1.99642 8.20965 2.57354 7.49908 2.57354C6.78982 2.57354 6.21484 1.99642 6.21484 1.28612C6.21484 0.575817 6.78982 0 7.49908 0C8.20965 3.51322e-05 8.78459 0.575817 8.78459 1.28612Z" fill="url(#paint2_linear_277_10065)" />
-                     <path d="M2.56974 3.70632C2.56974 4.41662 1.99477 4.99374 1.28424 4.99374C0.574975 4.99374 0 4.41662 0 3.70632C0 2.99601 0.574975 2.4202 1.28424 2.4202C1.9948 2.4202 2.56974 2.99601 2.56974 3.70632Z" fill="url(#paint3_linear_277_10065)" />
-                     <path d="M14.9994 3.70632C14.9994 4.41662 14.4245 4.99374 13.7139 4.99374C13.0047 4.99374 12.4297 4.41662 12.4297 3.70632C12.4297 2.99601 13.0047 2.4202 13.7139 2.4202C14.4245 2.4202 14.9994 2.99601 14.9994 3.70632Z" fill="url(#paint4_linear_277_10065)" />
-                     <path d="M8.71391 7.19696C8.71391 8.16861 8.16977 8.95645 7.49955 8.95645C6.82933 8.95645 6.28516 8.16861 6.28516 7.19696C6.28516 6.22534 6.8293 5.43747 7.49955 5.43747C8.16977 5.43747 8.71391 6.22534 8.71391 7.19696Z" fill="url(#paint5_linear_277_10065)" />
-                     <defs>
-                        <linearGradient id="paint0_linear_277_10065" x1="7.49928" y1="12" x2="7.49928" y2="10.2726" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F9403E" />
-                           <stop offset="1" stop-color="#F77953" />
-                        </linearGradient>
-                        <linearGradient id="paint1_linear_277_10065" x1="7.49931" y1="10.2718" x2="7.49931" y2="2.49874" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F79808" />
-                           <stop offset="1" stop-color="#EDBB0B" />
-                        </linearGradient>
-                        <linearGradient id="paint2_linear_277_10065" x1="7.49971" y1="2.57354" x2="7.49971" y2="3.52803e-05" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F79808" />
-                           <stop offset="1" stop-color="#EDBB0B" />
-                        </linearGradient>
-                        <linearGradient id="paint3_linear_277_10065" x1="1.28487" y1="4.99374" x2="1.28487" y2="2.4202" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F79808" />
-                           <stop offset="1" stop-color="#EDBB0B" />
-                        </linearGradient>
-                        <linearGradient id="paint4_linear_277_10065" x1="13.7146" y1="4.99374" x2="13.7146" y2="2.4202" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F79808" />
-                           <stop offset="1" stop-color="#EDBB0B" />
-                        </linearGradient>
-                        <linearGradient id="paint5_linear_277_10065" x1="7.49955" y1="8.95645" x2="7.49955" y2="5.43747" gradientUnits="userSpaceOnUse">
-                           <stop offset="0.0168" stop-color="#CCCCCC" />
-                           <stop offset="1" stop-color="#F2F2F2" />
-                        </linearGradient>
-                     </defs>
-                  </svg>
-                  VIP
-               </div>
-
-            </li>
-
-            <li>
-               <div class="content">
-                  <div class="img-box">
-                     <img class="img-fluid" src="{{ asset('admin/images/Lead-Board01.png') }}" alt="">
-                  </div>
-                  <div class="title">
-                     Cameron Williamson
-                  </div>
-               </div>
-               <div class="vip-box">
-                  <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M12.3208 11.1356C12.3208 11.6076 11.9397 12 11.459 12H3.53953C3.06366 12 2.67773 11.6135 2.67773 11.1356C2.67773 10.6672 3.05699 10.2726 3.53953 10.2726H11.459C11.9349 10.2726 12.3208 10.6591 12.3208 11.1356Z" fill="url(#paint0_linear_277_10065)" />
-                     <path d="M13.2584 4.91025L13.0892 5.3577L11.4137 9.79236L11.2317 10.2718H3.76685L3.58496 9.79236L1.90939 5.35773L1.74023 4.91029C1.99236 4.81438 2.20618 4.64181 2.35299 4.42125C2.4998 4.49636 2.64662 4.56188 2.79343 4.62101C4.32534 5.2139 5.85087 4.77763 6.8546 2.93024C6.9296 2.79442 6.9998 2.65059 7.06842 2.49878C7.20407 2.54673 7.34927 2.57228 7.49928 2.57228C7.65086 2.57228 7.79768 2.54673 7.93172 2.49878C8.00034 2.65059 8.07053 2.79445 8.14554 2.93024C9.15088 4.77925 10.6748 5.2139 12.2067 4.62101C12.3535 4.56188 12.5003 4.49636 12.6471 4.42125C12.794 4.64177 13.0062 4.81276 13.2584 4.91025Z" fill="url(#paint1_linear_277_10065)" />
-                     <path d="M8.78459 1.28612C8.78459 1.99642 8.20965 2.57354 7.49908 2.57354C6.78982 2.57354 6.21484 1.99642 6.21484 1.28612C6.21484 0.575817 6.78982 0 7.49908 0C8.20965 3.51322e-05 8.78459 0.575817 8.78459 1.28612Z" fill="url(#paint2_linear_277_10065)" />
-                     <path d="M2.56974 3.70632C2.56974 4.41662 1.99477 4.99374 1.28424 4.99374C0.574975 4.99374 0 4.41662 0 3.70632C0 2.99601 0.574975 2.4202 1.28424 2.4202C1.9948 2.4202 2.56974 2.99601 2.56974 3.70632Z" fill="url(#paint3_linear_277_10065)" />
-                     <path d="M14.9994 3.70632C14.9994 4.41662 14.4245 4.99374 13.7139 4.99374C13.0047 4.99374 12.4297 4.41662 12.4297 3.70632C12.4297 2.99601 13.0047 2.4202 13.7139 2.4202C14.4245 2.4202 14.9994 2.99601 14.9994 3.70632Z" fill="url(#paint4_linear_277_10065)" />
-                     <path d="M8.71391 7.19696C8.71391 8.16861 8.16977 8.95645 7.49955 8.95645C6.82933 8.95645 6.28516 8.16861 6.28516 7.19696C6.28516 6.22534 6.8293 5.43747 7.49955 5.43747C8.16977 5.43747 8.71391 6.22534 8.71391 7.19696Z" fill="url(#paint5_linear_277_10065)" />
-                     <defs>
-                        <linearGradient id="paint0_linear_277_10065" x1="7.49928" y1="12" x2="7.49928" y2="10.2726" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F9403E" />
-                           <stop offset="1" stop-color="#F77953" />
-                        </linearGradient>
-                        <linearGradient id="paint1_linear_277_10065" x1="7.49931" y1="10.2718" x2="7.49931" y2="2.49874" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F79808" />
-                           <stop offset="1" stop-color="#EDBB0B" />
-                        </linearGradient>
-                        <linearGradient id="paint2_linear_277_10065" x1="7.49971" y1="2.57354" x2="7.49971" y2="3.52803e-05" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F79808" />
-                           <stop offset="1" stop-color="#EDBB0B" />
-                        </linearGradient>
-                        <linearGradient id="paint3_linear_277_10065" x1="1.28487" y1="4.99374" x2="1.28487" y2="2.4202" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F79808" />
-                           <stop offset="1" stop-color="#EDBB0B" />
-                        </linearGradient>
-                        <linearGradient id="paint4_linear_277_10065" x1="13.7146" y1="4.99374" x2="13.7146" y2="2.4202" gradientUnits="userSpaceOnUse">
-                           <stop stop-color="#F79808" />
-                           <stop offset="1" stop-color="#EDBB0B" />
-                        </linearGradient>
-                        <linearGradient id="paint5_linear_277_10065" x1="7.49955" y1="8.95645" x2="7.49955" y2="5.43747" gradientUnits="userSpaceOnUse">
-                           <stop offset="0.0168" stop-color="#CCCCCC" />
-                           <stop offset="1" stop-color="#F2F2F2" />
-                        </linearGradient>
-                     </defs>
-                  </svg>
-                  VIP
-               </div>
-
-            </li>
-
-            <li>
+            <!-- <li>
                <div class="content">
                   <div class="img-box">
                      <img class="img-fluid" src="{{ asset('admin/images/Lead-Board02.png') }}" alt="">
@@ -864,6 +681,202 @@
                </div>
 
             </li>
+
+            <li>
+               <div class="content">
+                  <div class="img-box">
+                     <img class="img-fluid" src="{{ asset('admin/images/Lead-Board01.png') }}" alt="">
+                  </div>
+                  <div class="title">
+                     Cameron Williamson
+                  </div>
+               </div>
+               <div class="vip-box">
+                  <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                     <path d="M12.3208 11.1356C12.3208 11.6076 11.9397 12 11.459 12H3.53953C3.06366 12 2.67773 11.6135 2.67773 11.1356C2.67773 10.6672 3.05699 10.2726 3.53953 10.2726H11.459C11.9349 10.2726 12.3208 10.6591 12.3208 11.1356Z" fill="url(#paint0_linear_277_10065)" />
+                     <path d="M13.2584 4.91025L13.0892 5.3577L11.4137 9.79236L11.2317 10.2718H3.76685L3.58496 9.79236L1.90939 5.35773L1.74023 4.91029C1.99236 4.81438 2.20618 4.64181 2.35299 4.42125C2.4998 4.49636 2.64662 4.56188 2.79343 4.62101C4.32534 5.2139 5.85087 4.77763 6.8546 2.93024C6.9296 2.79442 6.9998 2.65059 7.06842 2.49878C7.20407 2.54673 7.34927 2.57228 7.49928 2.57228C7.65086 2.57228 7.79768 2.54673 7.93172 2.49878C8.00034 2.65059 8.07053 2.79445 8.14554 2.93024C9.15088 4.77925 10.6748 5.2139 12.2067 4.62101C12.3535 4.56188 12.5003 4.49636 12.6471 4.42125C12.794 4.64177 13.0062 4.81276 13.2584 4.91025Z" fill="url(#paint1_linear_277_10065)" />
+                     <path d="M8.78459 1.28612C8.78459 1.99642 8.20965 2.57354 7.49908 2.57354C6.78982 2.57354 6.21484 1.99642 6.21484 1.28612C6.21484 0.575817 6.78982 0 7.49908 0C8.20965 3.51322e-05 8.78459 0.575817 8.78459 1.28612Z" fill="url(#paint2_linear_277_10065)" />
+                     <path d="M2.56974 3.70632C2.56974 4.41662 1.99477 4.99374 1.28424 4.99374C0.574975 4.99374 0 4.41662 0 3.70632C0 2.99601 0.574975 2.4202 1.28424 2.4202C1.9948 2.4202 2.56974 2.99601 2.56974 3.70632Z" fill="url(#paint3_linear_277_10065)" />
+                     <path d="M14.9994 3.70632C14.9994 4.41662 14.4245 4.99374 13.7139 4.99374C13.0047 4.99374 12.4297 4.41662 12.4297 3.70632C12.4297 2.99601 13.0047 2.4202 13.7139 2.4202C14.4245 2.4202 14.9994 2.99601 14.9994 3.70632Z" fill="url(#paint4_linear_277_10065)" />
+                     <path d="M8.71391 7.19696C8.71391 8.16861 8.16977 8.95645 7.49955 8.95645C6.82933 8.95645 6.28516 8.16861 6.28516 7.19696C6.28516 6.22534 6.8293 5.43747 7.49955 5.43747C8.16977 5.43747 8.71391 6.22534 8.71391 7.19696Z" fill="url(#paint5_linear_277_10065)" />
+                     <defs>
+                        <linearGradient id="paint0_linear_277_10065" x1="7.49928" y1="12" x2="7.49928" y2="10.2726" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F9403E" />
+                           <stop offset="1" stop-color="#F77953" />
+                        </linearGradient>
+                        <linearGradient id="paint1_linear_277_10065" x1="7.49931" y1="10.2718" x2="7.49931" y2="2.49874" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F79808" />
+                           <stop offset="1" stop-color="#EDBB0B" />
+                        </linearGradient>
+                        <linearGradient id="paint2_linear_277_10065" x1="7.49971" y1="2.57354" x2="7.49971" y2="3.52803e-05" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F79808" />
+                           <stop offset="1" stop-color="#EDBB0B" />
+                        </linearGradient>
+                        <linearGradient id="paint3_linear_277_10065" x1="1.28487" y1="4.99374" x2="1.28487" y2="2.4202" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F79808" />
+                           <stop offset="1" stop-color="#EDBB0B" />
+                        </linearGradient>
+                        <linearGradient id="paint4_linear_277_10065" x1="13.7146" y1="4.99374" x2="13.7146" y2="2.4202" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F79808" />
+                           <stop offset="1" stop-color="#EDBB0B" />
+                        </linearGradient>
+                        <linearGradient id="paint5_linear_277_10065" x1="7.49955" y1="8.95645" x2="7.49955" y2="5.43747" gradientUnits="userSpaceOnUse">
+                           <stop offset="0.0168" stop-color="#CCCCCC" />
+                           <stop offset="1" stop-color="#F2F2F2" />
+                        </linearGradient>
+                     </defs>
+                  </svg>
+                  VIP
+               </div>
+
+            </li>
+
+            <li>
+               <div class="content">
+                  <div class="img-box">
+                     <img class="img-fluid" src="{{ asset('admin/images/Lead-Board02.png') }}" alt="">
+                  </div>
+                  <div class="title">
+                     Cameron Williamson
+                  </div>
+               </div>
+               <div class="vip-box">
+                  <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                     <path d="M12.3208 11.1356C12.3208 11.6076 11.9397 12 11.459 12H3.53953C3.06366 12 2.67773 11.6135 2.67773 11.1356C2.67773 10.6672 3.05699 10.2726 3.53953 10.2726H11.459C11.9349 10.2726 12.3208 10.6591 12.3208 11.1356Z" fill="url(#paint0_linear_277_10065)" />
+                     <path d="M13.2584 4.91025L13.0892 5.3577L11.4137 9.79236L11.2317 10.2718H3.76685L3.58496 9.79236L1.90939 5.35773L1.74023 4.91029C1.99236 4.81438 2.20618 4.64181 2.35299 4.42125C2.4998 4.49636 2.64662 4.56188 2.79343 4.62101C4.32534 5.2139 5.85087 4.77763 6.8546 2.93024C6.9296 2.79442 6.9998 2.65059 7.06842 2.49878C7.20407 2.54673 7.34927 2.57228 7.49928 2.57228C7.65086 2.57228 7.79768 2.54673 7.93172 2.49878C8.00034 2.65059 8.07053 2.79445 8.14554 2.93024C9.15088 4.77925 10.6748 5.2139 12.2067 4.62101C12.3535 4.56188 12.5003 4.49636 12.6471 4.42125C12.794 4.64177 13.0062 4.81276 13.2584 4.91025Z" fill="url(#paint1_linear_277_10065)" />
+                     <path d="M8.78459 1.28612C8.78459 1.99642 8.20965 2.57354 7.49908 2.57354C6.78982 2.57354 6.21484 1.99642 6.21484 1.28612C6.21484 0.575817 6.78982 0 7.49908 0C8.20965 3.51322e-05 8.78459 0.575817 8.78459 1.28612Z" fill="url(#paint2_linear_277_10065)" />
+                     <path d="M2.56974 3.70632C2.56974 4.41662 1.99477 4.99374 1.28424 4.99374C0.574975 4.99374 0 4.41662 0 3.70632C0 2.99601 0.574975 2.4202 1.28424 2.4202C1.9948 2.4202 2.56974 2.99601 2.56974 3.70632Z" fill="url(#paint3_linear_277_10065)" />
+                     <path d="M14.9994 3.70632C14.9994 4.41662 14.4245 4.99374 13.7139 4.99374C13.0047 4.99374 12.4297 4.41662 12.4297 3.70632C12.4297 2.99601 13.0047 2.4202 13.7139 2.4202C14.4245 2.4202 14.9994 2.99601 14.9994 3.70632Z" fill="url(#paint4_linear_277_10065)" />
+                     <path d="M8.71391 7.19696C8.71391 8.16861 8.16977 8.95645 7.49955 8.95645C6.82933 8.95645 6.28516 8.16861 6.28516 7.19696C6.28516 6.22534 6.8293 5.43747 7.49955 5.43747C8.16977 5.43747 8.71391 6.22534 8.71391 7.19696Z" fill="url(#paint5_linear_277_10065)" />
+                     <defs>
+                        <linearGradient id="paint0_linear_277_10065" x1="7.49928" y1="12" x2="7.49928" y2="10.2726" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F9403E" />
+                           <stop offset="1" stop-color="#F77953" />
+                        </linearGradient>
+                        <linearGradient id="paint1_linear_277_10065" x1="7.49931" y1="10.2718" x2="7.49931" y2="2.49874" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F79808" />
+                           <stop offset="1" stop-color="#EDBB0B" />
+                        </linearGradient>
+                        <linearGradient id="paint2_linear_277_10065" x1="7.49971" y1="2.57354" x2="7.49971" y2="3.52803e-05" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F79808" />
+                           <stop offset="1" stop-color="#EDBB0B" />
+                        </linearGradient>
+                        <linearGradient id="paint3_linear_277_10065" x1="1.28487" y1="4.99374" x2="1.28487" y2="2.4202" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F79808" />
+                           <stop offset="1" stop-color="#EDBB0B" />
+                        </linearGradient>
+                        <linearGradient id="paint4_linear_277_10065" x1="13.7146" y1="4.99374" x2="13.7146" y2="2.4202" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F79808" />
+                           <stop offset="1" stop-color="#EDBB0B" />
+                        </linearGradient>
+                        <linearGradient id="paint5_linear_277_10065" x1="7.49955" y1="8.95645" x2="7.49955" y2="5.43747" gradientUnits="userSpaceOnUse">
+                           <stop offset="0.0168" stop-color="#CCCCCC" />
+                           <stop offset="1" stop-color="#F2F2F2" />
+                        </linearGradient>
+                     </defs>
+                  </svg>
+                  VIP
+               </div>
+
+            </li>
+
+            <li>
+               <div class="content">
+                  <div class="img-box">
+                     <img class="img-fluid" src="{{ asset('admin/images/Lead-Board03.png') }}" alt="">
+                  </div>
+                  <div class="title">
+                     Cameron Williamson
+                  </div>
+               </div>
+               <div class="vip-box">
+                  <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                     <path d="M12.3208 11.1356C12.3208 11.6076 11.9397 12 11.459 12H3.53953C3.06366 12 2.67773 11.6135 2.67773 11.1356C2.67773 10.6672 3.05699 10.2726 3.53953 10.2726H11.459C11.9349 10.2726 12.3208 10.6591 12.3208 11.1356Z" fill="url(#paint0_linear_277_10065)" />
+                     <path d="M13.2584 4.91025L13.0892 5.3577L11.4137 9.79236L11.2317 10.2718H3.76685L3.58496 9.79236L1.90939 5.35773L1.74023 4.91029C1.99236 4.81438 2.20618 4.64181 2.35299 4.42125C2.4998 4.49636 2.64662 4.56188 2.79343 4.62101C4.32534 5.2139 5.85087 4.77763 6.8546 2.93024C6.9296 2.79442 6.9998 2.65059 7.06842 2.49878C7.20407 2.54673 7.34927 2.57228 7.49928 2.57228C7.65086 2.57228 7.79768 2.54673 7.93172 2.49878C8.00034 2.65059 8.07053 2.79445 8.14554 2.93024C9.15088 4.77925 10.6748 5.2139 12.2067 4.62101C12.3535 4.56188 12.5003 4.49636 12.6471 4.42125C12.794 4.64177 13.0062 4.81276 13.2584 4.91025Z" fill="url(#paint1_linear_277_10065)" />
+                     <path d="M8.78459 1.28612C8.78459 1.99642 8.20965 2.57354 7.49908 2.57354C6.78982 2.57354 6.21484 1.99642 6.21484 1.28612C6.21484 0.575817 6.78982 0 7.49908 0C8.20965 3.51322e-05 8.78459 0.575817 8.78459 1.28612Z" fill="url(#paint2_linear_277_10065)" />
+                     <path d="M2.56974 3.70632C2.56974 4.41662 1.99477 4.99374 1.28424 4.99374C0.574975 4.99374 0 4.41662 0 3.70632C0 2.99601 0.574975 2.4202 1.28424 2.4202C1.9948 2.4202 2.56974 2.99601 2.56974 3.70632Z" fill="url(#paint3_linear_277_10065)" />
+                     <path d="M14.9994 3.70632C14.9994 4.41662 14.4245 4.99374 13.7139 4.99374C13.0047 4.99374 12.4297 4.41662 12.4297 3.70632C12.4297 2.99601 13.0047 2.4202 13.7139 2.4202C14.4245 2.4202 14.9994 2.99601 14.9994 3.70632Z" fill="url(#paint4_linear_277_10065)" />
+                     <path d="M8.71391 7.19696C8.71391 8.16861 8.16977 8.95645 7.49955 8.95645C6.82933 8.95645 6.28516 8.16861 6.28516 7.19696C6.28516 6.22534 6.8293 5.43747 7.49955 5.43747C8.16977 5.43747 8.71391 6.22534 8.71391 7.19696Z" fill="url(#paint5_linear_277_10065)" />
+                     <defs>
+                        <linearGradient id="paint0_linear_277_10065" x1="7.49928" y1="12" x2="7.49928" y2="10.2726" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F9403E" />
+                           <stop offset="1" stop-color="#F77953" />
+                        </linearGradient>
+                        <linearGradient id="paint1_linear_277_10065" x1="7.49931" y1="10.2718" x2="7.49931" y2="2.49874" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F79808" />
+                           <stop offset="1" stop-color="#EDBB0B" />
+                        </linearGradient>
+                        <linearGradient id="paint2_linear_277_10065" x1="7.49971" y1="2.57354" x2="7.49971" y2="3.52803e-05" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F79808" />
+                           <stop offset="1" stop-color="#EDBB0B" />
+                        </linearGradient>
+                        <linearGradient id="paint3_linear_277_10065" x1="1.28487" y1="4.99374" x2="1.28487" y2="2.4202" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F79808" />
+                           <stop offset="1" stop-color="#EDBB0B" />
+                        </linearGradient>
+                        <linearGradient id="paint4_linear_277_10065" x1="13.7146" y1="4.99374" x2="13.7146" y2="2.4202" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F79808" />
+                           <stop offset="1" stop-color="#EDBB0B" />
+                        </linearGradient>
+                        <linearGradient id="paint5_linear_277_10065" x1="7.49955" y1="8.95645" x2="7.49955" y2="5.43747" gradientUnits="userSpaceOnUse">
+                           <stop offset="0.0168" stop-color="#CCCCCC" />
+                           <stop offset="1" stop-color="#F2F2F2" />
+                        </linearGradient>
+                     </defs>
+                  </svg>
+                  VIP
+               </div>
+
+            </li>
+
+            <li>
+               <div class="content">
+                  <div class="img-box">
+                     <img class="img-fluid" src="{{ asset('admin/images/Lead-Board04.png') }}" alt="">
+                  </div>
+                  <div class="title">
+                     Cameron Williamson
+                  </div>
+               </div>
+               <div class="vip-box">
+                  <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                     <path d="M12.3208 11.1356C12.3208 11.6076 11.9397 12 11.459 12H3.53953C3.06366 12 2.67773 11.6135 2.67773 11.1356C2.67773 10.6672 3.05699 10.2726 3.53953 10.2726H11.459C11.9349 10.2726 12.3208 10.6591 12.3208 11.1356Z" fill="url(#paint0_linear_277_10065)" />
+                     <path d="M13.2584 4.91025L13.0892 5.3577L11.4137 9.79236L11.2317 10.2718H3.76685L3.58496 9.79236L1.90939 5.35773L1.74023 4.91029C1.99236 4.81438 2.20618 4.64181 2.35299 4.42125C2.4998 4.49636 2.64662 4.56188 2.79343 4.62101C4.32534 5.2139 5.85087 4.77763 6.8546 2.93024C6.9296 2.79442 6.9998 2.65059 7.06842 2.49878C7.20407 2.54673 7.34927 2.57228 7.49928 2.57228C7.65086 2.57228 7.79768 2.54673 7.93172 2.49878C8.00034 2.65059 8.07053 2.79445 8.14554 2.93024C9.15088 4.77925 10.6748 5.2139 12.2067 4.62101C12.3535 4.56188 12.5003 4.49636 12.6471 4.42125C12.794 4.64177 13.0062 4.81276 13.2584 4.91025Z" fill="url(#paint1_linear_277_10065)" />
+                     <path d="M8.78459 1.28612C8.78459 1.99642 8.20965 2.57354 7.49908 2.57354C6.78982 2.57354 6.21484 1.99642 6.21484 1.28612C6.21484 0.575817 6.78982 0 7.49908 0C8.20965 3.51322e-05 8.78459 0.575817 8.78459 1.28612Z" fill="url(#paint2_linear_277_10065)" />
+                     <path d="M2.56974 3.70632C2.56974 4.41662 1.99477 4.99374 1.28424 4.99374C0.574975 4.99374 0 4.41662 0 3.70632C0 2.99601 0.574975 2.4202 1.28424 2.4202C1.9948 2.4202 2.56974 2.99601 2.56974 3.70632Z" fill="url(#paint3_linear_277_10065)" />
+                     <path d="M14.9994 3.70632C14.9994 4.41662 14.4245 4.99374 13.7139 4.99374C13.0047 4.99374 12.4297 4.41662 12.4297 3.70632C12.4297 2.99601 13.0047 2.4202 13.7139 2.4202C14.4245 2.4202 14.9994 2.99601 14.9994 3.70632Z" fill="url(#paint4_linear_277_10065)" />
+                     <path d="M8.71391 7.19696C8.71391 8.16861 8.16977 8.95645 7.49955 8.95645C6.82933 8.95645 6.28516 8.16861 6.28516 7.19696C6.28516 6.22534 6.8293 5.43747 7.49955 5.43747C8.16977 5.43747 8.71391 6.22534 8.71391 7.19696Z" fill="url(#paint5_linear_277_10065)" />
+                     <defs>
+                        <linearGradient id="paint0_linear_277_10065" x1="7.49928" y1="12" x2="7.49928" y2="10.2726" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F9403E" />
+                           <stop offset="1" stop-color="#F77953" />
+                        </linearGradient>
+                        <linearGradient id="paint1_linear_277_10065" x1="7.49931" y1="10.2718" x2="7.49931" y2="2.49874" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F79808" />
+                           <stop offset="1" stop-color="#EDBB0B" />
+                        </linearGradient>
+                        <linearGradient id="paint2_linear_277_10065" x1="7.49971" y1="2.57354" x2="7.49971" y2="3.52803e-05" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F79808" />
+                           <stop offset="1" stop-color="#EDBB0B" />
+                        </linearGradient>
+                        <linearGradient id="paint3_linear_277_10065" x1="1.28487" y1="4.99374" x2="1.28487" y2="2.4202" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F79808" />
+                           <stop offset="1" stop-color="#EDBB0B" />
+                        </linearGradient>
+                        <linearGradient id="paint4_linear_277_10065" x1="13.7146" y1="4.99374" x2="13.7146" y2="2.4202" gradientUnits="userSpaceOnUse">
+                           <stop stop-color="#F79808" />
+                           <stop offset="1" stop-color="#EDBB0B" />
+                        </linearGradient>
+                        <linearGradient id="paint5_linear_277_10065" x1="7.49955" y1="8.95645" x2="7.49955" y2="5.43747" gradientUnits="userSpaceOnUse">
+                           <stop offset="0.0168" stop-color="#CCCCCC" />
+                           <stop offset="1" stop-color="#F2F2F2" />
+                        </linearGradient>
+                     </defs>
+                  </svg>
+                  VIP
+               </div>
+
+            </li> -->
          </ul>
       </div>
    </div>

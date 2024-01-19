@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin;
 
 use App\Models\Quote;
+use App\Models\Role;
 use App\Models\Seminar;
 use Carbon\Carbon;
 use App\Models\User;
@@ -39,10 +40,9 @@ class Index extends Component
                 $query->where('start_date', '<=', $currentDate);
                 $query->where('end_time', '<=', $currentTime);
             })
-
-            // ->orderBy('start_date')
-            // ->orderBy('start_time')
             ->first();
+
+
 
         $seminar = Seminar::query()
             ->where(function ($query) use ($currentDate, $currentTime) {
@@ -57,12 +57,27 @@ class Index extends Component
                 $query->where('start_date', '<=', $currentDate);
                 $query->where('end_time', '<=', $currentTime);
             })
-            ->orderBy('start_date')
-            ->orderBy('start_time')
+            // ->orderBy('start_date')
+            // ->orderBy('start_time')
             ->first();
 
-        $todaysQuote = Quote::whereDate('created_at', today())->first();
 
-        return view('livewire.admin.index', compact('webinar', 'seminar', 'todaysQuote'));
+        $today = Carbon::today();
+        $todaysQuote = Quote::whereDate('created_at', $today)->first();
+        $submissionPercentage = 0;
+        $leadUsersList = null;
+        if ($todaysQuote) {
+            $submissionPercentage = $todaysQuote->users()->count() / $this->getTotalUsers() * 100;
+            $leadUsersList = $todaysQuote->users;
+        }
+
+        return view('livewire.admin.index', compact('webinar', 'seminar', 'todaysQuote', 'submissionPercentage', 'leadUsersList'));
+    }
+
+    protected function getTotalUsers()
+    {
+        // get the total count of users
+        $role = Role::where('title', 'User')->first();
+        return $role ? $role->users()->count() : 0;
     }
 }

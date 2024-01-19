@@ -80,6 +80,8 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
     Route::get('/get-all-webinars', [WebinarController::class, 'index']);
 
     Route::post('/post-task', [HomeController::class, 'store']);
+
+    Route::get('/today-quote', [HomeController::class, 'index']);
 });
 
 

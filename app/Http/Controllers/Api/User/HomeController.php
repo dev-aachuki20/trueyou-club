@@ -8,10 +8,47 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Quote;
+use App\Models\Role;
 use Carbon\Carbon;
 
 class HomeController extends Controller
 {
+
+    // today quote with percentage
+    public function index()
+    {
+        try {
+            $today = Carbon::today();
+            $todayQuote = Quote::whereDate('created_at', $today)->first();
+
+            if (!$todayQuote) {
+                $responseData = [
+                    'status'        => false,
+                    'message'       => "No quote exist",
+                ];
+                return response()->json($responseData, 404);
+            } else {
+
+                $submissionPercentage = $todayQuote->users()->count() / $this->getTotalUsers() * 100;
+
+                $responseData = [
+                    'status'        => true,
+                    'message'       => $todayQuote,
+                    'submission_percentage' => $submissionPercentage,
+                ];
+                return response()->json($responseData, 200);
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage() . '->' . $e->getLine());
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 500);
+        }
+    }
 
     public function store(Request $request)
     {
@@ -63,5 +100,12 @@ class HomeController extends Controller
             ];
             return response()->json($responseData, 500);
         }
+    }
+
+    protected function getTotalUsers()
+    {
+        // get the total count of users
+        $role = Role::where('title', 'User')->first();
+        return $role ? $role->users()->count() : 0;
     }
 }
