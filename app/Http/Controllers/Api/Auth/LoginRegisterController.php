@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\WelcomeMail;
+use App\Notifications\UserNotification;
+use Illuminate\Support\Facades\Notification;
 
 class LoginRegisterController extends Controller
 {
@@ -51,6 +53,9 @@ class LoginRegisterController extends Controller
             //Send welcome mail for user
             $subject = 'Welcome to ' . config('app.name');
             Mail::to($user->email)->queue(new WelcomeMail($subject, $user->name, $user->email));
+
+            $notification_message = config('constants.user_register_notification_message');
+            Notification::send($user, new UserNotification($user, $notification_message));
             
             //Verification mail sent
             $user->NotificationSendToVerifyEmail();

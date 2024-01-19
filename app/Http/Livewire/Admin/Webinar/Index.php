@@ -2,13 +2,16 @@
 
 namespace App\Http\Livewire\Admin\Webinar;
 
+use App\Models\User;
 use Gate;
 use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\Webinar;
+use App\Notifications\WebinarCreated;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -100,6 +103,9 @@ class Index extends Component
         // $validatedData['status'] = $this->status;
 
         $webinar = Webinar::create($validatedData);
+
+        $users = User::whereHas('roles', function($q){ $q->where('title', 'User');})->get();
+        Notification::send($users, new WebinarCreated($webinar));
 
         //Upload Image
         if ($this->image) {

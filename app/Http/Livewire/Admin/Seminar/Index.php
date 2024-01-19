@@ -3,12 +3,15 @@
 namespace App\Http\Livewire\Admin\Seminar;
 
 use App\Models\Seminar;
+use App\Models\User;
 use Gate;
 use Carbon\Carbon;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\Response;
+use App\Notifications\SeminarCreated;
+use Illuminate\Support\Facades\Notification;
 
 class Index extends Component
 {
@@ -110,6 +113,9 @@ class Index extends Component
         if ($this->image) {
             uploadImage($seminar, $this->image, 'seminar/image/', "seminar", 'original', 'save', null);
         }
+
+        $users = User::whereHas('roles', function($q){ $q->where('title', 'User');})->get();
+        Notification::send($users, new SeminarCreated($seminar));
 
         $this->formMode = false;
 

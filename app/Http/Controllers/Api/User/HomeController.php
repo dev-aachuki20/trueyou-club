@@ -152,4 +152,76 @@ class HomeController extends Controller
             return response()->json($responseData, 500);
         }
     }
+
+    public function notifications(Request $request){
+        try {
+            $user = Auth::user();
+            $notifications = $user->notifications()->select('id', 'data', 'created_at', 'read_at')->latest()->paginate(10);;
+
+            if ($notifications->count() > 0) {
+                foreach ($notifications as $key=>$record) {
+                    $now = Carbon::now();
+                    $notificationDate = Carbon::parse($record->created_at)->diffForHumans($now);
+                    $notificationDate = str_replace('before', 'ago', $notificationDate);
+
+                    $record->notification_date = $notificationDate;
+
+                    $notificationData = $record->data;
+                    $record->notification_message = $notificationData['message'];
+                }
+                $responseData = [
+                    'status'  => true,
+                    'data'    => $notifications,
+                ];
+                return response()->json($responseData, 200);
+            } else {
+                $responseData = [
+                    'status'  => false,
+                    'message' => 'No Record Found',
+                ];
+                return response()->json($responseData, 404);
+            }
+        } catch (\Exception $e) {
+            // dd($e->getMessage().'->'.$e->getLine());
+
+            $responseData = [
+                'status'  => false,
+                'error'   => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 500);
+        }
+    }
+
+    public function deleteNotification(Request $request, $id){
+        $user = Auth::user();
+        DB::beginTransaction();
+        try {
+            $notification = $user->notifications()->where('id', $id)->first();
+            if($notification){
+                $notification->delete();
+                DB::commit();
+
+                $responseData = [
+                    'status'        => true,
+                    'message'       => "Notification deleted successfully",
+                ];
+                return response()->json($responseData, 200);
+            } else {
+                $responseData = [
+                    'status'        => false,
+                    'message'       => "No data found",
+                ];
+                return response()->json($responseData, 404);
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage() . '->' . $e->getLine());
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 500);
+        }
+    }
 }
