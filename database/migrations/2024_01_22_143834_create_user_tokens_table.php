@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users_seminars', function (Blueprint $table) {
-            $table->unsignedBigInteger('seminar_id');
+        Schema::create('user_tokens', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('seminar_id')->references('id')->on('seminars')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->timestamp('created_at')->nullable();
+            $table->string('token')->nullable();
+            $table->string('type'); // For example: 'stripe_session_token', 'password_reset_token',''
+            $table->timestamps();
         });
     }
 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users_seminars');
+        Schema::dropIfExists('user_tokens');
     }
 };

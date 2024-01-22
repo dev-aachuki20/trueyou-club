@@ -533,6 +533,7 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
     padding: 11px 17px;
     display: flex;
     align-items: center;
+    justify-content: center;
     margin-right: 0 !important;
 }
 .card-title .btn-header i {
@@ -1224,6 +1225,11 @@ body .datepicker .datepicker-years .table-condensed{
     display: flex;
     align-items: flex-start;
     gap: 20px;
+    position: relative;
+}
+
+.webinar-disabled .webinar-item-inner {
+    position: initial;
 }
 
 .webinar-item-inner .webinar-content {
@@ -1240,7 +1246,7 @@ body .datepicker .datepicker-years .table-condensed{
 .webinar-item-inner>.webinar-img>img {
     width: 100%;
     height: 162px;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 .webinar-disabled{
@@ -1255,6 +1261,7 @@ body .datepicker .datepicker-years .table-condensed{
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 9;
     background: rgb(255 255 255 / 71%);
     /* backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px); */
@@ -1265,6 +1272,14 @@ body .datepicker .datepicker-years .table-condensed{
     right: 20px;
     bottom: -20px;
     background-color: #ffffff;
+}
+
+.webinar-disabled .update-webinar{
+    opacity: .8;
+}
+
+.webinar-disabled .update-webinar>ul>li a svg path {
+    fill: #d3d3d3;
 }
 
 .webinar-disabled .btn{
@@ -1280,7 +1295,7 @@ body .datepicker .datepicker-years .table-condensed{
 }
 
 .webinar-content h3{
-    margin-bottom: 15px;
+    margin-bottom: 7px;
     font-size: 20px;
     font-weight: 600;
     line-height: normal;
@@ -1625,11 +1640,11 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
 
 .date-time {
     color: #DA7821;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     align-items: center;
     gap: 5px;
-    margin: 15px 0;
+    margin: 0 0 10px;
 }
 
 .dropify-wrapper .dropify-preview .dropify-render img{
@@ -1778,10 +1793,18 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
 }
 
 .seminar-wrapper .webinar-content .book-seats {
-    margin-top: 1.3rem;
-    background-color: #F5F7F9 !important;
+    margin-top: 0;
+    background-color: #f5f7f9 !important;
     color: #0A2540 !important;
     box-shadow: none !important;
+    position: absolute;
+    bottom: -10px;
+    left: 13px;
+    font-size: 11px !important;
+    padding: 9px 9px 9px 7px !important;
+    border-radius: 20px !important;
+    border: 1px solid #9a9da129;
+    opacity: 1 !important;
 }
 
 .seminar-wrapper .webinar-content .book-seats:hover{
@@ -1790,13 +1813,18 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
     color: #ffffff !important;
 }
 
+.webinar-disabled .webinar-item-inner  .webinar-content .book-seats {
+    bottom: 20px;
+    left: 43px;
+}
+
 .book-seats span{
-    font-size: 13px;
+    font-size: 11px;
     background-color: #0659c5;
     color: #ffffff;
-    padding: 3px 9px;
+    padding: 4px 8px;
     border-radius: 30px;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 .btn-primary:not(:disabled):not(.disabled):active{
@@ -1872,13 +1900,13 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
     margin-top: 10px;
 }
 
-.dashboard-wrapper .date-time{
+/* .dashboard-wrapper .date-time{
     margin: 10px 0 0;
-}
+} */
 
-.dashboard-wrapper .webinar-content h3{
+/* .dashboard-wrapper .webinar-content h3{
     margin-bottom: 0;
-}
+} */
 
 .dashboard-wrapper .seminar-tab-list .row-list{
     grid-template-columns: 1fr;
@@ -2150,6 +2178,20 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
     .btn-secondary{
         padding: 10px 15px !important;
         font-size: 14px !important;
+    }
+
+    .seminar-wrapper .webinar-content .book-seats{
+        bottom: auto;
+        top: 180px;
+        left: auto;
+        right: 13px;
+    }
+
+    .webinar-disabled .webinar-item-inner  .webinar-content .book-seats {
+        bottom: auto;
+        left: auto;
+        top: 200px;
+        right: 35px;
     }
 }
 

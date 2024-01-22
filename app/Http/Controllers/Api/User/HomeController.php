@@ -23,10 +23,11 @@ class HomeController extends Controller
 
             if (!$todayQuote) {
                 $responseData = [
-                    'status'        => false,
-                    'message'       => "No quote exist",
+                    'status'        => true,
+                    'message'       => null,
+                    'submission_percentage' => 0
                 ];
-                return response()->json($responseData, 404);
+                return response()->json($responseData, 200);
             } else {
 
                 $submissionPercentage = $todayQuote->users()->count() / $this->getTotalUsers() * 100;
@@ -35,7 +36,7 @@ class HomeController extends Controller
                 $responseData = [
                     'status'        => true,
                     'message'       => $quoteMessage,
-                    'submission_percentage' => $submissionPercentage . '%',
+                    'submission_percentage' => $submissionPercentage,
                 ];
                 return response()->json($responseData, 200);
             }
@@ -133,11 +134,11 @@ class HomeController extends Controller
                 return response()->json($responseData, 200);
             } else {
                 $responseData = [
-                    'status'        => false,
-                    'message'       => "No user exist",
+                    'status'        => true,
+                    'leadUsersList' => null,
                 ];
 
-                return response()->json($responseData, 404);
+                return response()->json($responseData, 200);
             }
         } catch (\Exception $e) {
             DB::rollBack();
@@ -176,10 +177,10 @@ class HomeController extends Controller
                 return response()->json($responseData, 200);
             } else {
                 $responseData = [
-                    'status'  => false,
-                    'message' => 'No Record Found',
+                    'status'  => true,
+                    'data' => null,
                 ];
-                return response()->json($responseData, 404);
+                return response()->json($responseData, 200);
             }
         } catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());
@@ -211,7 +212,7 @@ class HomeController extends Controller
                     'status'        => false,
                     'message'       => "No data found",
                 ];
-                return response()->json($responseData, 404);
+                return response()->json($responseData, 200);
             }
         } catch (\Exception $e) {
             DB::rollBack();

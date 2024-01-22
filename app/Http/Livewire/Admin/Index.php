@@ -27,7 +27,7 @@ class Index extends Component
         $currentDate = now()->toDateString();
         $currentTime = now()->toTimeString();
 
-        $webinar = Webinar::query()
+        /* $webinar = Webinar::query()
             ->where(function ($query) use ($currentDate, $currentTime) {
                 $query->where('start_date', '=', $currentDate)
                     ->where('start_time', '<=', $currentTime)
@@ -40,11 +40,16 @@ class Index extends Component
                 $query->where('start_date', '<=', $currentDate);
                 $query->where('end_time', '<=', $currentTime);
             })
-            ->first();
+            ->first(); */
+        $webinar = Webinar::query()
+        ->select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+        ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+        ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
+        ->first();
 
 
 
-        $seminar = Seminar::query()
+        /* $seminar = Seminar::query()
             ->where(function ($query) use ($currentDate, $currentTime) {
                 $query->where('start_date', '=', $currentDate)
                     ->where('start_time', '<=', $currentTime)
@@ -59,7 +64,13 @@ class Index extends Component
             })
             // ->orderBy('start_date')
             // ->orderBy('start_time')
-            ->first();
+            ->first(); */
+
+        $seminar = Seminar::query()
+        ->select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+        ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+        ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
+        ->first();
 
 
         $today = Carbon::today();

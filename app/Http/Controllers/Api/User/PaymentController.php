@@ -10,6 +10,7 @@ use Stripe\Stripe;
 use Stripe\Customer;
 use App\Models\Seminar;
 use App\Models\User;
+use App\Models\UserToken;
 use App\Models\Transaction;
 use Stripe\Checkout\Session as StripeSession;
 use Stripe\Subscription as StripeSubscription;
@@ -22,7 +23,7 @@ class PaymentController extends Controller
     public function __construct(Request $request)
     {
         $this->default_currency = config('constants.default_currency');
-        $this->stripeSecret = Stripe::setApiKey(config('app.stripe_secret_key')); // test stripe pub key
+        $this->stripeSecret = Stripe::setApiKey(config('app.stripe_secret_key'));
     }
 
     public function config()
@@ -46,15 +47,21 @@ class PaymentController extends Controller
     public function createCheckoutSession(Request $request)
     {
         $request->validate([
-            'plan' => 'required',
-            'type' => 'required',
+            'seminar' => 'required',
         ]);
 
         try {
-            // Set your Stripe secret key
-            Stripe::setApiKey(config('app.stripe_secret_key'));
+            $seminar = Seminar::where('id',$request->seminar)->first();
 
-            $planId = $request->plan; // Replace with the actual Price ID
+            if(!$seminar){
+                return response()->json(['errors' => 'Invalid Seminar!'], 422);
+            }
+
+            // Set your Stripe secret key
+            $stripeSecretKey = getSetting('stripe_secret_key') ? getSetting('stripe_secret_key') : config('app.stripe_secret_key');
+            $stripePublishableKey = getSetting('stripe_publishable_key') ? getSetting('stripe_publishable_key') : config('app.stripe_publishable_key');
+
+            Stripe::setApiKey($stripeSecretKey);
 
             $authUser = auth()->user();
 
@@ -63,19 +70,22 @@ class PaymentController extends Controller
             $userToken = UserToken::where('user_id', $authUser->id)->first();
             if ($userToken) {
                 $userToken->update([
-                    'plan_stripe_id'=>$planId,
-                    'token'=>$token,
-                    'type'=>'checkout_token',
+                    'token' => $token,
+                    'type'  =>'checkout_token',
                 ]);
             } else {
                 $userToken = UserToken::create([
                     'user_id' => $authUser->id,
-                    'plan_stripe_id' => $planId,
                     'token'   => $token,
                     'type'    => 'checkout_token',
                 ]);
             }
             //End To Set Token
+
+            // Retrieve customer details by email
+            // $customers = Customer::all(['email' => $authUser->email]);
+
+            // dd($customers->data[0]);
 
             // Create or retrieve Stripe customer
             if (is_null($authUser->stripe_customer_id)) {
@@ -90,63 +100,39 @@ class PaymentController extends Controller
             }
 
             $metadata = [
-                'plan' => $planId,
+                'seminar' => json_encode([
+                    'id' => $seminar->id,
+                    'title' => ucwords($seminar->title),
+                    'total_ticket'=> $seminar->total_ticket,
+                    'ticket_price'=> $seminar->ticket_price,
+                    'venue' => $seminar->venue,
+                    'start_date' => $seminar->start_date,
+                    'start_time' => $seminar->start_time,
+                    'end_time'   => $seminar->end_time,
+                ]),
             ];
 
-            if ($request->type == 'addon') {
-                $metadata['user_type'] = 'seller';
-                $sessionData = [
-                    'payment_method_types' => ['card'],
-                    'line_items' => [
-                        [
-                            'price' => $planId,
-                            'quantity' => 1,
+    
+            $sessionData = [
+                'payment_method_types' => ['card'],
+                'line_items' => [
+                    [
+                        'price_data' => [
+                            'currency' => config('constants.default_currency'),
+                            'product_data' => [
+                                'name' => ucwords($seminar->title),
+                            ],
+                            'unit_amount' => (float)$seminar->ticket_price * 100, // Amount in cents
                         ],
+                        'quantity' => 1,
                     ],
-                    'mode' => 'payment',
-                    'success_url' => env('FRONTEND_URL') . 'completion/' . $token, 
-                    'cancel_url' => env('FRONTEND_URL') . 'cancel',    
-                    'metadata' => $metadata,
-                ];
-            } else  if ($request->type == 'boost_your_profile') {
-
-                $active_subscription = $authUser->subscription()->where('status','active')->first() ? $authUser->subscription()->where('status','active')->first()->stripe_subscription_id : '';
-
-                $metadata = [
-                    'user_type' => 'buyer',
-                    'product_type' => 'boost-plan',
-                    'description'  => 'Boost Plan',
-                    'active_subscription' => $active_subscription,
-                ];
-                $sessionData = [
-                    'payment_method_types' => ['card'],
-                    'subscription_data' => [
-                        'items' => [
-                            ['plan' => $planId],
-                        ],
-                        'metadata' => $metadata,
-                    ],
-                    'mode' => 'subscription',
-                    'success_url' => env('FRONTEND_URL') . 'payment-confirm/' . $token,
-                    'cancel_url' => env('FRONTEND_URL') . 'cancel',  
-                ];
-
-            } else {
-                $metadata['user_type'] = 'seller';
-                $sessionData = [
-                    'payment_method_types' => ['card'],
-                    'subscription_data' => [
-                        'items' => [
-                            ['plan' => $planId],
-                        ],
-                        'metadata' => $metadata,
-                    ],
-                    'mode' => 'subscription',
-                    'success_url' => env('FRONTEND_URL') . 'completion/' . $token, 
-                    'cancel_url' => env('FRONTEND_URL') . 'cancel',  
-                ];
-            }
-
+                ],
+                'mode' => 'payment',
+                'success_url' => env('FRONTEND_URL') . 'completion/'.$token, 
+                'cancel_url' => env('FRONTEND_URL') . 'cancel',    
+                'metadata' => $metadata,
+            ];
+           
             if ($customer) {
                 $sessionData['customer'] = $customer->id;
             }
@@ -157,7 +143,7 @@ class PaymentController extends Controller
             return response()->json(['session' => $session]);
         } catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -212,142 +198,7 @@ class PaymentController extends Controller
         }
     }
 
-    public function paymentHistory()
-    {
 
-        try {
-            $userId = auth()->user()->id;
-            $transactions = Transaction::select('id', 'user_id', 'plan_id', 'amount', 'currency', 'is_addon', 'status', 'payment_type', 'created_at')->where('user_id', $userId)->orderBy('created_at', 'desc')->paginate(10);
-
-            foreach ($transactions as $transaction) {
-                $transaction->user_name = $transaction->user->name ?? '';
-
-                if ($transaction->is_addon == 0) {
-                    $transaction->plan_name = $transaction->plan->title ?? '';
-                }
-
-                if ($transaction->is_addon == 1) {
-                    $transaction->plan_name = $transaction->addonPlan->title ?? '';
-                }
-            }
-            return response()->json(['status' => true, 'result' => $transactions], 200);
-        } catch (\Exception $e) {
-            // dd($e->getMessage().'->'.$e->getLine());
-            return response()->json(['error' => 'Something went wrong!'], 400);
-        }
-    }
-
-    public function updateAutoRenewFlag(Request $request)
-    {
-        $request->validate([
-            'is_plan_auto_renew' => ['required', 'in:0,1']
-        ]);
-        
-        DB::beginTransaction();
-        try {
-            $authUser =  auth()->user();
-            $authBuyerUser = Buyer::where('buyer_user_id',$authUser->id)->first();
-
-            if($authBuyerUser){
-
-                // Start to cancel subscription on stripe
-                $is_auto_renew = $request->is_plan_auto_renew == 1 ? true : false;
-
-                $isCancelSubscription = $this->subscriptionEntry($authUser,'buyer', 'update',$is_auto_renew);
-           
-                //End to acncel subscription on stripe
-                if($isCancelSubscription){
-                    $updateBuyerPlan = Buyer::where('buyer_user_id',$authUser->id)->update(['is_plan_auto_renew' => $request->is_plan_auto_renew]);
-    
-                    DB::commit();
-                    $responseData = [
-                    'status'       => true,
-                    'message' => ($request->is_plan_auto_renew == 1 ? 'The plan auto-renew is activated.':'The plan auto-renew is deactivated.')
-                    ];
-                    return response()->json($responseData, 200);
-                }
-            }else{
-                 //Return Error Response
-                $responseData = [
-                    'status'        => false,
-                    'error'         => trans('messages.error_message'),
-                ];
-                return response()->json($responseData, 400);
-            }
-            
-        } catch (\Exception $e) {
-            
-            DB::rollBack();
-
-            // dd($e->getMessage() . '->' . $e->getLine());
-
-            //Return Error Response
-            $responseData = [
-                'status'        => false,
-                'error'         => trans('messages.error_message'),
-            ];
-            return response()->json($responseData, 400);
-        }
-    }
-
-    public function subscriptionEntry($user, $userType='seller', $action='save', $is_auto_renew, $plan=null, $paymentIntent=null){
-
-        if($userType == 'seller'){
-
-        }else if($userType == 'buyer'){
-            
-            if($action == 'update'){
-
-                // Retrieve customer's subscriptions
-                $getAllSubscriptions = StripeSubscription::all(['customer' => $user->stripe_customer_id]);
-
-                // Find the active subscription
-                $activeSubscription = null;
-                foreach ($getAllSubscriptions as $subscription) {
-                    if ($subscription->status === 'active') {
-                        $activeSubscription = $subscription;
-                        break;
-                    }
-                }
-
-                if($activeSubscription){
-                    // Cancel the active subscription
-                    $canceledSubscription = StripeSubscription::update(
-                        $activeSubscription->id,
-                        ['cancel_at_period_end' => $is_auto_renew]
-                    );
-
-                    Subscription::where('stripe_subscription_id',$activeSubscription->id)->update(['status'=>'canceled']);
-                }
-
-            }else{
-                $subscription = Subscription::where('stripe_subscription_id',$paymentIntent->subscription)->exists();
-
-                if(!$subscription){
-                    $stripe_subscription = StripeSubscription::retrieve($paymentIntent->subscription); 
-                    
-                    $record = [
-                        'user_id' => $user->id,
-                        'stripe_customer_id' => $paymentIntent->customer,
-                        'plan_id'=>$plan ? $plan->id : null,
-                        'stripe_plan_id'=>$plan ? $plan->plan_stripe_id : null,
-                        'stripe_subscription_id'=>$paymentIntent->subscription,
-                        'start_date' => Carbon::createFromTimestamp($stripe_subscription->current_period_start)->format('Y-m-d'),
-                        'end_date' => Carbon::createFromTimestamp($stripe_subscription->current_period_end)->format('Y-m-d'),
-                        'subscription_json'=>json_encode($stripe_subscription),
-                        'status'=> $stripe_subscription->status,
-                    ];
-
-                    // return response()->json(['success' => true,'record'=>$stripe_subscription]);
-
-                    Subscription::create($record);
-                }
-                
-            }
-        }
-
-        return true;
-
-    }
-
+  
+  
 }

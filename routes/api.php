@@ -73,9 +73,9 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
 
     // Route::post('send-sms', [TwilioController::class, 'sendSms']);
 
-    // Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
+    Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
 
-    // Route::post('/checkout-success', [PaymentController::class, 'checkoutSuccess']);
+    Route::post('/checkout-success', [PaymentController::class, 'checkoutSuccess']);
 
     Route::get('/get-all-webinars', [WebinarController::class, 'index']);
 
