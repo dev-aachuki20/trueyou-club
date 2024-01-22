@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         \Log::info("Start schedule the commands");
+        $schedule->command('quote-task-skipped')->dailyAt('11:45')->withoutOverlapping();
         $schedule->command('queue:work --stop-when-empty')->everyMinute()->withoutOverlapping();
     }
 

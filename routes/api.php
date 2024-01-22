@@ -85,8 +85,10 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
 
     Route::get('/lead-board-user-list', [HomeController::class, 'leadBoardUser']);
 
-    Route::get('/notifications', [HomeController::class, 'notifications']);
+    Route::get('/notifications', [HomeController::class, 'userNotifications']);
     Route::delete('/notification/{id}', [HomeController::class, 'deleteNotification']);
+
+    Route::get('/reward', [HomeController::class, 'getReward']);
 });
 
 

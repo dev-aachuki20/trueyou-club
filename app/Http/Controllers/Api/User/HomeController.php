@@ -55,7 +55,6 @@ class HomeController extends Controller
     public function store(Request $request)
     {
         $user_id = Auth::user()->id;
-
         $request->validate([
             'quote_id'    => 'required|numeric',
         ], [
@@ -77,7 +76,26 @@ class HomeController extends Controller
                 $today = Carbon::today()->format('Y-m-d');
 
                 if ($todayQuoteData == $today) {
-                    $user->quotes()->attach($todayQuote, ['created_at' => now()]);
+                    if($user->is_active){
+                        $user->quotes()->attach($todayQuote, ['created_at' => now(), 'status' => 'completed']);
+    
+                        $quoteTasksCount = $user->quotes->count();
+                        $countForStar = config('constants.user_star_no_with_task_count');
+
+                        if(!$user->is_vip){
+                            if($quoteTasksCount == $countForStar['1_star']){
+                                $user->update(['star_no' => 1]);
+                            } else if($quoteTasksCount > $countForStar['1_star'] && $quoteTasksCount == $countForStar['2_star']){
+                                $user->update(['star_no' => 2]);
+                            } else if($quoteTasksCount > $countForStar['2_star'] && $quoteTasksCount == $countForStar['3_star']){
+                                $user->update(['star_no' => 3]);
+                            } else if($quoteTasksCount > $countForStar['3_star'] && $quoteTasksCount == $countForStar['4_star']){
+                                $user->update(['star_no' => 4]);
+                            } else if($quoteTasksCount > $countForStar['4_star'] && $quoteTasksCount == $countForStar['5_star']){
+                                $user->update(['star_no' => 5, 'is_vip' => 1]);
+                            }
+                        }
+                    }
                     DB::commit();
                     $responseData = [
                         'status'        => true,
@@ -154,10 +172,10 @@ class HomeController extends Controller
         }
     }
 
-    public function notifications(Request $request){
+    public function userNotifications(Request $request){
         try {
             $user = Auth::user();
-            $notifications = $user->notifications()->select('id', 'data', 'created_at', 'read_at')->latest()->paginate(10);;
+            $notifications = $user->notifications()->select('id', 'data', 'created_at', 'read_at')->latest()->paginate(10);
 
             if ($notifications->count() > 0) {
                 foreach ($notifications as $key=>$record) {
@@ -221,6 +239,45 @@ class HomeController extends Controller
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 500);
+        }
+    }
+
+    public function getReward(Request $request){
+        try {
+            $currentUser = Auth::user();
+            
+            $data = [
+                'star' => $currentUser->star_no,
+            ];
+            
+            $users = User::select('id', 'name', 'is_vip')->where('is_vip', 1)->get();
+
+            foreach($users as $user){
+                $user->profile_image_url = $user->profile_image_url ? $user->profile_image_url : asset(config('constants.default.no_image'));
+            }
+            $data['vip_users'] = $users;
+             
+            $responseData = [
+                'status'  => true,
+                'data'    => $data,
+            ];
+            return response()->json($responseData, 200);
+
+            /* } else {
+                $responseData = [
+                    'status'  => false,
+                    'message' => 'No Record Found',
+                ];
+                return response()->json($responseData, 404);
+            } */
+        } catch (\Exception $e) {
+            // dd($e->getMessage().'->'.$e->getLine());
+
+            $responseData = [
+                'status'  => false,
+                'error'   => trans('messages.error_message'),
             ];
             return response()->json($responseData, 500);
         }
