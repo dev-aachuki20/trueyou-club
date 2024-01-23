@@ -82,7 +82,7 @@ class HomeController extends Controller
                         $quoteTasksCount = $user->quotes->count();
                         $countForStar = config('constants.user_star_no_with_task_count');
 
-                        if(!$user->is_vip){
+                        if(!$user->vip_at){
                             if($quoteTasksCount == $countForStar['1_star']){
                                 $user->update(['star_no' => 1]);
                             } else if($quoteTasksCount > $countForStar['1_star'] && $quoteTasksCount == $countForStar['2_star']){
@@ -92,7 +92,8 @@ class HomeController extends Controller
                             } else if($quoteTasksCount > $countForStar['3_star'] && $quoteTasksCount == $countForStar['4_star']){
                                 $user->update(['star_no' => 4]);
                             } else if($quoteTasksCount > $countForStar['4_star'] && $quoteTasksCount == $countForStar['5_star']){
-                                $user->update(['star_no' => 5, 'is_vip' => 1]);
+                                $user->update(['star_no' => 5, 'vip_at' => now()->format('Y-m-d H:i:s')]);
+                                cacheVipUsers('set');
                             }
                         }
                     }
@@ -248,30 +249,16 @@ class HomeController extends Controller
         try {
             $currentUser = Auth::user();
             
-            $data = [
-                'star' => $currentUser->star_no,
-            ];
+            $data = [ 'star' => $currentUser->star_no];
             
-            $users = User::select('id', 'name', 'is_vip')->where('is_vip', 1)->get();
-
-            foreach($users as $user){
-                $user->profile_image_url = $user->profile_image_url ? $user->profile_image_url : asset(config('constants.default.no_image'));
-            }
-            $data['vip_users'] = $users;
+            $vipUsers = cacheVipUsers();
+            $data['vip_users'] = $vipUsers;
              
             $responseData = [
                 'status'  => true,
                 'data'    => $data,
             ];
             return response()->json($responseData, 200);
-
-            /* } else {
-                $responseData = [
-                    'status'  => false,
-                    'message' => 'No Record Found',
-                ];
-                return response()->json($responseData, 404);
-            } */
         } catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());
 

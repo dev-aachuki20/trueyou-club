@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Setting;
+use Illuminate\Support\Facades\Cache;
 
 if (!function_exists('convertToFloat')) {
 	function convertToFloat($value)
@@ -223,5 +224,35 @@ if (!function_exists('getSettingByGroup')) {
 			
 		}
 		return $settings;
+	}
+}
+
+if (!function_exists('cacheVipUsers')) {
+	function cacheVipUsers($type ='get'){
+		if($type == 'get'){
+			if (Cache::has('vip_users')) {
+				$vipUsers = Cache::get('vip_users');
+			} else {
+				$vipUsers = getVipUsers();
+				Cache::put('vip_users', $vipUsers);
+			}
+			return $vipUsers;
+		} else if($type == 'set'){
+			if (Cache::has('vip_users')) {
+				Cache::forget('vip_users');
+			}
+			$vipUsers = getVipUsers();
+			Cache::put('vip_users', $vipUsers);
+		}
+	}
+}
+
+if (!function_exists('getVipUsers')) {
+	function getVipUsers(){
+		$vipUsers = User::select('id', 'name', 'vip_at')->whereNotNull('vip_at')->orderBy('vip_at', 'desc')->get();
+		foreach($vipUsers as $vipUser){
+			$vipUser->profile_image_url = $vipUser->profile_image_url ? $vipUser->profile_image_url : asset(config('constants.default.no_image'));
+		}
+		return $vipUsers;
 	}
 }

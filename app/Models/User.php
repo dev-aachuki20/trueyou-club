@@ -37,7 +37,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'social_json',
         'remember_token',
         'is_active',
-        'is_vip',
+        'vip_at',
         'star_no',
         'last_login_at',
         'email_verified_at',
