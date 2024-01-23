@@ -73,17 +73,11 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
 
     // Route::post('send-sms', [TwilioController::class, 'sendSms']);
 
-    Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
-
-    Route::post('/checkout-success', [PaymentController::class, 'checkoutSuccess']);
-
     Route::get('/get-all-webinars', [WebinarController::class, 'index']);
 
-    Route::post('/post-task', [HomeController::class, 'store']);
+    Route::post('/completed-task', [HomeController::class, 'store']);
 
     Route::get('/today-quote-percentage', [HomeController::class, 'index']);
-
-    Route::get('/lead-board-user-list', [HomeController::class, 'leadBoardUser']);
 
     Route::get('/notifications', [HomeController::class, 'userNotifications']);
     Route::delete('/notification/{id}', [HomeController::class, 'deleteNotification']);
@@ -105,5 +99,9 @@ Route::get('/page/{slug}', [PageController::class, 'getPageDetails']);
 
 Route::post('/contact-us', [ContactController::class, 'store']);
 
+//Payments Routes
+Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
+
+Route::post('/checkout-success', [PaymentController::class, 'checkoutSuccess']);
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleStripeWebhook']);

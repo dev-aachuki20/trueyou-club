@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('user_tokens', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->string('email')->nullable();
             $table->string('token')->nullable();
             $table->string('type'); // For example: 'stripe_session_token', 'password_reset_token',''
             $table->timestamps();

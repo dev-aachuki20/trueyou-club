@@ -22,8 +22,10 @@ class ProfileController extends Controller
         $currentDate = now()->toDateString();
         $currentTime = now()->toTimeString();
 
-
-        $closestWebinar = Webinar::where('start_time', '>=', $currentDate)->where('start_time', '>=', $currentTime)->orderBy('start_date', 'desc')->orderBy('start_time', 'desc')->first();
+        $closestWebinar = Webinar::query()
+        ->select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+        ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+        ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')->first();
 
         if ($closestWebinar) {
             $closestWebinar->image_url = $closestWebinar->image_url ? $closestWebinar->image_url : asset(config('constants.default.no_image'));
@@ -35,6 +37,8 @@ class ProfileController extends Controller
             'start_time' => $closestWebinar->start_time ?? null,
             'end_time' => $closestWebinar->end_time ?? null,
             'image_url' => $closestWebinar->image_url ?? null,
+            'datetime' => convertDateTimeFormat($closestWebinar->start_date.' '.$closestWebinar->start_time,'fulldatetime') .'-'. Carbon::parse($closestWebinar->end_time)->format('h:i A')
+
         ];
 
         // Get the authenticated user

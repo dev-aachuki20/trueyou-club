@@ -73,12 +73,13 @@ return [
     'webinar_notification_message' => 'A new webinar has been added. Visit the webinar page and join.',
     'seminar_notification_message' => 'A new seminar has been added. Visit the seminar page to book your seat.',
     'user_register_notification_message' => 'Welcome to the '.env('APP_NAME').'! We are excited to have you on board.',
+    'seminar_booked_notification_message' => 'A seminar has been booked.',
 
     'user_star_no_with_task_count' => [
-        '1_star'    => 1,
-        '2_star'    => 2,
-        '3_star'    => 3,
-        '4_star'    => 4,
-        '5_star'    => 5,
+        '1_star'    => 63,
+        '2_star'    => 126,
+        '3_star'    => 189,
+        '4_star'    => 252,
+        '5_star'    => 315,
     ]
 ];

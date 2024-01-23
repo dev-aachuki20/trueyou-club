@@ -256,3 +256,31 @@ if (!function_exists('getVipUsers')) {
 		return $vipUsers;
 	}
 }
+
+if (!function_exists('getTotalUsers')) {
+	function getTotalUsers()
+	{
+		$userCount = User::whereHas('roles', function ($query) {
+			$query->where('id', 2);
+		})->count();
+
+		return $userCount;
+	}
+}
+
+if (!function_exists('generateBookingNumber')) {
+   function generateBookingNumber(){
+		$length = 10;
+
+		// Get the latest ticket number and increment it
+		$latestBooking = DB::table('bookings')->latest()->first();
+		$latestNumber = optional($latestBooking)->booking_number;
+		$ticketNumber = $latestNumber ? intval($latestNumber) + 1 : 1;
+
+		// Ensure the ticket number has the desired length
+		$formattedTicketNumber = str_pad($ticketNumber, $length, '0', STR_PAD_LEFT);
+
+		return $formattedTicketNumber;
+   }
+}
+

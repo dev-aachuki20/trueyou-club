@@ -70,4 +70,10 @@ class Seminar extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function bookings()
+    {
+        return $this->morphMany(Booking::class, 'bookingable')->where('type', 'seminar');
+    }
+
 }

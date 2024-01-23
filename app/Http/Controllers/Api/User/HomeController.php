@@ -8,13 +8,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Quote;
-use App\Models\Role;
 use Carbon\Carbon;
 
 class HomeController extends Controller
 {
 
-    // today quote with percentage
     public function index()
     {
         try {
@@ -23,20 +21,25 @@ class HomeController extends Controller
 
             if (!$todayQuote) {
                 $responseData = [
-                    'status'        => true,
-                    'message'       => null,
-                    'submission_percentage' => 0
+                    'status'     => true,
+                    'data'       => null,
                 ];
                 return response()->json($responseData, 200);
             } else {
 
-                $submissionPercentage = $todayQuote->users()->count() / $this->getTotalUsers() * 100;
+                $submissionPercentage = round($todayQuote->users()->count() / getTotalUsers() * 100);
 
-                $quoteMessage = $todayQuote->message;
                 $responseData = [
                     'status'        => true,
-                    'message'       => $quoteMessage,
-                    'submission_percentage' => $submissionPercentage,
+                    'data'          => [
+                        'id' => $todayQuote->id,
+                        'message' => $todayQuote->message,
+                        'submission_percentage' => $submissionPercentage,
+                        'today_quote_completed' => auth()->user()->quotes()->where('quote_id',$todayQuote->id)->exists(),
+                        'user_active' => auth()->user()->is_active ? true : false,
+
+                    ],
+                    
                 ];
                 return response()->json($responseData, 200);
             }
@@ -54,7 +57,6 @@ class HomeController extends Controller
 
     public function store(Request $request)
     {
-        $user_id = Auth::user()->id;
         $request->validate([
             'quote_id'    => 'required|numeric',
         ], [
@@ -63,7 +65,7 @@ class HomeController extends Controller
 
         DB::beginTransaction();
         try {
-            $user = User::find($user_id);
+            $user = Auth::user();
             $todayQuote = Quote::find($request->quote_id);
             if (!$todayQuote) {
                 $responseData = [
@@ -100,7 +102,7 @@ class HomeController extends Controller
                     DB::commit();
                     $responseData = [
                         'status'        => true,
-                        'message'       => "Task added successfully",
+                        'message'       => "Completed Today Task Successfully!",
                     ];
                     return response()->json($responseData, 200);
                 } else {
@@ -123,55 +125,6 @@ class HomeController extends Controller
         }
     }
 
-    protected function getTotalUsers()
-    {
-        // get the total count of users
-        $role = Role::where('title', 'User')->first();
-        return $role ? $role->users()->count() : 0;
-    }
-
-    public function leadBoardUser()
-    {
-        try {
-            $today = Carbon::today();
-            $todaysQuote = Quote::whereDate('created_at', $today)->first();
-
-            if ($todaysQuote) {
-                $leadUsersList = $todaysQuote->users->map(function ($user) {
-                    return [
-                        'username' => $user->name,
-                        'image_url' => $user->profile_image_url ? asset($user->profile_image_url) : asset(config('constants.default.no_image')),
-                    ];
-                });
-
-                $responseData = [
-                    'status'        => true,
-                    'message'       => 'Lead Board Users list',
-                    'leadUsersList' => $leadUsersList,
-                ];
-
-                return response()->json($responseData, 200);
-            } else {
-                $responseData = [
-                    'status'        => true,
-                    'leadUsersList' => null,
-                ];
-
-                return response()->json($responseData, 200);
-            }
-        } catch (\Exception $e) {
-            DB::rollBack();
-            // dd($e->getMessage() . '->' . $e->getLine());
-
-            // Return Error Response
-            $responseData = [
-                'status' => false,
-                'error'  => trans('messages.error_message'),
-            ];
-
-            return response()->json($responseData, 500);
-        }
-    }
 
     public function userNotifications(Request $request){
         try {

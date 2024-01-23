@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('quote_user', function (Blueprint $table) {
             $table->unsignedBigInteger('quote_id');
             $table->unsignedBigInteger('user_id');
-            $table->foreign('quote_id')->references('id')->on('quotes')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('quote_id')->references('id')->on('quotes');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamp('created_at')->nullable();
         });
     }

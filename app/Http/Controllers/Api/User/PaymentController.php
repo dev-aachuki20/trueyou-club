@@ -11,51 +11,25 @@ use Stripe\Customer;
 use App\Models\Seminar;
 use App\Models\User;
 use App\Models\UserToken;
-use App\Models\Transaction;
 use Stripe\Checkout\Session as StripeSession;
-use Stripe\Subscription as StripeSubscription;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
-    public function __construct(Request $request)
-    {
-        $this->default_currency = config('constants.default_currency');
-        $this->stripeSecret = Stripe::setApiKey(config('app.stripe_secret_key'));
-    }
-
-    public function config()
-    {
-        try {
-            $responseData = [
-                'status'            => true,
-                'key'               => config('app.stripe_publishable_key'),
-            ];
-
-            return response()->json($responseData, 200);
-        } catch (\Exception $e) {
-            $responseData = [
-                'status'        => false,
-                'error'         => trans('messages.error_message'),
-            ];
-            return response()->json($responseData, 400);
-        }
-    }
 
     public function createCheckoutSession(Request $request)
     {
-        $request->validate([
-            'seminar' => 'required',
-        ]);
+       
+        $rules['name'] = 'required|string';
+        $rules['email'] = 'required|string|email';
+        $rules['seminar'] = 'required|exists:seminars,id';
+
+        $request->validate($rules);
 
         try {
             $seminar = Seminar::where('id',$request->seminar)->first();
-
-            if(!$seminar){
-                return response()->json(['errors' => 'Invalid Seminar!'], 422);
-            }
 
             // Set your Stripe secret key
             $stripeSecretKey = getSetting('stripe_secret_key') ? getSetting('stripe_secret_key') : config('app.stripe_secret_key');
@@ -63,11 +37,13 @@ class PaymentController extends Controller
 
             Stripe::setApiKey($stripeSecretKey);
 
-            $authUser = auth()->user();
+            $authUser = User::where('email',$request->email)->first();
 
             //Start To Set Token
             $token = Str::random(32);
-            $userToken = UserToken::where('user_id', $authUser->id)->first();
+            $userEmail =  !$authUser ? $request->email :  $authUser->email;
+
+            $userToken = UserToken::where('email', $userEmail)->first();
             if ($userToken) {
                 $userToken->update([
                     'token' => $token,
@@ -75,7 +51,7 @@ class PaymentController extends Controller
                 ]);
             } else {
                 $userToken = UserToken::create([
-                    'user_id' => $authUser->id,
+                    'email'   => $userEmail,
                     'token'   => $token,
                     'type'    => 'checkout_token',
                 ]);
@@ -83,20 +59,26 @@ class PaymentController extends Controller
             //End To Set Token
 
             // Retrieve customer details by email
-            // $customers = Customer::all(['email' => $authUser->email]);
+            $customers = Customer::all(['email' => $userEmail]);
+            $customerStripeId = null;
+            if( isset($customers->data[0]) ){
+                $customer = $customers->data[0];
+                $customerStripeId = $customer->id;
+            }else{
+                $customer = Customer::create([
+                    'name'  => $request->name,
+                    'email' => $request->email,
+                ]);
+
+                $customerStripeId = $customer->id;
+            }
 
             // dd($customers->data[0]);
 
-            // Create or retrieve Stripe customer
-            if (is_null($authUser->stripe_customer_id)) {
-                $customer = Customer::create([
-                    'name'  => $authUser->name,
-                    'email' => $authUser->email,
-                ]);
-                $authUser->stripe_customer_id = $customer->id;
+            //Update stripe id if user authenticate
+            if( $authUser ){
+                $authUser->stripe_customer_id = $customerStripeId;
                 $authUser->save();
-            } else {
-                $customer = Customer::retrieve($authUser->stripe_customer_id);
             }
 
             $metadata = [
@@ -133,62 +115,46 @@ class PaymentController extends Controller
                 'metadata' => $metadata,
             ];
            
-            if ($customer) {
-                $sessionData['customer'] = $customer->id;
+            if ($customerStripeId) {
+                $sessionData['customer'] = $customerStripeId;
             }
 
             // Create a Checkout Sessions
             $session = StripeSession::create($sessionData);
 
-            return response()->json(['session' => $session]);
+            return response()->json(['status'=>true,'session' => $session]);
         } catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['status'=>false,'error' => $e->getMessage()], 500);
         }
     }
 
     public function checkoutSuccess(Request $request)
     {
 
-        $requestToken = $request->token;
         $authUser = auth()->user();
 
-        $userToken = UserToken::where('user_id', $authUser->id)->where('token', $requestToken)->first();
+        if( !$authUser ){
+            $rules['email'] = 'required|string|email';
+        }
+
+        $rules['token'] = 'required';
+
+        $request->validate($rules);
+
+        $requestEmail = null;
+
+        if($authUser){
+            $requestEmail = $authUser->email;
+        }else{
+            $requestEmail = $request->email;
+        }
+       
+        $userToken = UserToken::where('email', $requestEmail)->where('token', $request->token)->first();
 
         if ($userToken) {
-            // The request is from the same session.
-            if ($authUser->is_buyer) {
-                $buyerPlan = BuyerPlan::where('plan_stripe_id', $userToken->plan_stripe_id)->first();
-
-                if($buyerPlan){
-                $updateBuyerPlan = Buyer::where('buyer_user_id', $authUser->id)->update(['plan_id' => $buyerPlan->id, 'is_plan_auto_renew' =>1]);
-                    $response = [
-                        'status' => true,
-                        'message' => 'Your payment is successfully completed.'
-                    ];
-                }else{
-                    $response = [
-                        'status' => true,
-                        'message' => 'Invalid buyer plan.'
-                    ];
-                }
-            } else {
-                                        
-                $plan = Plan::where('plan_stripe_id', $userToken->plan_stripe_id)->first();
-                $addonPlan = Addon::where('price_stripe_id', $userToken->plan_stripe_id)->first();
-                if ($plan) {
-                    $authUser->credit_limit = $plan->credits ?? 0;
-                } else if ($addonPlan) {
-                    $authUser->credit_limit = (int)$authUser->credit_limit + (int)$addonPlan->credit;
-                }
-                $authUser->level_type = 2;
-                $authUser->save();
-
-                $response = ['status' => true, 'credit_limit' => $authUser->credit_limit];
-            }
-          
+            
             $userToken->token = null;
-            $userToken->plan_stripe_id = null;
             $userToken->save();
                
             return response()->json($response, 200);
