@@ -29,8 +29,8 @@ class HomeController extends Controller
                 $remainingValue = $userQuoteCount%7;  // Total Tasks % 7  = Total Completed/Skipped Task Within Last 7 Days 
                 $completedWeeks = floor($userQuoteCount/7); // Total Tasks / 7 = Total completed weeks
 
-                $daysData = [1=>false, 2=>false, 3=>false, 4=>false, 5=>false, 6=>false, 7=>false];
-
+                $daysData = [1=>null, 2=>null, 3=>null, 4=>null, 5=>null, 6=>null, 7=>null];
+                // $daysData = [];
                 if($remainingValue > 0){
                     // get within last 7 days Task details
                     $uqdata = $user->quotes()->withPivot('status', 'created_at')->orderBy('created_at', 'desc')->limit($remainingValue)->withTrashed()->get()->pluck('pivot');
@@ -54,7 +54,8 @@ class HomeController extends Controller
                     $data['today_qoute_data']['message'] = null;
                 } else {
                     $data['today_qoute_data']['is_completed'] = true;
-                    $submissionPercentage = $todayQuote->users()->count() / $this->getTotalUsers() * 100;
+                    $totalUsers = getTotalUsers();
+                    $submissionPercentage = ($todayQuote->users()->count() / (int)$totalUsers) * 100;
                     $quoteMessage = $todayQuote->message;
 
                     $data['today_qoute_data']['percentage'] = $submissionPercentage;
@@ -73,7 +74,7 @@ class HomeController extends Controller
             //Return Error Response
             $responseData = [
                 'status'        => false,
-                'error'         => trans('messages.error_message'),
+                'error'         => trans('messages.error_message').$e->getMessage() . '->' . $e->getLine(),
             ];
             return response()->json($responseData, 500);
         }

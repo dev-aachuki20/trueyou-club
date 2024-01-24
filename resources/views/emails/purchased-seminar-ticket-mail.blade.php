@@ -4,12 +4,24 @@
     @php
         $mailContent  = null;
 
-        // $mailContent  = getSetting('booked_seminar_mail_content');
-        // $mailContent  = str_replace('[NAME]',ucwords($name),$mailContent);
-        // $mailContent  = str_replace('[EMAIL]',ucwords($email),$mailContent);
-        // $mailContent  = str_replace('[SUPPORT_EMAIL]', getSetting('support_email'), $mailContent);
-        // $mailContent  = str_replace('[SUPPORT_PHONE]', getSetting('support_phone'), $mailContent);
-        // $mailContent  = str_replace('[APP_NAME]', config('app.name'), $mailContent);
+        $mailContent  = getSetting('booked_seminar_mail_content');
+        
+        $mailContent  = str_replace('[NAME]',ucwords($name),$mailContent);
+
+        $mailContent  = str_replace('[BOOKING_NUMBER]',$bookingNumber,$mailContent);
+        $mailContent  = str_replace('[SEMINAR_TITLE]',ucwords($seminar->title),$mailContent);
+        $mailContent  = str_replace('[SEMINAR_DATE]',convertDateTimeFormat($seminar->start_date,'fulldate'),$mailContent);
+
+        $mailContent  = str_replace('[SEMINAR_START_TIME]',\Carbon\Carbon::parse($seminar->start_time)->format('h:i A'),$mailContent);
+        $mailContent  = str_replace('[SEMINAR_END_TIME]',\Carbon\Carbon::parse($seminar->end_time)->format('h:i A'),$mailContent);
+
+        $mailContent  = str_replace('[SEMINAR_VENUE]',ucwords($seminar->venue),$mailContent);
+
+
+        $mailContent  = str_replace('[SUPPORT_EMAIL]', getSetting('support_email'), $mailContent);
+        $mailContent  = str_replace('[SUPPORT_PHONE]', getSetting('support_phone'), $mailContent);
+
+        $mailContent  = str_replace('[APP_NAME]', config('app.name'), $mailContent);
 
     @endphp
 

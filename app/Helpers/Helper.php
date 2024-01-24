@@ -276,6 +276,12 @@ if (!function_exists('generateBookingNumber')) {
 		// Get the latest ticket number and increment it
 		$latestBooking = DB::table('bookings')->where('bookingable_id',$seminarId)->latest()->first();
 		$latestNumber = optional($latestBooking)->booking_number;
+
+		// Extract the last 6 digits
+		if($latestNumber){
+			$latestNumber = substr($latestNumber, -($length));
+		}
+
 		$ticketNumber = $latestNumber ? intval($latestNumber) + 1 : 1;
 
 		// Ensure the ticket number has the desired length

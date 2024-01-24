@@ -159,18 +159,17 @@ class SettingSeeder extends Seeder
                 'created_by' => 1,
             ],
 
-            // [
-
-            //     'key'    => 'booked_seminar_mail_content',
-            //     'value'  =>  null,
-            //     'type'   => 'text_area',
-            //     'display_name'  => 'Booked Seminar Mail Content',
-            //     'group'  => 'mail',
-            //     'details' => '[APP_NAME], [MESSAGE], [NAME], [EMAIL]',
-            //     'status' => 1,
-            //     'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            //     'created_by' => 1,
-            // ],
+            [
+                'key'    => 'booked_seminar_mail_content',
+                'value'  =>  null,
+                'type'   => 'text_area',
+                'display_name'  => 'Booked Seminar Mail Content',
+                'group'  => 'mail',
+                'details' => '[NAME], [BOOKING_NUMBER], [SEMINAR_TITLE], [SEMINAR_DATE], [SEMINAR_START_TIME], [SEMINAR_END_TIME], [SEMINAR_VENUE], [SUPPORT_EMAIL], [SUPPORT_PHONE], [APP_NAME]',
+                'status' => 1,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'created_by' => 1,
+            ],
          
            
             [

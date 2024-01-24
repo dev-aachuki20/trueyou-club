@@ -45,7 +45,7 @@
                         <span>
                             {{$detail->bookings()->where('type','seminar')->count()}} / {{$detail->total_ticket}}
                         </span>
-                        Avilable Tickets
+                        Available Tickets
                     </a>
 
                    

@@ -94,7 +94,7 @@
                                 <span>
                                     {{$remain_ticket}} / {{$seminar->total_ticket}}
                                 </span>
-                                Avilable Tickets
+                                Available Tickets
                             </a>
                         </div>
                     </div>
