@@ -976,6 +976,7 @@ input::-webkit-inner-spin-button {
 .dataTables_length {
     float: left;
 }
+
 /*--------- Media Query ----------*/
 @media (max-width:991px){
      .card .card-title h4{
@@ -1271,15 +1272,8 @@ body .datepicker .datepicker-years .table-condensed{
     position: absolute;
     right: 20px;
     bottom: -20px;
+    z-index: 99;
     background-color: #ffffff;
-}
-
-.webinar-disabled .update-webinar{
-    opacity: .8;
-}
-
-.webinar-disabled .update-webinar>ul>li a svg path {
-    fill: #d3d3d3;
 }
 
 .webinar-disabled .btn{

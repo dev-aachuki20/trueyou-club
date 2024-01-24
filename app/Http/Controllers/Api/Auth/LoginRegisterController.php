@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use Carbon\Carbon; 
 use App\Models\User;
+use App\Models\Webinar;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Mail\ResetPasswordMail;
@@ -179,6 +180,30 @@ class LoginRegisterController extends Controller
 
                 DB::commit();
 
+                // get closest webinar
+                // $closestWebinar = Webinar::query()
+                // ->select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+                // ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+                // ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')->first();
+
+                $closestWebinar = Webinar::query()
+                ->select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+                    ->where(\DB::raw('CONCAT(start_date, " ", end_time)'), '>', now())
+                    ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')->first();
+
+                if ($closestWebinar) {
+                    $closestWebinar->image_url = $closestWebinar->image_url ? $closestWebinar->image_url : asset(config('constants.default.no_image'));
+                }
+
+                $getWebinar = [
+                    'title' => $closestWebinar->title ?? null,
+                    'start_date' => $closestWebinar->start_date ?? null,
+                    'start_time' => $closestWebinar->start_time ?? null,
+                    'end_time' => $closestWebinar->end_time ?? null,
+                    'image_url' => $closestWebinar->image_url ?? null,
+                    'datetime' => convertDateTimeFormat($closestWebinar->start_date.' '.$closestWebinar->start_time,'fulldatetime') .'-'. Carbon::parse($closestWebinar->end_time)->format('h:i A')
+                ];
+
                 //Success Response Send
                 $responseData = [
                     'status'            => true,
@@ -192,7 +217,10 @@ class LoginRegisterController extends Controller
                         'role'=> $user->roles()->first()->id ?? '',
                     ],
                     'remember_me_token' => $user->remember_token,
-                    'access_token'      => $accessToken
+                    'access_token'      => $accessToken,
+                    'data'=>[
+                        'closest_webinar_detail' => $getWebinar ?? null,
+                    ]
                 ];
 
 

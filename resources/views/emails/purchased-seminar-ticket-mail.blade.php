@@ -4,12 +4,13 @@
     @php
         $mailContent  = null;
 
-        // $mailContent  = getSetting('welcome_mail_content');
+        // $mailContent  = getSetting('booked_seminar_mail_content');
         // $mailContent  = str_replace('[NAME]',ucwords($name),$mailContent);
         // $mailContent  = str_replace('[EMAIL]',ucwords($email),$mailContent);
         // $mailContent  = str_replace('[SUPPORT_EMAIL]', getSetting('support_email'), $mailContent);
         // $mailContent  = str_replace('[SUPPORT_PHONE]', getSetting('support_phone'), $mailContent);
         // $mailContent  = str_replace('[APP_NAME]', config('app.name'), $mailContent);
+
     @endphp
 
     @if($mailContent)
@@ -22,11 +23,13 @@
                     <b>Hello</b> {{ ucwords($name) }},
                 </p>
                 <div class="mail-desc">
-                    <p style="font-size:14px;">We are delighted to inform you that your seminar ticket purchase has been successfully processed. Thank you for choosing to attend {{$seminar->title ?? null}}!
+                    <p style="font-size:14px;">Congratulations! Your recent purchase of seminar tickets has been successfully completed. We're thrilled to have you join us at {{$seminar->title ?? null}}!
                     </p>
                     <p style="font-size:14px;">Here are the details of your ticket:</p>
                     <div class="mail-desc">
                         <ul>
+                            <li style="font-size:14px;">Booking Number : {{ $bookingNumber }}</li>
+
                             <li style="font-size:14px;">Event : {{ $seminar->title }}</li>
                             <li style="font-size:14px;">Datetime : {{ convertDateTimeFormat($seminar->start_date.' '.$seminar->start_time,'fulldatetime') .'-'. \Carbon\Carbon::parse($seminar->end_time)->format('h:i A') }}</li>
                             <li style="font-size:14px;">Venue : {{ $seminar->venue }}</li>

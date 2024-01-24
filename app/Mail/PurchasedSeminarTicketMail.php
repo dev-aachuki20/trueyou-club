@@ -11,20 +11,20 @@ class PurchasedSeminarTicketMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $name, $subject, $email,$seminar;
+    public $name, $subject, $email,$seminar,$bookingNumber;
   
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($subject,$name,$email,$seminar)
+    public function __construct($subject,$name,$email,$seminar,$bookingNumber)
     {
         $this->subject = $subject;
         $this->name    = $name;
         $this->email   = $email;
         $this->seminar = $seminar;
-
+        $this->bookingNumber = $bookingNumber;
     }
 
 
@@ -39,6 +39,7 @@ class PurchasedSeminarTicketMail extends Mailable
                 'name'  => $this->name,
                 'email' => $this->email,
                 'seminar' => $this->seminar,
+                'bookingNumber' => $this->bookingNumber,
             ])->subject($this->subject);
     }
 }

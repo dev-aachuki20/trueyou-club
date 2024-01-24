@@ -158,6 +158,19 @@ class SettingSeeder extends Seeder
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'created_by' => 1,
             ],
+
+            // [
+
+            //     'key'    => 'booked_seminar_mail_content',
+            //     'value'  =>  null,
+            //     'type'   => 'text_area',
+            //     'display_name'  => 'Booked Seminar Mail Content',
+            //     'group'  => 'mail',
+            //     'details' => '[APP_NAME], [MESSAGE], [NAME], [EMAIL]',
+            //     'status' => 1,
+            //     'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            //     'created_by' => 1,
+            // ],
          
            
             [

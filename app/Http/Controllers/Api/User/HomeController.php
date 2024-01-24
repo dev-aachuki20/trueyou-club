@@ -29,7 +29,8 @@ class HomeController extends Controller
                 $remainingValue = $userQuoteCount%7;  // Total Tasks % 7  = Total Completed/Skipped Task Within Last 7 Days 
                 $completedWeeks = floor($userQuoteCount/7); // Total Tasks / 7 = Total completed weeks
 
-                $daysData = [];
+                $daysData = [1=>false, 2=>false, 3=>false, 4=>false, 5=>false, 6=>false, 7=>false];
+
                 if($remainingValue > 0){
                     // get within last 7 days Task details
                     $uqdata = $user->quotes()->withPivot('status', 'created_at')->orderBy('created_at', 'desc')->limit($remainingValue)->withTrashed()->get()->pluck('pivot');
@@ -37,6 +38,11 @@ class HomeController extends Controller
                         $daysData[($remainingValue-$key)] = $pivotData->status == "completed" ? true : false;
                     }
                 }
+
+                if(($remainingValue == 0) && $todayQuote){
+                    $daysData[7] = true;
+                }
+
                 $data['task_tracking_data']['week_days'] = $daysData;
                 $data['task_tracking_data']['completed_week'] = $completedWeeks;
             // End: Task Tracking
@@ -133,7 +139,7 @@ class HomeController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage() . '->' . $e->getLine());
+            // dd($e->getMessage() . '->' . $e->getLine());
             //Return Error Response
             $responseData = [
                 'status'        => false,

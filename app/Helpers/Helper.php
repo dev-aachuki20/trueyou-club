@@ -269,18 +269,18 @@ if (!function_exists('getTotalUsers')) {
 }
 
 if (!function_exists('generateBookingNumber')) {
-   function generateBookingNumber(){
-		$length = 10;
+   function generateBookingNumber($seminarId){
+		$length = 6;
+		$currentYear = date('y');
 
 		// Get the latest ticket number and increment it
-		$latestBooking = DB::table('bookings')->latest()->first();
+		$latestBooking = DB::table('bookings')->where('bookingable_id',$seminarId)->latest()->first();
 		$latestNumber = optional($latestBooking)->booking_number;
 		$ticketNumber = $latestNumber ? intval($latestNumber) + 1 : 1;
 
 		// Ensure the ticket number has the desired length
 		$formattedTicketNumber = str_pad($ticketNumber, $length, '0', STR_PAD_LEFT);
 
-		return $formattedTicketNumber;
+		return  $currentYear.$seminarId.$formattedTicketNumber;
    }
 }
-

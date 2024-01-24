@@ -69,13 +69,19 @@ class CommanController extends Controller
                 // End Latest News Details
 
                 // Start Latest Seminar Details
-                $latestSeminar = Seminar::select('*')
+                // $latestSeminar = Seminar::select('*')
+                // ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+                // ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+                // ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
+                // ->limit(1)
+                // ->first();
+
+                $latestSeminar = Seminar::select('id', 'title', 'total_ticket', 'ticket_price', 'start_date', 'start_time', 'end_time', 'venue')
                 ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
-                ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+                ->where(\DB::raw('CONCAT(start_date, " ", end_time)'), '>', now())
                 ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
                 ->limit(1)
                 ->first();
-
             
                 $latestRecords['seminar']['title'] = $latestSeminar->title;
                 $latestRecords['seminar']['ticket_price'] = $latestSeminar->ticket_price;
@@ -88,14 +94,24 @@ class CommanController extends Controller
                 $latestRecords['seminar']['datetime'] = convertDateTimeFormat($latestSeminar->start_date.' '.$latestSeminar->start_time,'fulldatetime') .'-'. Carbon::parse($latestSeminar->end_time)->format('h:i A');
 
                 $latestRecords['seminar']['imageUrl'] = $latestSeminar->image_url ? $latestSeminar->image_url : asset(config('constants.default.no_image'));
+
+                $latestRecords['seminar']['remain_ticket'] = (int)$latestSeminar->total_ticket - (int)$latestSeminar->bookings()->where('type','seminar')->count();
+
                 // End Latest Seminar Details
 
 
             }elseif($pageName == 'home'){
                 // Start upcomming Seminar Details
-                $upcomingSeminars = Seminar::select('id','title','venue','start_date','start_time','end_time','ticket_price','total_ticket')
+                // $upcomingSeminars = Seminar::select('id','title','venue','start_date','start_time','end_time','ticket_price','total_ticket')
+                // ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+                // ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+                // ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
+                // ->limit(3)
+                // ->get();
+
+                $upcomingSeminars = Seminar::select('id', 'title', 'total_ticket', 'ticket_price', 'start_date', 'start_time', 'end_time', 'venue')
                 ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
-                ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+                ->where(\DB::raw('CONCAT(start_date, " ", end_time)'), '>', now())
                 ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
                 ->limit(3)
                 ->get();
@@ -105,6 +121,9 @@ class CommanController extends Controller
                     $seminar->datetime = convertDateTimeFormat($seminar->start_date.' '.$seminar->start_time,'fulldatetime') .'-'. Carbon::parse($seminar->end_time)->format('h:i A');
     
                     $seminar->imageUrl = $seminar->image_url ? $seminar->image_url : asset(config('constants.default.no_image'));
+
+                    $seminar->remain_ticket = (int)$seminar->total_ticket - (int)$seminar->bookings()->where('type','seminar')->count();
+                    
                 }
 
                 $latestRecords['upcomingSeminars'] = $upcomingSeminars;

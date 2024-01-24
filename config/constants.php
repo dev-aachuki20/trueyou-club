@@ -21,7 +21,7 @@ return [
         'admin_logo' => 'default/favicon.svg',
         'transparent_logo' => 'assets/logo/logo-transparent.png',
         'profile_image' => 'default/default-user.svg',
-        'email_logo' => 'default/email-logo.png',
+        'email_logo' => 'default/elogo.png',
         'no_image' => 'default/no-image.jpg',
     ],
 
@@ -73,7 +73,7 @@ return [
     'webinar_notification_message' => 'A new webinar has been added. Visit the webinar page and join.',
     'seminar_notification_message' => 'A new seminar has been added. Visit the seminar page to book your seat.',
     'user_register_notification_message' => 'Welcome to the '.env('APP_NAME').'! We are excited to have you on board.',
-    'seminar_booked_notification_message' => 'A seminar has been booked.',
+    'seminar_booked_notification_message' => 'Thank you for your purchase! Your seminar ticket is confirmed. Get ready for an insightful experience!',
 
     'user_star_no_with_task_count' => [
         '1_star'    => 63,

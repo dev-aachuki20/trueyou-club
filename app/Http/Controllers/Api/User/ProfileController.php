@@ -19,13 +19,15 @@ class ProfileController extends Controller
     public function userDetails()
     {
         // get closest webinar
-        $currentDate = now()->toDateString();
-        $currentTime = now()->toTimeString();
+        // $closestWebinar = Webinar::query()
+        // ->select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+        // ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+        // ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')->first();
 
         $closestWebinar = Webinar::query()
         ->select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
-        ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
-        ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')->first();
+            ->where(\DB::raw('CONCAT(start_date, " ", end_time)'), '>', now())
+            ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')->first();
 
         if ($closestWebinar) {
             $closestWebinar->image_url = $closestWebinar->image_url ? $closestWebinar->image_url : asset(config('constants.default.no_image'));

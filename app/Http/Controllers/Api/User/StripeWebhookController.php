@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Mail;
 use App\Mail\PurchasedSeminarTicketMail;
 
 class StripeWebhookController extends Controller
@@ -113,19 +114,20 @@ class StripeWebhookController extends Controller
 
                 //Make entry in booking table
                 $seminarId = json_decode($eventDataObject->metadata->seminar)->id;
+                $bookingNumber = generateBookingNumber($seminarId);
 
                 $seminarBooking = Seminar::find($seminarId);
                 $booking = $seminarBooking->bookings()->create([
                     'user_id' => $customer ? $customer->id : null,
                     'user_details' =>  $customerDetails,
                     'bookingable_details'=> $eventDataObject->metadata->seminar,
-                    'booking_number' => generateBookingNumber(), 
+                    'booking_number' => $bookingNumber, 
                     'type'=>'seminar',
                 ]);
 
 
-                // $subject = 'Seminar Ticket Purchased';
-                // Mail::to($customerEmail)->queue(new PurchasedSeminarTicketMail($subject, $customerName, $customerEmail,$seminarBooking));
+                $subject = 'Seminar Ticket Purchased';
+                Mail::to($customerEmail)->queue(new PurchasedSeminarTicketMail($subject, $customerName, $customerEmail,$seminarBooking,$bookingNumber));
     
                 if($customer){
                     $notification_message = config('constants.seminar_booked_notification_message');
@@ -136,89 +138,38 @@ class StripeWebhookController extends Controller
             }
         }
         
-
     }
 
 
     private function handlePaymentFailed($eventDataObject)
     {
-        Log::info('Start stripe webhook of invoice payment failed');
+        Log::info('Start stripe webhook of payment failed');
        
         $customer_stripe_id = $eventDataObject->customer;
 
-        $metaData = $eventDataObject->subscription_details->metadata ?? null;
+        if (isset($eventDataObject->metadata->seminar)) {
+            $customer = User::where('stripe_customer_id', $customer_stripe_id)->first();
+            $customerDetails = json_encode($eventDataObject->customer_details);
 
-        if($metaData && $metaData->user_type){
+            $customerName = $eventDataObject->customer_details->name;
+            $customerEmail = $eventDataObject->customer_details->email;
 
-            if($metaData->user_type == 'seller'){
-                $customer = User::where('stripe_customer_id', $customer_stripe_id)->first();
-                $customerId = $customer->id ?? null;
+            $transaction = Transaction::where('payment_intent_id', $eventDataObject->payment_intent)->where('status','failed')->exists();
+            if (!$transaction) {
+               
+                // Save data to transactions table
+                Transaction::create([
+                    'user_id' => $customer ? $customer->id : null,
+                    'user_json' => $customerDetails,
+                    'payment_intent_id' => $eventDataObject->payment_intent,
+                    'amount' => (float)$eventDataObject->amount_total / 100,
+                    'currency' => $eventDataObject->currency,
+                    'payment_method' => $eventDataObject->payment_method_types[0],
+                    'payment_type'   => 'credit',
+                    'status' => 'failed',
+                    'payment_json' => json_encode($eventDataObject),
+                ]);
 
-                $isAddon = false;
-                $planId = Plan::where('plan_stripe_id', $eventDataObject->lines->data[0]->plan->id)->value('id');
-                if (!$planId) {
-                    $planId = Addon::where('product_stripe_id', $eventDataObject->lines->data[0]->plan->id)->value('id');
-                    $isAddon = true;
-                }
-
-                $transaction = Transaction::where('user_id', $customerId)->where('payment_intent_id', $eventDataObject->payment_intent)->where('status','failed')->exists();
-                if (!$transaction) {
-                    if (!is_null($customerId) && !is_null($planId)) {
-                        // Save data to transactions table
-                        Transaction::create([
-                            'user_id' => $customerId,
-                            'plan_id' => $planId,
-                            'is_addon' => $isAddon,
-                            'payment_intent_id' => $eventDataObject->payment_intent,
-                            'amount' => (float)$eventDataObject->lines->data[0]->amount / 100,
-                            'currency' => $eventDataObject->lines->data[0]->currency,
-                            'payment_method' => null,
-                            'payment_type'   => 'credit',
-                            'status' => 'failed',
-                            'payment_json' => json_encode($eventDataObject),
-                        ]);
-
-                        $customer->level_type = 1;
-                        $customer->save();
-                    }
-                }
-            }
-            
-            else if($metaData->product_type == 'boost-plan' && $metaData->user_type == 'buyer'){
-              /*  $authUser = User::where('stripe_customer_id', $customer_stripe_id)->first();
-
-                $transaction = BuyerTransaction::where('user_id', $authUser->id)->where('payment_intent_id', $eventDataObject->payment_intent)->where('status','failed')->exists();
-
-                if (!$transaction) {
-
-                    $userJson = [
-                        'stripe_customer_id' => $authUser->stripe_customer_id,
-                        'name'  => $authUser->name,
-                        'email' => $authUser->email,
-                        'phone' => $authUser->phone,
-                        'register_type' => $authUser->register_type,
-                        'email_verified_at' => $authUser->email_verified_at,
-                        'phone_verified_at' => $authUser->phone_verified_at,
-                    ];
-
-                    $planJson = BuyerPlan::find($authUser->buyerDetail->plan_id);
-
-                    BuyerTransaction::create([
-                        'user_id' => $authUser->id,
-                        'user_json' => json_encode($userJson),
-                        'plan_id'   => $planJson ? $planJson->id : null,
-                        'plan_json' =>  $planJson ? $planJson->toJson() : null,
-                        'payment_intent_id' => $eventDataObject->payment_intent,
-                        'amount' => (float)$eventDataObject->total / 100,
-                        'currency' => $eventDataObject->currency,
-                        'payment_method' => $eventDataObject->payment_method_types[0] ?? null,
-                        'payment_type'   => 'credit',
-                        'status' => 'failed',
-                        'payment_json' => json_encode($eventDataObject),
-                    ]);
-
-                }
-                */
             }
         }
 

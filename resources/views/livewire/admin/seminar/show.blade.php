@@ -43,7 +43,7 @@
                 
                     <a href="javascript:voide(0);" class="btn btn-primary joinBtn book-seats">
                         <span>
-                            0 / {{$detail->total_ticket}}
+                            {{$detail->bookings()->where('type','seminar')->count()}} / {{$detail->total_ticket}}
                         </span>
                         Avilable Tickets
                     </a>

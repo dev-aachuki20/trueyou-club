@@ -15,9 +15,15 @@ class SeminarController extends Controller
 
         try {
            
-            $getAllRecords = Seminar::select('id','title','total_ticket','ticket_price','start_date','start_time','end_time','venue')
+            // $getAllRecords = Seminar::select('id','title','total_ticket','ticket_price','start_date','start_time','end_time','venue')
+            // ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+            // ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+            // ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
+            // ->paginate(10);
+
+            $getAllRecords = Seminar::select('id', 'title', 'total_ticket', 'ticket_price', 'start_date', 'start_time', 'end_time', 'venue')
             ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
-            ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+            ->where(\DB::raw('CONCAT(start_date, " ", end_time)'), '>', now())
             ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
             ->paginate(10);
             
@@ -28,6 +34,7 @@ class SeminarController extends Controller
 
                     $record->imageUrl = $record->image_url ? $record->image_url : asset(config('constants.default.no_image'));
 
+                    $record->remain_ticket = (int)$record->total_ticket - (int)$record->bookings()->where('type','seminar')->count();
                 }
 
                 $responseData = [

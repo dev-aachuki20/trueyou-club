@@ -87,8 +87,12 @@
                                 @endif
                             </div>
                             <a href="javascript:voide(0);" class="btn btn-primary joinBtn book-seats">
+                                @php
+                                    $remain_ticket = $seminar->bookings()->where('type','seminar')->count();
+                                @endphp
+
                                 <span>
-                                    0 / {{$seminar->total_ticket}}
+                                    {{$remain_ticket}} / {{$seminar->total_ticket}}
                                 </span>
                                 Avilable Tickets
                             </a>
