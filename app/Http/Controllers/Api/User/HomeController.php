@@ -16,33 +16,51 @@ class HomeController extends Controller
     public function index()
     {
         try {
+            $data = [];
+            $user = Auth::user();
             $today = Carbon::today();
             $todayQuote = Quote::whereDate('created_at', $today)->first();
 
-            if (!$todayQuote) {
-                $responseData = [
-                    'status'     => true,
-                    'data'       => null,
-                ];
-                return response()->json($responseData, 200);
-            } else {
+            // Start: Task Tracking
+                $userQuoteCount = $user->quotes()->withTrashed()->count();
+                if($userQuoteCount >= 63){ // 63 days/tasks = 9 weeks
+                    $userQuoteCount = $userQuoteCount%63;
+                }
+                $remainingValue = $userQuoteCount%7;  // Total Tasks % 7  = Total Completed/Skipped Task Within Last 7 Days 
+                $completedWeeks = floor($userQuoteCount/7); // Total Tasks / 7 = Total completed weeks
 
-                $submissionPercentage = round($todayQuote->users()->count() / getTotalUsers() * 100);
+                $daysData = [];
+                if($remainingValue > 0){
+                    // get within last 7 days Task details
+                    $uqdata = $user->quotes()->withPivot('status', 'created_at')->orderBy('created_at', 'desc')->limit($remainingValue)->withTrashed()->get()->pluck('pivot');
+                    foreach($uqdata as $key => $pivotData){
+                        $daysData[($remainingValue-$key)] = $pivotData->status == "completed" ? true : false;
+                    }
+                }
+                $data['task_tracking_data']['week_days'] = $daysData;
+                $data['task_tracking_data']['completed_week'] = $completedWeeks;
+            // End: Task Tracking
 
-                $responseData = [
-                    'status'        => true,
-                    'data'          => [
-                        'id' => $todayQuote->id,
-                        'message' => $todayQuote->message,
-                        'submission_percentage' => $submissionPercentage,
-                        'today_quote_completed' => auth()->user()->quotes()->where('quote_id',$todayQuote->id)->exists(),
-                        'user_active' => auth()->user()->is_active ? true : false,
+            // Start: Quote of the day
+                if (!$todayQuote) {
+                    $data['today_qoute_data']['is_completed'] = false;
+                    $data['today_qoute_data']['percentage'] = 0;
+                    $data['today_qoute_data']['message'] = null;
+                } else {
+                    $data['today_qoute_data']['is_completed'] = true;
+                    $submissionPercentage = $todayQuote->users()->count() / $this->getTotalUsers() * 100;
+                    $quoteMessage = $todayQuote->message;
 
-                    ],
-                    
-                ];
-                return response()->json($responseData, 200);
-            }
+                    $data['today_qoute_data']['percentage'] = $submissionPercentage;
+                    $data['today_qoute_data']['message'] = $quoteMessage;
+                }
+            // End: Quote of the day
+
+            $responseData = [
+                'status' => true,
+                'data' => $data
+            ];
+            return response()->json($responseData, 200);
         } catch (\Exception $e) {
             DB::rollBack();
             // dd($e->getMessage() . '->' . $e->getLine());
@@ -81,7 +99,7 @@ class HomeController extends Controller
                     if($user->is_active){
                         $user->quotes()->attach($todayQuote, ['created_at' => now(), 'status' => 'completed']);
     
-                        $quoteTasksCount = $user->quotes->count();
+                        $quoteTasksCount = $user->quotes()->withTrashed()->count();
                         $countForStar = config('constants.user_star_no_with_task_count');
 
                         if(!$user->vip_at){
@@ -115,7 +133,7 @@ class HomeController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            // dd($e->getMessage() . '->' . $e->getLine());
+            dd($e->getMessage() . '->' . $e->getLine());
             //Return Error Response
             $responseData = [
                 'status'        => false,

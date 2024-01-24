@@ -77,7 +77,7 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
 
     Route::post('/completed-task', [HomeController::class, 'store']);
 
-    Route::get('/today-quote-percentage', [HomeController::class, 'index']);
+    Route::get('/dashboard', [HomeController::class, 'index']);
 
     Route::get('/notifications', [HomeController::class, 'userNotifications']);
     Route::delete('/notification/{id}', [HomeController::class, 'deleteNotification']);
