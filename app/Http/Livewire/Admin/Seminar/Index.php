@@ -19,14 +19,14 @@ class Index extends Component
 
     protected $layout = null;
 
-    public $search = '', $formMode = false, $updateMode = false, $viewMode = false;
+    public $search = '', $formMode = false, $updateMode = false, $viewMode = false, $bookingMode=false;
 
     public $seminar_id = null, $title, $total_ticket, $ticket_price=null, $start_date = null, $start_time = null,  $end_time = null,  $venue, $image, $originalImage, $status = 1;
 
     public $removeImage = false;
 
     protected $listeners = [
-        'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm'
+        'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm', 'viewBookings'
     ];
 
     public function mount()
@@ -228,6 +228,14 @@ class Index extends Component
         $this->seminar_id = $id;
         $this->formMode = false;
         $this->viewMode = true;
+    }
+
+    public function viewBookings($id)
+    {
+        $this->seminar_id = $id;
+        $this->formMode = false;
+        $this->viewMode = false;
+        $this->bookingMode = true;
     }
 
 

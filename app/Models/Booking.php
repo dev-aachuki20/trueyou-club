@@ -34,4 +34,14 @@ class Booking extends Model
     {
         return $this->morphTo();
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function seminar()
+    {
+        return $this->belongsTo(Seminar::class, 'bookingable_id');
+    }
 }

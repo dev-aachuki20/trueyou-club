@@ -6,13 +6,13 @@
                 <div class="card-body">
 
                     @if($formMode)
-
-                    @include('livewire.admin.seminar.form')
-
+                        @include('livewire.admin.seminar.form')
                     @elseif($viewMode)
-
-                    @livewire('admin.seminar.show', ['seminar_id' => $seminar_id])
-
+                        @livewire('admin.seminar.show', ['seminar_id' => $seminar_id])
+                    @elseif($bookingMode)
+                        
+                        {{-- @dd('test111') --}}
+                        @livewire('admin.seminar.bookings-table', ['seminar_id' => $seminar_id])
                     @else
                     <div wire:loading wire:target="create" class="loader"></div>
                     <div class="card-title top-box-set">
