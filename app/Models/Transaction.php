@@ -11,6 +11,11 @@ class Transaction extends Model
 
     public $table = 'transactions';
   
+    protected $casts = [
+        'user_json'=>'json',
+        'payment_json' => 'json',
+    ];
+
     protected $dates = [
         'created_at',
         'updated_at',

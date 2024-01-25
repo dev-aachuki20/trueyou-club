@@ -977,6 +977,132 @@ input::-webkit-inner-spin-button {
     float: left;
 }
 
+/* ==== ticket modal =====  */
+.ticketBox{
+    padding: 0 !important;
+}
+.ticket-wrapper {
+    background-color: #F5F7F9;
+    padding: 1rem;
+    border-radius: 10px;
+}   
+
+.ticket-wrapper .webinar-item {
+    border: none;
+    padding: 10px;
+    margin-bottom: 0;
+}
+
+.ticket-wrapper .webinar-item-inner>.webinar-img {
+    width: 100%;
+    max-width: 156px;
+    height: 110px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.ticket-wrapper .webinar-item-inner>.webinar-img>img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ticket-wrapper .webinar-item-inner .webinar-content {
+    width: inherit;
+}
+
+.ticket-wrapper .webinar-content h3 {
+    margin-bottom: 7px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.ticket-wrapper .webinar-item-inner {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+}
+
+.ticket-wrapper .seminar-date svg path {
+    fill: #0A2540;
+    stroke: none;
+}
+
+.ticketBox .modal-dialog .modal-content .modal-body {
+    padding: 25px 15px;
+}
+
+.ticketBox .modal-dialog .modal-content .modal-header {
+    padding: 15px 15px 0 0;
+    border: none;
+    justify-content: flex-end;
+}
+
+.ticketBooking-list ul {
+    padding: 0;
+}
+
+.ticketBooking-list ul li {
+    padding: 21px 0;
+    border-bottom: 1px solid #DDDDE9;
+}
+
+.ticketBooking-inner {
+    display: flex;
+    align-items: center;
+}
+
+.ticketBooking-list ul li .ticketBooking-inner span {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    width: 120px;
+}
+
+.ticketBooking-list ul li .ticketBooking-inner b{
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.ticketBooking-inner .space {
+    margin-right: 15px;
+}
+
+.total-box {
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.total-box .title {
+    color: #0A2540;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.total-box .total-amount {
+    color: #23D21F;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal .modal-dialog{
+    margin: auto !important;
+}
+@media (min-width: 576px){
+    .modal-dialog-centered {
+        min-height: 100% !important;
+    }
+}
+/* ==== end ticket modal =====  */
+
 /*--------- Media Query ----------*/
 @media (max-width:991px){
      .card .card-title h4{
@@ -1238,7 +1364,8 @@ body .datepicker .datepicker-years .table-condensed{
 }
 
 .webinar-item-inner>.webinar-img {
-    width: 254px;
+    width: 100%;
+    max-width: 254px;
     height: 162px;
     border-radius: 8px;
     overflow: hidden;
@@ -2156,6 +2283,7 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
 
     .webinar-item-inner>.webinar-img {
         width: 100%;
+        max-width: 100%;
         height: 200px;
         border-radius: 8px;
         overflow: hidden;

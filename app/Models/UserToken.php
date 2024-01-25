@@ -15,6 +15,7 @@ class UserToken extends Model
 
     protected $fillable = [
         'email',
+        'seminar_id',
         'token',
         'type',
         'created_at',

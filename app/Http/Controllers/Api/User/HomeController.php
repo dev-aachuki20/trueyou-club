@@ -26,6 +26,7 @@ class HomeController extends Controller
                 if($userQuoteCount >= 63){ // 63 days/tasks = 9 weeks
                     $userQuoteCount = $userQuoteCount%63;
                 }
+                
                 $remainingValue = $userQuoteCount%7;  // Total Tasks % 7  = Total Completed/Skipped Task Within Last 7 Days 
                 $completedWeeks = floor($userQuoteCount/7); // Total Tasks / 7 = Total completed weeks
 
@@ -39,7 +40,7 @@ class HomeController extends Controller
                     }
                 }
 
-                if(($remainingValue == 0) && $todayQuote){
+                if(($remainingValue == 0) && $userQuoteCount > 0){
                     $daysData[7] = true;
                 }
 
@@ -53,15 +54,23 @@ class HomeController extends Controller
                     $data['today_qoute_data']['percentage'] = 0;
                     $data['today_qoute_data']['message'] = null;
                 } else {
-                    $data['today_qoute_data']['is_completed'] = true;
+                    $data['today_qoute_data']['is_completed'] = false;
+                    
+                    if($todayQuote->users()->where('user_id',$user->id)->count() > 0){
+                        $data['today_qoute_data']['is_completed'] = true;
+                    }
+
                     $totalUsers = getTotalUsers();
                     $submissionPercentage = ($todayQuote->users()->count() / (int)$totalUsers) * 100;
                     $quoteMessage = $todayQuote->message;
 
-                    $data['today_qoute_data']['percentage'] = $submissionPercentage;
+                    $data['today_qoute_data']['id'] = $todayQuote->id;
+                    $data['today_qoute_data']['percentage'] = round($submissionPercentage);
                     $data['today_qoute_data']['message'] = $quoteMessage;
                 }
             // End: Quote of the day
+
+            $data['is_break'] = $user->is_active ? false : true;
 
             $responseData = [
                 'status' => true,
@@ -154,6 +163,9 @@ class HomeController extends Controller
     public function userNotifications(Request $request){
         try {
             $user = Auth::user();
+            
+            $user->notifications()->update(['read_at'=>Carbon::now()]);
+
             $notifications = $user->notifications()->select('id', 'data', 'created_at', 'read_at')->latest()->paginate(10);
 
             if ($notifications->count() > 0) {

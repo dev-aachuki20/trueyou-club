@@ -47,8 +47,7 @@
                         @foreach($seminarBookings as $serialNo => $booking)
                         <tr>
                             <td>{{ $serialNo+1 }}</td>
-                            {{-- <td>{{ ucwords($booking->user->name) }}</td> --}}
-                            <td>{{ ucwords($booking->user_details ? json_decode($booking->user_details, true)['name'] : '') }}</td>
+                            <td>{{ ucwords($booking->user_details ? $booking->user_details['name'] : '') }}</td>
                             <td>{{ $booking->booking_number }}</td>
                             <td>{{ convertDateTimeFormat($booking->created_at,'fulldate') }}</td>
             
@@ -56,7 +55,9 @@
                                 <div class="update-webinar table-btns">
                                     <ul class="d-flex">
                                         <li>
-                                            <a href="javascript:void()" wire:click.prevent="$emitUp('show', {{$booking->id}})">
+                                            {{-- @livewire('admin.seminar.ticket-modal',['booking_id'=>$booking->id]) --}}
+                                            {{-- <a href="javascript:void()" wire:click.prevent="$emitUp('show', {{$booking->id}})" data-bs-toggle="modal" data-bs-target="#ticketBox"> --}}
+                                            <a href="javascript:void()"  data-bs-toggle="modal" data-bs-target="#ticketBox" title="View Ticket">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="20" height="20">
                                                     <g id="_01_align_center" data-name="01 align center">
                                                         <path d="M23.821,11.181v0C22.943,9.261,19.5,3,12,3S1.057,9.261.179,11.181a1.969,1.969,0,0,0,0,1.64C1.057,14.739,4.5,21,12,21s10.943-6.261,11.821-8.181A1.968,1.968,0,0,0,23.821,11.181ZM12,19c-6.307,0-9.25-5.366-10-6.989C2.75,10.366,5.693,5,12,5c6.292,0,9.236,5.343,10,7C21.236,13.657,18.292,19,12,19Z" fill="#40658B"></path>

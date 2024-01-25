@@ -91,7 +91,7 @@ class StripeWebhookController extends Controller
 
         if (isset($eventDataObject->metadata->seminar)) {
             $customer = User::where('stripe_customer_id', $customer_stripe_id)->first();
-            $customerDetails = json_encode($eventDataObject->customer_details);
+            $customerDetails = $eventDataObject->customer_details;
 
             $customerName = $eventDataObject->customer_details->name;
             $customerEmail = $eventDataObject->customer_details->email;
@@ -109,7 +109,7 @@ class StripeWebhookController extends Controller
                     'payment_method' => $eventDataObject->payment_method_types[0],
                     'payment_type'   => 'credit',
                     'status' => 'success',
-                    'payment_json' => json_encode($eventDataObject),
+                    'payment_json' => $eventDataObject,
                 ]);
 
                 //Make entry in booking table
@@ -120,7 +120,7 @@ class StripeWebhookController extends Controller
                 $booking = $seminarBooking->bookings()->create([
                     'user_id' => $customer ? $customer->id : null,
                     'user_details' =>  $customerDetails,
-                    'bookingable_details'=> $eventDataObject->metadata->seminar,
+                    'bookingable_details'=> json_decode($eventDataObject->metadata->seminar,true),
                     'booking_number' => $bookingNumber, 
                     'type'=>'seminar',
                 ]);
@@ -149,7 +149,7 @@ class StripeWebhookController extends Controller
 
         if (isset($eventDataObject->metadata->seminar)) {
             $customer = User::where('stripe_customer_id', $customer_stripe_id)->first();
-            $customerDetails = json_encode($eventDataObject->customer_details);
+            $customerDetails = $eventDataObject->customer_details;
 
             $customerName = $eventDataObject->customer_details->name;
             $customerEmail = $eventDataObject->customer_details->email;
@@ -167,7 +167,7 @@ class StripeWebhookController extends Controller
                     'payment_method' => $eventDataObject->payment_method_types[0],
                     'payment_type'   => 'credit',
                     'status' => 'failed',
-                    'payment_json' => json_encode($eventDataObject),
+                    'payment_json' => $eventDataObject,
                 ]);
 
             }

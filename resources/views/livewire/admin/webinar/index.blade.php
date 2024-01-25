@@ -3,6 +3,7 @@
     <div class="row">
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
+              
                 <div class="card-body">
 
                     @if($formMode)
@@ -42,6 +43,8 @@
     </div>
 
 </div>
+
+
 @push('styles')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.css" />
 <link rel="stylesheet" href="{{ asset('admin/assets/select2-bootstrap-theme/select2-bootstrap.min.css') }}">

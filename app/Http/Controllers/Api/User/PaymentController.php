@@ -15,6 +15,8 @@ use Stripe\Checkout\Session as StripeSession;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\Booking;
+use Illuminate\Support\Facades\Validator;
 
 class PaymentController extends Controller
 {
@@ -46,12 +48,14 @@ class PaymentController extends Controller
             $userToken = UserToken::where('email', $userEmail)->first();
             if ($userToken) {
                 $userToken->update([
+                    'seminar_id'=> $seminar->id ?? null,
                     'token' => $token,
                     'type'  =>'checkout_token',
                 ]);
             } else {
                 $userToken = UserToken::create([
                     'email'   => $userEmail,
+                    'seminar_id'=> $seminar->id ?? null,
                     'token'   => $token,
                     'type'    => 'checkout_token',
                 ]);
@@ -110,8 +114,8 @@ class PaymentController extends Controller
                     ],
                 ],
                 'mode' => 'payment',
-                'success_url' => env('FRONTEND_URL') . 'completion/'.$token, 
-                'cancel_url' => env('FRONTEND_URL') . 'cancel',    
+                'success_url' => env('FRONTEND_URL') . 'seminar-ticket/'.encrypt($userEmail).'/'.$token, 
+                'cancel_url' => env('FRONTEND_URL') . 'paymentfailed',    
                 'metadata' => $metadata,
             ];
            
@@ -132,35 +136,56 @@ class PaymentController extends Controller
     public function checkoutSuccess(Request $request)
     {
 
-        $authUser = auth()->user();
+        $requestVal['email'] = decrypt($request->email);
+        $requestVal['token'] = $request->token;
 
-        if( !$authUser ){
-            $rules['email'] = 'required|string|email';
-        }
-
+       
+        $rules['email'] = 'required|string|email';
         $rules['token'] = 'required';
 
-        $request->validate($rules);
+        // $request->validate($rules);
+     
+        $validator = Validator::make($requestVal, $rules);
 
-        $requestEmail = null;
-
-        if($authUser){
-            $requestEmail = $authUser->email;
-        }else{
-            $requestEmail = $request->email;
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
-       
-        $userToken = UserToken::where('email', $requestEmail)->where('token', $request->token)->first();
+
+
+        $requestEmail = $requestVal['email'];
+        $sessionToken = $requestVal['token'];
+
+        $userToken = UserToken::where('email', $requestEmail)->where('token', $sessionToken)->first();
 
         if ($userToken) {
             
+            $bookingDetails = Booking::whereJsonContains('user_details->email', $requestEmail)->where('bookingable_id',$userToken->seminar_id)->first();
+            
+            $ticketDetails = [
+                'title' => ucwords($bookingDetails->seminar->title),
+                'booking_number' => $bookingDetails->booking_number,
+                'date' => convertDateTimeFormat($bookingDetails->seminar->start_date,'fulldate'),
+                'start_time' => \Carbon\Carbon::parse($bookingDetails->seminar->start_time)->format('h:i A'),
+                'end_time' => \Carbon\Carbon::parse($bookingDetails->seminar->end_time)->format('h:i A'),
+
+                'venue' => $bookingDetails->seminar->venue,
+                'ticket_price' => number_format($bookingDetails->seminar->ticket_price,2),
+            ];
+
+            $userToken->seminar_id = null;
             $userToken->token = null;
             $userToken->save();
-               
+            
+            $response = [
+                'status'  => true,
+                'message' => 'Payment Successfully!',
+                'data'    => $ticketDetails,
+            ];
+
             return response()->json($response, 200);
         } else {
             // The request is not from the same session.
-            return response()->json(['status' => false], 404);
+            return response()->json(['status' => false, 'message'=>'Expired Token!'], 200);
         }
     }
 

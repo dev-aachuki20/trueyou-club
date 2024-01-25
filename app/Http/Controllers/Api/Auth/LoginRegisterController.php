@@ -401,7 +401,7 @@ class LoginRegisterController extends Controller
             
             $responseData = [
                 'status'  => true,
-                'message' => 'Email is aleready verifed!',
+                'message' => 'Email is already verifed!',
             ];
             return response()->json($responseData, 200);
         }

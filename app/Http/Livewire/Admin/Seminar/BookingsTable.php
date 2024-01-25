@@ -10,6 +10,8 @@ class BookingsTable extends Component
 {
     use WithPagination;
 
+    protected $layout = null;
+
     public $search = null;
 
     public $seminarId;
