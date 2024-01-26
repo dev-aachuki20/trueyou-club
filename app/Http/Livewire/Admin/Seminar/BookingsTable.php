@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin\Seminar;
 
 use App\Models\Seminar;
+use App\Models\Booking;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -10,11 +11,11 @@ class BookingsTable extends Component
 {
     use WithPagination;
 
-    protected $layout = null;
+    // protected $layout = null;
 
-    public $search = null;
+    public string $searchVal = '';
 
-    public $seminarId;
+    public $seminarId, $componentKey;
 
     public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By User Name, Booking Number, Created";
 
@@ -24,8 +25,9 @@ class BookingsTable extends Component
         'show'
     ];
 
-    public function mount($seminar_id){
+    public function mount($seminar_id,$componentKey){
         $this->seminarId = $seminar_id;
+        $this->componentKey = $componentKey;
     }
 
     public function updatePaginationLength($length)
@@ -34,7 +36,7 @@ class BookingsTable extends Component
         $this->paginationLength = $length;
     }
 
-    public function updatedSearch()
+    public function updatedSearchVal()
     {
         $this->resetPage();
     }
@@ -57,20 +59,19 @@ class BookingsTable extends Component
         return $this->sortDirection === 'asc' ? 'desc' : 'asc';
     }
     public function render()
-    {       
-        $searchValue = $this->search;
-        
+    {   
+        $searchValue = $this->searchVal;
         $seminar = Seminar::find($this->seminarId);
         $seminarName = $seminar->title;
-        $seminarBookings = $seminar->bookings()->where(function ($query) use ($searchValue) {
-            $query
-                /* ->whereHas('user', function($q) use($searchValue){
-                    $q->where('name', 'like', '%' . $searchValue . '%');
-                }) */
-                // ->whereJsonContains('user_details->name', '%'.$searchValue.'%')
+
+        $seminarBookings = Booking::where(function ($query) use ($searchValue){
+            if($searchValue){
+                $query->where('name', 'like', '%'.$searchValue.'%')
                 ->orWhere('booking_number', 'like', '%' . $searchValue . '%')
                 ->orWhereRaw("date_format(created_at, '" . config('constants.search_full_date_format') . "') like ?", ['%' . $searchValue . '%']);
+            }
         })
+        ->where('bookingable_id',$seminar->id)
         ->orderBy($this->sortColumnName, $this->sortDirection)
         ->paginate($this->paginationLength);
 

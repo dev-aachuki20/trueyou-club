@@ -159,7 +159,7 @@ class PaymentController extends Controller
 
         if ($userToken) {
             
-            $bookingDetails = Booking::whereJsonContains('user_details->email', $requestEmail)->where('bookingable_id',$userToken->seminar_id)->first();
+            $bookingDetails = Booking::where('email', $requestEmail)->where('bookingable_id',$userToken->seminar_id)->first();
             
             $ticketDetails = [
                 'title' => ucwords($bookingDetails->seminar->title),

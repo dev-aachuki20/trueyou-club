@@ -18,6 +18,8 @@ return new class extends Migration
 
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
+            $table->string('name')->nullable();
+            $table->string('email')->nullable();
             $table->json('user_details')->nullable()->default(null);
 
             $table->morphs('bookingable');

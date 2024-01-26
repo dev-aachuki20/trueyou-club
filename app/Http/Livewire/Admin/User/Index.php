@@ -163,6 +163,7 @@ class Index extends Component
     {
         $userId = $event['data']['inputAttributes']['userId'];
         $model = User::find($userId);
+       
         $model->update(['is_active' => !$model->is_active]);
 
         $this->emit('refreshTable');

@@ -98,11 +98,19 @@ class StripeWebhookController extends Controller
 
             $transaction = Transaction::where('payment_intent_id', $eventDataObject->payment_intent)->where('status','success')->exists();
             if (!$transaction) {
-               
+
+                $seminarObj = json_decode($eventDataObject->metadata->seminar);
+
                 // Save data to transactions table
                 Transaction::create([
                     'user_id' => $customer ? $customer->id : null,
+                    'name'  => $customerDetails->name ?? null,
+                    'email' => $customerDetails->email ?? null,
                     'user_json' => $customerDetails,
+                    'ticket_id' => $seminarObj->id,
+                    'ticket_json' => json_decode($eventDataObject->metadata->seminar,true),
+                    'type' =>'seminar',
+                    'description'=>'Seminar Ticket Purchased',
                     'payment_intent_id' => $eventDataObject->payment_intent,
                     'amount' => (float)$eventDataObject->amount_total / 100,
                     'currency' => $eventDataObject->currency,
@@ -113,12 +121,13 @@ class StripeWebhookController extends Controller
                 ]);
 
                 //Make entry in booking table
-                $seminarId = json_decode($eventDataObject->metadata->seminar)->id;
-                $bookingNumber = generateBookingNumber($seminarId);
+                $bookingNumber = generateBookingNumber($seminarObj->id);
 
-                $seminarBooking = Seminar::find($seminarId);
+                $seminarBooking = Seminar::find($seminarObj->id);
                 $booking = $seminarBooking->bookings()->create([
                     'user_id' => $customer ? $customer->id : null,
+                    'name'  => $customerDetails->name ?? null,
+                    'email' => $customerDetails->email ?? null,
                     'user_details' =>  $customerDetails,
                     'bookingable_details'=> json_decode($eventDataObject->metadata->seminar,true),
                     'booking_number' => $bookingNumber, 

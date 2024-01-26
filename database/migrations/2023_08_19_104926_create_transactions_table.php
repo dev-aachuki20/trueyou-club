@@ -15,8 +15,14 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id'); // If you want to associate transactions with users
+            $table->unsignedBigInteger('user_id');
+            $table->string('name')->nullable();
+            $table->string('email')->nullable();
             $table->json('user_json')->nullable();
+            $table->unsignedBigInteger('ticket_id')->nullable();
+            $table->json('ticket_json')->nullable();
+            $table->string('type',100)->nullable();
+            $table->text('description')->nullable();
             $table->string('payment_intent_id')->nullable();
             $table->double('amount', 11, 2)->nullable();
             $table->string('currency')->nullable();

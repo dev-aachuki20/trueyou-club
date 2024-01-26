@@ -1,4 +1,4 @@
-<div>
+<div wire:key="{{$componentKey}}">
     <div wire:loading wire:target="create" class="loader"></div>
     <div class="card-title top-box-set">
         <h4 class="card-title-heading"> {{ ucfirst($seminarName) ?? '' }} </h4>
@@ -12,7 +12,46 @@
     <div class="table-responsive search-table-data">
         <div class="relative">
 
-            @include('admin.partials.table-show-entries-search-box', ['searchBoxPlaceholder'=>$searchBoxPlaceholder])
+            <!-- Show entries & Search box -->
+            <div wire:loading wire:target="searchVal" class="loader"></div>
+
+            <div class="flex items-center justify-between mb-1">
+                <div class="w-100 flex items-center">                
+                    <div class="w-100 items-center justify-between p-2 sm:flex">
+                        <div class="flex items-center my-2 sm:my-0">
+                            <span class="items-center justify-between p-2 sm:flex"> 
+                                Show 
+                                <select class="ml-2 mr-2 border block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 form-select leading-6 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5" wire:model="paginationLength">
+                                    @foreach(config('constants.datatable_entries') as $length)
+                                        <option value="{{ $length }}">{{ $length }}</option>
+                                    @endforeach
+                                </select>
+                                entries
+                            </span>
+                        </div>
+                        <div class="flex justify-end text-gray-600">
+                            <div class="flex rounded-lg w-96 shadow-sm">
+                                    <div class="relative flex-grow focus-within:z-10">
+                                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                            <svg class="w-5 h-5 text-gray-400" viewBox="0 0 20 20" stroke="currentColor" fill="none">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <input wire:model.debounce.500ms="searchVal" class="block w-full py-3 pl-10 text-sm border-gray-300 leading-4 rounded-md shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 focus:outline-none" placeholder="{{ isset($searchBoxPlaceholder) ? $searchBoxPlaceholder : 'Search'}}" type="text">
+                                        <div class="absolute inset-y-0 right-0 flex items-center pr-2">
+                                            <button wire:click="$set('searchVal','')" class="text-gray-300 hover:text-red-600 focus:outline-none">
+                                                <svg class="h-5 w-5 stroke-current w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Show entries & Search box -->
         
             <div class="table-responsive mt-3 my-team-details table-record">
                 <table class="table table-striped table-hover">
@@ -44,33 +83,25 @@
                     </thead>
                     <tbody>
                         @if($seminarBookings->count() > 0)
-                        @foreach($seminarBookings as $serialNo => $booking)
-                        <tr>
-                            <td>{{ $serialNo+1 }}</td>
-                            <td>{{ ucwords($booking->user_details ? $booking->user_details['name'] : '') }}</td>
-                            <td>{{ $booking->booking_number }}</td>
-                            <td>{{ convertDateTimeFormat($booking->created_at,'fulldate') }}</td>
-            
-                            <td>
-                                <div class="update-webinar table-btns">
-                                    <ul class="d-flex">
-                                        <li>
-                                            {{-- @livewire('admin.seminar.ticket-modal',['booking_id'=>$booking->id]) --}}
-                                            {{-- <a href="javascript:void()" wire:click.prevent="$emitUp('show', {{$booking->id}})" data-bs-toggle="modal" data-bs-target="#ticketBox"> --}}
-                                            <a href="javascript:void()"  data-bs-toggle="modal" data-bs-target="#ticketBox" title="View Ticket">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="20" height="20">
-                                                    <g id="_01_align_center" data-name="01 align center">
-                                                        <path d="M23.821,11.181v0C22.943,9.261,19.5,3,12,3S1.057,9.261.179,11.181a1.969,1.969,0,0,0,0,1.64C1.057,14.739,4.5,21,12,21s10.943-6.261,11.821-8.181A1.968,1.968,0,0,0,23.821,11.181ZM12,19c-6.307,0-9.25-5.366-10-6.989C2.75,10.366,5.693,5,12,5c6.292,0,9.236,5.343,10,7C21.236,13.657,18.292,19,12,19Z" fill="#40658B"></path>
-                                                        <path d="M12,7a5,5,0,1,0,5,5A5.006,5.006,0,0,0,12,7Zm0,8a3,3,0,1,1,3-3A3,3,0,0,1,12,15Z" fill="#40658B"></path>
-                                                    </g>
-                                                </svg>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
+                        {{-- @dd($seminarBookings) --}}
+                            @foreach($seminarBookings as $serialNo => $booking)
+                                <tr>
+                                    <td>{{ $serialNo+1 }}</td>
+                                    <td>{{ ucwords($booking->name) }}</td>
+                                    <td>{{ $booking->booking_number }}</td>
+                                    <td>{{ convertDateTimeFormat($booking->created_at,'fulldate') }}</td>
+                    
+                                    <td>
+                                        <div class="update-webinar table-btns">
+                                            <ul class="d-flex">
+                                                <li>
+                                                    @livewire('admin.seminar.ticket-modal',['booking_id'=>$booking->id], key('booking-'.$booking->id))
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
                         @else
                         <tr>
                             <td class="text-center" colspan="7">{{ __('messages.no_record_found')}}</td>
@@ -80,7 +111,10 @@
                     </tbody>
                 </table>
             </div>
-            {{ $seminarBookings->links('vendor.pagination.custom-pagination') }}
+
+            @if($seminarBookings->count() > 0)
+                {{-- {{ $seminarBookings->links('vendor.pagination.custom-pagination') }} --}}
+            @endif
         
         </div>
     </div>

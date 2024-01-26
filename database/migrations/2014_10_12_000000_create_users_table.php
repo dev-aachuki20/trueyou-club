@@ -34,7 +34,7 @@ return new class extends Migration
             $table->json('social_json')->nullable()->default(null);
 
             $table->rememberToken();
-            $table->boolean('is_active')->default(1)->comment('1=> active, 0=>deactive');
+            $table->boolean('is_active')->default(1)->comment('1 => break, 0 => continue');
             $table->datetime('last_login_at')->nullable();
             $table->timestamps();
             $table->softDeletes();

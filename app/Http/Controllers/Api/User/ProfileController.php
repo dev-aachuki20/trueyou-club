@@ -53,7 +53,7 @@ class ProfileController extends Controller
             'email'      => $user->email ?? null,
             'phone'      => $user->phone ?? null,
             'profile_image' => $user->profile_image_url ?? null,
-            'is_active'  => $user->is_active ? false : true,
+            'is_active'  => $user->is_active ? true : false,
             'closest_webinar_detail' => $getWebinar ?? null,
             'is_notification' => $user->notifications()->whereNull('read_at')->count() > 0 ? true : false,
         ];

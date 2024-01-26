@@ -17,7 +17,7 @@ class Index extends Component
 {
     use  LivewireAlert, WithFileUploads;
 
-    protected $layout = null;
+    // protected $layout = null;
 
     public $search = '', $formMode = false, $updateMode = false, $viewMode = false, $bookingMode=false;
 

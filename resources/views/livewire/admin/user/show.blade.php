@@ -30,13 +30,32 @@
         <div class="col-sm-9 col-form-label">
 
             @if($detail->is_active)
-            <div class="badge badge-success">Continue</div>
+            <div class="badge badge-success">Break</div>
             @else
-            <div class="badge badge-danger">Break</div>
+            <div class="badge badge-danger">Continue</div>
             @endif
 
         </div>
     </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label font-weight-bold">Rating</label>
+        <div class="col-sm-9 col-form-label">
+
+            <div class="rewardscrad card">
+                <div class="star-rating">
+                    <button type="button" class="{{ $detail->star_no >=1 ? 'on': 'off'}}"><span class="star">★</span></button>
+                    <button type="button" class="{{ $detail->star_no >=2 ? 'on': 'off'}}"><span class="star">★</span></button>
+                    <button type="button" class="{{ $detail->star_no >=3 ? 'on': 'off'}}"><span class="star">★</span></button>
+                    <button type="button" class="{{ $detail->star_no >=4 ? 'on': 'off'}}"><span class="star">★</span></button>
+                    <button type="button" class="{{ $detail->star_no ==5 ? 'on': 'off'}}"><span class="star">★</span></button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+   
 
     <button wire:click.prevent="cancel" class="btn btn-secondary mt-4">
         {{ __('global.back')}}

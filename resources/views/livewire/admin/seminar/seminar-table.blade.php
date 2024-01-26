@@ -33,8 +33,11 @@
                     <div class="webinar-item {{ $endDateTime < $now ? 'webinar-disabled' : '' }} {{ $diffInSeconds > 0 ? 'webinar-item-active' : '' }}" data-diff_in_seconds="{{ $diffInSeconds }}">
                         <div class="webinar-item-inner seminar-wrapper">
 
-                            @if($endDateTime < $now) <div class="buyer-active-verfiy"><span>Expired Seminar </span></div>
-                        @endif
+                            @if($endDateTime < $now) 
+                            <div class="buyer-active-verfiy"><span>Expired Seminar </span></div>
+                            @elseif($now >= $dateTime && $now <= $endDateTime)
+                            {{-- <div class="buyer-active-verfiy"><span>Ongoing </span></div> --}}
+                            @endif
 
                         <div class="webinar-img">
                             <img class="img-fluid" src="{{ $seminar->image_url ? $seminar->image_url : asset(config('constants.default.no_image')) }}" alt="">

@@ -70,7 +70,7 @@ class HomeController extends Controller
                 }
             // End: Quote of the day
 
-            $data['is_break'] = $user->is_active ? false : true;
+            $data['is_break'] = $user->is_active ? true : false;
 
             $responseData = [
                 'status' => true,
@@ -112,7 +112,7 @@ class HomeController extends Controller
                 $today = Carbon::today()->format('Y-m-d');
 
                 if ($todayQuoteData == $today) {
-                    if($user->is_active){
+                    if(!$user->is_active){
                         $user->quotes()->attach($todayQuote, ['created_at' => now(), 'status' => 'completed']);
     
                         $quoteTasksCount = $user->quotes()->withTrashed()->count();

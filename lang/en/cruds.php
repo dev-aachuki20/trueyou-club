@@ -28,6 +28,8 @@ return [
             'created_at'               => 'Created',
             'updated_at'               => 'Updated',
             'deleted_at'               => 'Deleted',
+            'rating'                   => 'Rating',
+
         ],
     ],
     'permission'     => [

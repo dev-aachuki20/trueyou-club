@@ -52,17 +52,17 @@ class UserTable extends Component
     {
         $statusSearch = null;
         $searchValue = $this->search;
-        if (Str::contains('active', strtolower($searchValue))) {
+        if (Str::contains('break', strtolower($searchValue))) {
             $statusSearch = 1;
-        } else if (Str::contains('inactive', strtolower($searchValue))) {
+        } else if (Str::contains('continue', strtolower($searchValue))) {
             $statusSearch = 0;
         }
 
         $allUsers = User::query()->where(function ($query) use ($searchValue, $statusSearch) {
             $query
-                ->whereRaw("CONCAT(first_name, ' ', last_name) like ?", ['%' . $searchValue . '%'])
-                ->orWhere('email', 'like', '%' . $searchValue . '%')
+                ->where('name', 'like', '%' . $searchValue . '%')
                 ->orWhere('phone', 'like', '%' . $searchValue . '%')
+                ->orWhere('star_no', $searchValue)
                 ->orWhere('is_active', $statusSearch)
                 ->orWhereRaw("date_format(created_at, '" . config('constants.search_datetime_format') . "') like ?", ['%' . $searchValue . '%']);
         })

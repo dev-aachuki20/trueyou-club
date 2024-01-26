@@ -2344,3 +2344,33 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
         display: flex;
     }
 }
+
+.rewardscrad {
+    width: fit-content;
+    background:none;
+}
+
+.star-rating {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    width: 175px;
+}
+
+.rewardscrad .star-rating button.on {
+    background-color: #fff9dd;
+    color: #ffb800;
+}
+.rewardscrad .star-rating button {
+    background-color: #f5f7f9;
+    border: none;
+    border-radius: 2px;
+    box-shadow: none;
+    color: #40658b;
+    cursor: inherit;
+    font-size: 20px;
+    height: 25px;
+    outline: none;
+    width: 30px;
+}

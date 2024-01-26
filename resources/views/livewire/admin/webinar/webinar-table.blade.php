@@ -36,7 +36,9 @@
                             <div class="webinar-item-inner">
                                 
                                 @if($endDateTime < $now)
-                                <div class="buyer-active-verfiy"><span>Expired Webinar </span></div>
+                                    <div class="buyer-active-verfiy"><span>Expired Webinar </span></div>
+                                @elseif($now >= $dateTime && $now <= $endDateTime)
+                                    {{-- <div class="buyer-active-verfiy"><span>Ongoing </span></div> --}}
                                 @endif
 
                                 <div class="webinar-img">
@@ -64,7 +66,7 @@
                                             {{ convertDateTimeFormat($webinar->start_date.' '.$webinar->start_time,'fulldatetime') }} - {{ \Carbon\Carbon::parse($webinar->end_time)->format('h:i A') }}
                                         </span>
                                     </div>
-                                    <a href="{{ $endDateTime < $now ? 'javascript:void(0)' : $webinar->meeting_link }}" class="btn btn-primary joinBtn {{ $diffInSeconds != 0 ? 'd-none' : '' }}">
+                                    <a href="{{ $endDateTime < $now ? 'javascript:void(0)' : $webinar->meeting_link }}" class="btn btn-primary joinBtn {{ $diffInSeconds != 0 ? 'd-none' : '' }}" target="_blank">
                                         Join The Webinar
                                     </a>
                                 

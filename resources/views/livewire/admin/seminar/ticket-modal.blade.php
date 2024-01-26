@@ -1,5 +1,5 @@
-<div wire:key="{{$booking_id}}">
-
+<div>
+ 
     <a href="javascript:void(0);"  wire:click="openModal" title="View Ticket">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="20" height="20">
             <g id="_01_align_center" data-name="01 align center">
@@ -8,46 +8,27 @@
             </g>
         </svg>
     </a>
-    
-    @if($showModal)
-    
-    <div class="modal show" tabindex="-1" role="dialog" wire:ignore.self>
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Modal Title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="closeModal">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Your modal content goes here -->
-                    <p>This is your modal content.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" wire:click="closeModal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+   
+    @if($showModal && $bookingDetail)
+      
         <!-- Ticket Modal -->
-        <div  wire:ignore.self  class="modal fade ticketBox show" id="ticketBox" tabindex="-1" aria-labelledby="ticketBox" aria-hidden="true">
+        <div class="modal fade ticketBox" id="ticketBox" tabindex="-1" aria-labelledby="ticketBox" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" wire:click="closeModal" aria-label="Close"></button>
+                <div class="modal-header d-flex justify-content-between">
+                    <h5 class="ml-3">{{ ucwords($bookingDetail->name) ?? null }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="closeModal"></button>
                 </div>
                 <div class="modal-body">
                 <div class="ticket-wrapper">
                     <div class="webinar-item">
                         <div class="webinar-item-inner">
                             <div class="webinar-img">
-                                <img class="img-fluid" src="https://trueyouclub.hipl-staging3.com/storage/webinar/image//yl6LJkEMvtqhcJjMHYviHnD9JDDmjMAcNKns4xCs.jpg" alt="">
+                                <img class="img-fluid" src="{{ $bookingDetail->seminar->image_url }}" alt="{{ $bookingDetail->bookingable_details ? ucwords($bookingDetail->bookingable_details['title']) : null }}">
                             </div>
                             <div class="webinar-content">
                             <h3>
-                                Trueyou.Club Realise Your Potential
+                                {{ $bookingDetail->bookingable_details ? ucwords($bookingDetail->bookingable_details['title']) : null }}
                             </h3>
                             <div class="date-time seminar-date d-flex">
                                 <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -63,7 +44,7 @@
                                     <path d="M12 17.5625H6C3.2625 17.5625 1.6875 15.9875 1.6875 13.25V6.875C1.6875 4.1375 3.2625 2.5625 6 2.5625H12C14.7375 2.5625 16.3125 4.1375 16.3125 6.875V13.25C16.3125 15.9875 14.7375 17.5625 12 17.5625ZM6 3.6875C3.855 3.6875 2.8125 4.73 2.8125 6.875V13.25C2.8125 15.395 3.855 16.4375 6 16.4375H12C14.145 16.4375 15.1875 15.395 15.1875 13.25V6.875C15.1875 4.73 14.145 3.6875 12 3.6875H6Z" fill="#DA7821"></path>
                                 </svg>
                                 <span>
-                                    10 February 2024
+                                    {{ $bookingDetail->bookingable_details ? convertDateTimeFormat($bookingDetail->bookingable_details['start_date'],'fulldate') : null}}
                                 </span>
                             </div>
                             </div>
@@ -72,13 +53,23 @@
                     <div class="ticketBooking-list">
                         <ul>
                             <li>
-                                <div class="ticketBooking-inner"><span>Booking Number</span><div class="space">:</div><b>123456789000</b></div>
+                                <div class="ticketBooking-inner"><span>Booking Number</span><div class="space">:</div><b>{{ $bookingDetail->booking_number ?? null }}</b></div>
                             </li>
                             <li>
-                                <div class="ticketBooking-inner"><span>Webinar Time</span><div class="space">:</div><b>09.00AM To 12.00AM</b></div>
+                                    <div class="ticketBooking-inner"><span>Seminar Time</span><div class="space">:</div>
+                                    <b>
+                                        {{ $bookingDetail->bookingable_details ? \Carbon\Carbon::parse($bookingDetail->bookingable_details['start_time'])->format('h:i A') : null}}
+                                         To 
+                                        {{ $bookingDetail->bookingable_details ? \Carbon\Carbon::parse($bookingDetail->bookingable_details['end_time'])->format('h:i A') : null}}
+                                    </b>
+                                </div>
                             </li>
                             <li>
-                                <div class="ticketBooking-inner"><span>Webinar Venue</span><div class="space">:</div><b>4517 Washington Ave. Manchester, Kentucky.</b></div>
+                                <div class="ticketBooking-inner"><span>Seminar Venue</span><div class="space">:</div>
+                                    <b>
+                                        {{ $bookingDetail->bookingable_details ? $bookingDetail->bookingable_details['venue'] : null}}
+                                    </b>
+                                </div>
                             </li>
                         </ul>
                         <div class="total-box">
@@ -87,7 +78,7 @@
                             </div>
                             <div>:</div>
                             <div class="total-amount">
-                                $2500.00
+                                ${{ $bookingDetail->bookingable_details ? $bookingDetail->bookingable_details['ticket_price'] : 0.00}}
                             </div>
                         </div>
                     </div>
@@ -97,7 +88,8 @@
             </div>
         </div>
         <!-- end  -->
-    @endif
+        
+    @endif 
 
    
 </div>

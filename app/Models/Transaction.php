@@ -13,6 +13,7 @@ class Transaction extends Model
   
     protected $casts = [
         'user_json'=>'json',
+        'ticket_json'=>'json',
         'payment_json' => 'json',
     ];
 
@@ -24,7 +25,13 @@ class Transaction extends Model
 
     protected $fillable = [
         'user_id',
+        'name',
+        'email',
         'user_json',
+        'ticket_id',
+        'ticket_json',
+        'type',
+        'description',
         'payment_intent_id',
         'amount',
         'currency',
