@@ -58,7 +58,8 @@ class QuoteTable extends Component
 
         $allQuote = Quote::query()->where(function ($query) use ($searchValue, $statusSearch) {
             $query->where('message', 'like', '%' . $searchValue . '%')
-            ->orWhereRaw("DATE_FORMAT(created_at,  '" . config('constants.search_full_date_format') . "') = ?", [date(config('constants.full_date_format'), strtotime($searchValue))]);
+            ->orWhereRaw("date_format(created_at, '" . config('constants.search_full_date_format') . "') like ?", ['%' . $searchValue . '%']);
+
         })->whereDate('created_at','<',Carbon::now())
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);

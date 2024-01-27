@@ -59,9 +59,15 @@
                         <tr>
                             <th class="text-gray-500 text-xs font-medium">{{ trans('global.sno') }}</th>
                             <th class="text-gray-500 text-xs">@lang('cruds.booking.fields.user_name')
-                                <span wire:click="sortBy('user.name')" class="float-right text-sm" style="cursor: pointer;">
-                                    <i class="fa fa-arrow-up {{ $sortColumnName === 'user.name' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                                    <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'user.name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                                <span wire:click="sortBy('name')" class="float-right text-sm" style="cursor: pointer;">
+                                    <i class="fa fa-arrow-up {{ $sortColumnName === 'name' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                                    <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                                </span>
+                            </th>
+                             <th class="text-gray-500 text-xs">@lang('cruds.booking.fields.user_email')
+                                <span wire:click="sortBy('email')" class="float-right text-sm" style="cursor: pointer;">
+                                    <i class="fa fa-arrow-up {{ $sortColumnName === 'email' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                                    <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'email' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                                 </span>
                             </th>
                             <th class="text-gray-500 text-xs">@lang('cruds.booking.fields.booking_number')
@@ -88,8 +94,9 @@
                                 <tr>
                                     <td>{{ $serialNo+1 }}</td>
                                     <td>{{ ucwords($booking->name) }}</td>
+                                    <td>{{ $booking->email }}</td>
                                     <td>{{ $booking->booking_number }}</td>
-                                    <td>{{ convertDateTimeFormat($booking->created_at,'fulldate') }}</td>
+                                    <td>{{ convertDateTimeFormat($booking->created_at,'fulldatetime') }}</td>
                     
                                     <td>
                                         <div class="update-webinar table-btns">

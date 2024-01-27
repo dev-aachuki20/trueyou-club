@@ -47,7 +47,7 @@ class CommanController extends Controller
 
             $currentDateTime = Carbon::now();
 
-            $latestRecords = null;
+            $latestRecords = [];
             if($pageName == 'login'){
 
                 // Start Latest News Details
@@ -83,20 +83,23 @@ class CommanController extends Controller
                 ->limit(1)
                 ->first();
             
-                $latestRecords['seminar']['title'] = $latestSeminar->title;
-                $latestRecords['seminar']['ticket_price'] = $latestSeminar->ticket_price;
-                $latestRecords['seminar']['total_ticket'] = $latestSeminar->total_ticket;
-                $latestRecords['seminar']['venue'] = $latestSeminar->venue;
-                $latestRecords['seminar']['start_date'] = $latestSeminar->start_date;
-                $latestRecords['seminar']['start_time'] = $latestSeminar->start_time;
-                $latestRecords['seminar']['end_time'] = $latestSeminar->end_time;
-
-                $latestRecords['seminar']['datetime'] = convertDateTimeFormat($latestSeminar->start_date.' '.$latestSeminar->start_time,'fulldatetime') .'-'. Carbon::parse($latestSeminar->end_time)->format('h:i A');
-
-                $latestRecords['seminar']['imageUrl'] = $latestSeminar->image_url ? $latestSeminar->image_url : asset(config('constants.default.no_image'));
-
-                $latestRecords['seminar']['remain_ticket'] = (int)$latestSeminar->total_ticket - (int)$latestSeminar->bookings()->where('type','seminar')->count();
-
+                if($latestSeminar){
+                    $latestRecords['seminar']['id'] = $latestSeminar->id;
+                    $latestRecords['seminar']['title'] = $latestSeminar->title;
+                    $latestRecords['seminar']['ticket_price'] = $latestSeminar->ticket_price;
+                    $latestRecords['seminar']['total_ticket'] = $latestSeminar->total_ticket;
+                    $latestRecords['seminar']['venue'] = $latestSeminar->venue;
+                    $latestRecords['seminar']['start_date'] = $latestSeminar->start_date;
+                    $latestRecords['seminar']['start_time'] = $latestSeminar->start_time;
+                    $latestRecords['seminar']['end_time'] = $latestSeminar->end_time;
+    
+                    $latestRecords['seminar']['datetime'] = convertDateTimeFormat($latestSeminar->start_date.' '.$latestSeminar->start_time,'fulldatetime') .'-'. Carbon::parse($latestSeminar->end_time)->format('h:i A');
+    
+                    $latestRecords['seminar']['imageUrl'] = $latestSeminar->image_url ? $latestSeminar->image_url : asset(config('constants.default.no_image'));
+    
+                    $latestRecords['seminar']['remain_ticket'] = (int)$latestSeminar->total_ticket - (int)$latestSeminar->bookings()->where('type','seminar')->count();    
+                }
+              
                 // End Latest Seminar Details
 
 
@@ -116,37 +119,40 @@ class CommanController extends Controller
                 ->limit(3)
                 ->get();
 
-                foreach($upcomingSeminars as $seminar){
-                  
-                    $seminar->datetime = convertDateTimeFormat($seminar->start_date.' '.$seminar->start_time,'fulldatetime') .'-'. Carbon::parse($seminar->end_time)->format('h:i A');
-    
-                    $seminar->imageUrl = $seminar->image_url ? $seminar->image_url : asset(config('constants.default.no_image'));
+                if($upcomingSeminars->count() > 0){
 
-                    $seminar->remain_ticket = (int)$seminar->total_ticket - (int)$seminar->bookings()->where('type','seminar')->count();
+                    foreach($upcomingSeminars as $seminar){
                     
+                        $seminar->datetime = convertDateTimeFormat($seminar->start_date.' '.$seminar->start_time,'fulldatetime') .'-'. Carbon::parse($seminar->end_time)->format('h:i A');
+        
+                        $seminar->imageUrl = $seminar->image_url ? $seminar->image_url : asset(config('constants.default.no_image'));
+
+                        $seminar->remain_ticket = (int)$seminar->total_ticket - (int)$seminar->bookings()->where('type','seminar')->count();
+                        
+                    }
+
+                    $latestRecords['upcomingSeminars'] = $upcomingSeminars;
                 }
-
-                $latestRecords['upcomingSeminars'] = $upcomingSeminars;
-
                 // End upcomming Seminar Details
 
                 // Start Latest Post Details
 
                 $latestPosts = Post::select('id','title','slug','content','publish_date','type','created_by')->where('publish_date','<=',$currentDate)->whereIn('type',['news'])->orderBy('publish_date', 'desc')->limit(3)->get();
 
-                foreach($latestPosts as $post){
+                if($latestPosts->count() > 0){
+                    foreach($latestPosts as $post){
                   
-                    $post->datetime = convertDateTimeFormat($post->publish_date,'fulldate');
+                        $post->datetime = convertDateTimeFormat($post->publish_date,'fulldate');
+        
+                        if($post->type == 'news'){
+                            $post->image_url = $post->news_image_url ? $post->news_image_url : asset(config('constants.default.no_image'));
+                        }
     
-                    if($post->type == 'news'){
-                        $post->image_url = $post->news_image_url ? $post->news_image_url : asset(config('constants.default.no_image'));
+                        $post->created_by  = $post->user->name ?? null;
                     }
-
-                    $post->created_by  = $post->user->name ?? null;
+    
+                    $latestRecords['latestPosts'] = $latestPosts;    
                 }
-
-                $latestRecords['latestPosts'] = $latestPosts;
-
                 // End Latest Post Details
 
             }

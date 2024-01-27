@@ -112,10 +112,23 @@ class Index extends Component
 
     public function updateProfile(){
     //    dd($this->all());
+
+        $userId = auth()->user()->id;
+
         $validatedDate = $this->validate([
             'first_name'  => 'required',
             'last_name'   => 'required',
-            'phone'       => 'nullable|digits:10|integer|not_in:-'
+            'phone' => [
+                'required',
+                'integer',
+                'regex:/^[0-9]{7,15}$/',
+                'not_in:-',
+                Rule::unique('users', 'phone')->ignore($userId, 'id')
+            ],
+        ],[
+            'phone.required'=>'The phone number field is required',
+            'phone.regex' =>'The phone number length must be 7 to 15 digits.',
+            'phone.unique' =>'The phone number already exists.',
         ]);
 
         $userDetails = [];

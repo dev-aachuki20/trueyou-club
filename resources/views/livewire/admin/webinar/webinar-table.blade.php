@@ -38,7 +38,7 @@
                                 @if($endDateTime < $now)
                                     <div class="buyer-active-verfiy"><span>Expired Webinar </span></div>
                                 @elseif($now >= $dateTime && $now <= $endDateTime)
-                                    {{-- <div class="buyer-active-verfiy"><span>Ongoing </span></div> --}}
+                                    <div class="buyer-active-verfiy"><span>Ongoing </span></div>
                                 @endif
 
                                 <div class="webinar-img">

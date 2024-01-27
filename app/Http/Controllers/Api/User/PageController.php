@@ -36,7 +36,7 @@ class PageController extends Controller
                     'status'  => false,
                     'data'    => $record,
                 ];
-                return response()->json($responseData, 404);
+                return response()->json($responseData, 200);
             }
         } catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());

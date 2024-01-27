@@ -37,9 +37,6 @@ class Index extends Component
         $this->removeFile['remove_favicon'] = false;
         $this->removeFile['remove_footer_logo'] = false;
         $this->removeFile['remove_short_logo'] = false;
-        $this->removeFile['remove_introduction_video_image'] = false;
-        $this->removeFile['remove_introduction_video'] = false;
-        $this->removeFile['remove_payment_qr_code'] = false;
     }
 
     public function changeTab($tab){
@@ -64,8 +61,6 @@ class Index extends Component
         $dimensionsDetails['favicon']       = '';
         $dimensionsDetails['short_logo']    = '';
         $dimensionsDetails['footer_logo']   = '';
-        $dimensionsDetails['introduction_video_image'] ='';
-        $dimensionsDetails['payment_qr_code'] ='';
 
         foreach ($this->settings as $setting) {
             if($setting){
@@ -75,7 +70,7 @@ class Index extends Component
                 }
 
                 if ($setting->type == 'number') {
-                    $rules['state.'.$setting->key] = 'required|numeric';
+                    $rules['state.'.$setting->key] = 'required|integer|numeric|min:0';
                 }
 
                 if ($setting->type == 'text_area') {
@@ -126,10 +121,6 @@ class Index extends Component
             'state.short_logo.dimensions'=> 'The short logo size must be '.$dimensionsDetails['short_logo'],
             'state.footer_logo.dimensions'=> 'The footer logo size must be '.$dimensionsDetails['footer_logo'],
 
-            'state.introduction_video_image' => 'The image must be an image.',
-            'state.introduction_video_image.mimes' => 'The image must be jpeg,png,jpg,PNG,JPG.',
-            'state.introduction_video_image.max'   => 'The image maximum size is '.config('constants.img_max_size').' KB.',
-            'state.introduction_video_image.dimensions'=> 'The introduction video image size must be '.$dimensionsDetails['introduction_video_image'],
 
             'state.introduction_video.video' => 'The introduction video must be an video.',
             'state.introduction_video.mimes' => 'The introduction video must be webm, mp4, avi, wmv, flv, mov.',
@@ -140,10 +131,8 @@ class Index extends Component
             'state.reset_password_mail_content.string'=> 'The reset password mail content must be a string.',
             'state.contact_us_mail_content.string'=> 'The contact us mail content must be a string.',
 
-            'state.payment_qr_code_status.in' => 'The selected qr code status is invalid.',
             'state.razorpay_status.in' => 'The selected razorpay status is invalid.',
-
-
+            'state.max_skip_day.min' => 'The maximum skip day must be at least 0',
 
         ];
 

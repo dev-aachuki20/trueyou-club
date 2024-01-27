@@ -164,8 +164,9 @@ return [
         'title'                 => 'Bookings',
         'title_singular'        => 'Booking',
         'fields' => [
-            'seminar_name'         => 'Seminar Name',
-            'user_name'  => 'User Name',
+            'seminar_name'    => 'Seminar Name',
+            'user_name'       => 'Name',
+            'user_email'      => 'Email',
             'booking_number'  => 'Booking Number',
             'bookings'  => 'B',
         ],

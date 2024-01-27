@@ -9,11 +9,19 @@
                 <tr>
                     <th class="text-gray-500 text-xs font-medium">{{ trans('global.sno') }}</th>
                     <th class="text-gray-500 text-xs">
-                        {{ __('cruds.user.fields.full_name')}}
+                        {{ __('cruds.user.fields.name')}}
+                        <span wire:click="sortBy('name')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'name' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
                     </th>
 
                     <th class="text-gray-500 text-xs">
                         {{ __('cruds.user.fields.rating')}}
+                        <span wire:click="sortBy('star_no')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'star_no' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'star_no' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
                     </th>
 
                     <th class="text-gray-500 text-xs">
@@ -59,7 +67,7 @@
                     </td>
                     <td>{{ ucwords($user->phone) }}</td>
 
-                    <td>{{ convertDateTimeFormat($user->created_at,'date_month_year') }}</td>
+                    <td>{{ convertDateTimeFormat($user->created_at,'fulldate') }}</td>
 
                     <td>
                         <div class="toggleSwitch-wrap">
@@ -114,6 +122,12 @@
                                     </a>
                                 </li>
                                 @endcan
+                                
+                                <li>
+                                    <a href="javascript:void()" wire:click.prevent="$emitUp('viewQuoteHistory', {{$user->id}})" title="Quote History">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><g id="_01_align_center" data-name="01 align center"><path d="M12,0A12.03,12.03,0,0,0,4,3.078V0H2V5.143A1.859,1.859,0,0,0,3.857,7H9V5H4.879A9.985,9.985,0,1,1,2,12H0A12,12,0,1,0,12,0Z"/><polygon points="11 7 11 12.414 14.293 15.707 15.707 14.293 13 11.586 13 7 11 7"/></g></svg>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                         {{--

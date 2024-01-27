@@ -163,13 +163,21 @@ class StripeWebhookController extends Controller
             $customerName = $eventDataObject->customer_details->name;
             $customerEmail = $eventDataObject->customer_details->email;
 
+            $seminarObj = json_decode($eventDataObject->metadata->seminar);
+
             $transaction = Transaction::where('payment_intent_id', $eventDataObject->payment_intent)->where('status','failed')->exists();
             if (!$transaction) {
                
                 // Save data to transactions table
                 Transaction::create([
                     'user_id' => $customer ? $customer->id : null,
+                    'name'  => $customerDetails->name ?? null,
+                    'email' => $customerDetails->email ?? null,
                     'user_json' => $customerDetails,
+                    'ticket_id' => $seminarObj->id,
+                    'ticket_json' => json_decode($eventDataObject->metadata->seminar,true),
+                    'type' =>'seminar',
+                    'description'=>'Seminar Ticket Purchased',
                     'payment_intent_id' => $eventDataObject->payment_intent,
                     'amount' => (float)$eventDataObject->amount_total / 100,
                     'currency' => $eventDataObject->currency,

@@ -17,7 +17,7 @@ class BookingsTable extends Component
 
     public $seminarId, $componentKey;
 
-    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By User Name, Booking Number, Created";
+    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Name, Email, Booking Number, Created";
 
     protected $listeners = [
         'refreshTable' => 'render',
@@ -67,8 +67,9 @@ class BookingsTable extends Component
         $seminarBookings = Booking::where(function ($query) use ($searchValue){
             if($searchValue){
                 $query->where('name', 'like', '%'.$searchValue.'%')
+                ->orWhere('email', 'like', '%' . $searchValue . '%')
                 ->orWhere('booking_number', 'like', '%' . $searchValue . '%')
-                ->orWhereRaw("date_format(created_at, '" . config('constants.search_full_date_format') . "') like ?", ['%' . $searchValue . '%']);
+                ->orWhereRaw("date_format(created_at, '" . config('constants.search_full_datetime_format') . "') like ?", ['%' . $searchValue . '%']);
             }
         })
         ->where('bookingable_id',$seminar->id)

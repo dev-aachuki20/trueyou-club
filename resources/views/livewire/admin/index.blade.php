@@ -46,7 +46,10 @@
                            <div class="col-12 col-md-12">
                               <div class="webinar-item  {{ $endDateTime < $now ? 'webinar-disabled' : '' }} {{ $diffInSeconds > 0 ? 'webinar-item-active' : '' }}" data-diff_in_seconds="{{$diffInSeconds}}">
                                  <div class="webinar-item-inner">
-                                    @if($endDateTime < $now) <div class="buyer-active-verfiy"><span>Expired Seminar </span></div>
+                                 @if($endDateTime < $now) 
+                                    <div class="buyer-active-verfiy"><span>Expired Webinar </span></div>
+                                 @elseif($now >= $dateTime && $now <= $endDateTime)
+                                    <div class="buyer-active-verfiy"><span>Ongoing </span></div>
                                  @endif
                                  <div class="webinar-img">
                                     <img class="img-fluid" src="{{ $webinar->image_url ? $webinar->image_url : asset(config('constants.default.no_image')) }}" alt="">
@@ -160,7 +163,10 @@
                            <div class="webinar-item  {{ $endDateTime < $now ? 'webinar-disabled' : '' }} {{ $diffInSeconds > 0 ? 'webinar-item-active' : '' }}" data-diff_in_seconds="{{ $diffInSeconds }}">
                               <div class="webinar-item-inner seminar-wrapper">
 
-                                 @if($endDateTime < $now) <div class="buyer-active-verfiy"><span>Expired Seminar </span></div>
+                              @if($endDateTime < $now) 
+                                 <div class="buyer-active-verfiy"><span>Expired Seminar </span></div>
+                              @elseif($now >= $dateTime && $now <= $endDateTime)
+                                 <div class="buyer-active-verfiy"><span>Ongoing </span></div>
                               @endif
 
                               <div class="webinar-img">
@@ -290,7 +296,7 @@
             <li>
                <div class="content">
                   <div class="img-box">
-                     <img class="img-fluid" src="{{ $leaduser && $leaduser->profile_image_url  ? asset($leaduser->profile_image_url) : asset(config('constants.default.no_image')) }}" alt="">
+                     <img class="img-fluid" src="{{ $leaduser && $leaduser->profile_image_url  ? asset($leaduser->profile_image_url) : asset(config('constants.default.profile_image')) }}" alt="">
                   </div>
                   <div class="title">
                      {{ucwords($leaduser->name) ?? ''}}

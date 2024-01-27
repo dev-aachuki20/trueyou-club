@@ -15,12 +15,12 @@ class Index extends Component
 {
     use  LivewireAlert, WithFileUploads;
 
-    public $search = '', $formMode = false, $updateMode = false, $viewMode = false;
+    public $formMode = false, $updateMode = false, $viewMode = false, $viewQuoteHistoryMode = false;
 
     public $user_id = null, $first_name,  $last_name, $phone, $email, $message, $is_active = 1;
 
     protected $listeners = [
-        'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm'
+        'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm','viewQuoteHistory'
     ];
 
     public function mount()
@@ -103,6 +103,13 @@ class Index extends Component
         $this->user_id = $id;
         $this->formMode = false;
         $this->viewMode = true;
+    }
+
+    public function viewQuoteHistory($id){
+        $this->user_id = $id;
+        $this->formMode = false;
+        $this->viewMode = false;
+        $this->viewQuoteHistoryMode = true;
     }
 
     public function initializePlugins()

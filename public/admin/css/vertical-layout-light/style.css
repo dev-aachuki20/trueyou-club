@@ -28609,7 +28609,6 @@ div.tagsinput span.tag a {
 
 .sidebar .nav .nav-item.active > .nav-link {
   background: #006AF2;
-  position: relative;
   box-shadow: 8px 6px 15px 0px rgba(0, 97, 222, 0.25);
 }
 
@@ -28656,6 +28655,14 @@ div.tagsinput span.tag a {
 
 .sidebar .nav:not(.sub-menu) > .nav-item.active {
   background: #006AF2;
+  position: relative;
+}
+
+.sidebar .nav .nav-item.active > .nav-link::before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
 }
 
 .sidebar .nav.sub-menu {

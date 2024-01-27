@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('type',100)->default(null)->nullable();
             $table->string('display_name')->default(null)->nullable();
             $table->text('details')->default(null)->nullable();
-            $table->enum('group', ['site', 'support','payment','mail','social media'])->nullable();
+            $table->enum('group', ['site', 'support','payment','mail','social media','quote'])->nullable();
             $table->tinyInteger('status')->default(1)->comment('0=> inactive, 1=> active');
             $table->timestamp('created_at')->useCurrent();
             $table->unsignedBigInteger('created_by')->default(null)->nullable();

@@ -14,7 +14,6 @@ class ContactTable extends Component
     public $search = null;
 
     public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10;
-    public $sortColumnFullName = 'full_name';
 
     protected $listeners = [
         'refreshTable' => 'render',
@@ -44,15 +43,6 @@ class ContactTable extends Component
         $this->sortColumnName = $columnName;
     }
 
-    public function sortByName($column)
-    {
-        if ($this->sortColumnFullName === $column) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortColumnFullName = $column;
-            $this->sortDirection = 'asc';
-        }
-    }
 
     public function swapSortDirection()
     {
@@ -62,11 +52,11 @@ class ContactTable extends Component
     {
         $statusSearch = null;
         $searchValue = $this->search;
-        if (Str::contains('active', strtolower($searchValue))) {
-            $statusSearch = 1;
-        } else if (Str::contains('inactive', strtolower($searchValue))) {
-            $statusSearch = 0;
-        }
+        // if (Str::contains('active', strtolower($searchValue))) {
+        //     $statusSearch = 1;
+        // } else if (Str::contains('inactive', strtolower($searchValue))) {
+        //     $statusSearch = 0;
+        // }
 
         $allContacts = Contact::query()->where(function ($query) use ($searchValue, $statusSearch) {
             $query
@@ -74,10 +64,16 @@ class ContactTable extends Component
                 ->orWhere('email', 'like', '%' . $searchValue . '%')
                 ->orWhere('phone_number', 'like', '%' . $searchValue . '%')
                 ->orWhere('status', $statusSearch)
-                ->orWhereRaw("date_format(created_at, '" . config('constants.search_datetime_format') . "') like ?", ['%' . $searchValue . '%']);
-        })
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate($this->paginationLength);
+                ->orWhereRaw("date_format(created_at, '" . config('constants.search_full_date_format') . "') like ?", ['%' . $searchValue . '%']);
+        });
+
+        if($this->sortColumnName == 'full_name'){
+            $allContacts = $allContacts->orderByRaw("CONCAT(first_name, ' ', last_name) ".$this->sortDirection);
+        }else{
+            $allContacts = $allContacts->orderBy($this->sortColumnName, $this->sortDirection);
+        }
+        
+        $allContacts = $allContacts->paginate($this->paginationLength);
 
         return view('livewire.admin.contact.contact-table', compact('allContacts'));
     }

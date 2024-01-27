@@ -48,6 +48,7 @@ class UserTable extends Component
     {
         return $this->sortDirection === 'asc' ? 'desc' : 'asc';
     }
+
     public function render()
     {
         $statusSearch = null;
@@ -58,19 +59,24 @@ class UserTable extends Component
             $statusSearch = 0;
         }
 
-        $allUsers = User::query()->where(function ($query) use ($searchValue, $statusSearch) {
-            $query
-                ->where('name', 'like', '%' . $searchValue . '%')
+        $starNumber = null;
+        if(in_array($searchValue,array(1,2,3,4,5))){
+            $starNumber = $searchValue;
+        }
+
+        $allUsers = User::query()->where(function ($query) use ($searchValue, $statusSearch, $starNumber) {
+            $query->where('name', 'like', '%' . $searchValue . '%')
                 ->orWhere('phone', 'like', '%' . $searchValue . '%')
-                ->orWhere('star_no', $searchValue)
+                ->orWhere('star_no', $starNumber)
                 ->orWhere('is_active', $statusSearch)
-                ->orWhereRaw("date_format(created_at, '" . config('constants.search_datetime_format') . "') like ?", ['%' . $searchValue . '%']);
-        })
+                ->orWhereRaw("date_format(created_at, '" . config('constants.search_full_date_format') . "') like ?", ['%' . $searchValue . '%']);
+            })
             ->whereHas('roles', function ($query) {
                 $query->where('id', 2);
             })
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);
+            
         return view('livewire.admin.user.user-table', compact('allUsers'));
     }
 }

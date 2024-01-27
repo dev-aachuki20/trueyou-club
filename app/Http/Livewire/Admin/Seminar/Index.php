@@ -12,6 +12,8 @@ use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\Response;
 use App\Notifications\SeminarCreated;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PurchasedSeminarTicketMail;
 
 class Index extends Component
 {

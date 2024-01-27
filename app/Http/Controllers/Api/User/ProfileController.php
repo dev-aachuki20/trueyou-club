@@ -18,30 +18,25 @@ class ProfileController extends Controller
 {
     public function userDetails()
     {
-        // get closest webinar
-        // $closestWebinar = Webinar::query()
-        // ->select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
-        // ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
-        // ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')->first();
-
         $closestWebinar = Webinar::query()
         ->select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
             ->where(\DB::raw('CONCAT(start_date, " ", end_time)'), '>', now())
             ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')->first();
 
+        $getWebinar = null;
         if ($closestWebinar) {
             $closestWebinar->image_url = $closestWebinar->image_url ? $closestWebinar->image_url : asset(config('constants.default.no_image'));
+      
+            $getWebinar = [
+                'title' => $closestWebinar->title ?? null,
+                'start_date' => $closestWebinar->start_date ?? null,
+                'start_time' => $closestWebinar->start_time ?? null,
+                'end_time' => $closestWebinar->end_time ?? null,
+                'image_url' => $closestWebinar->image_url ?? null,
+                'datetime' => $closestWebinar ? convertDateTimeFormat($closestWebinar->start_date.' '.$closestWebinar->start_time,'fulldatetime') .'-'. Carbon::parse($closestWebinar->end_time)->format('h:i A') : null,
+            ];
         }
-
-        $getWebinar = [
-            'title' => $closestWebinar->title ?? null,
-            'start_date' => $closestWebinar->start_date ?? null,
-            'start_time' => $closestWebinar->start_time ?? null,
-            'end_time' => $closestWebinar->end_time ?? null,
-            'image_url' => $closestWebinar->image_url ?? null,
-            'datetime' => convertDateTimeFormat($closestWebinar->start_date.' '.$closestWebinar->start_time,'fulldatetime') .'-'. Carbon::parse($closestWebinar->end_time)->format('h:i A')
-
-        ];
+       
 
         // Get the authenticated user
         $user = Auth::user();
@@ -54,7 +49,7 @@ class ProfileController extends Controller
             'phone'      => $user->phone ?? null,
             'profile_image' => $user->profile_image_url ?? null,
             'is_active'  => $user->is_active ? true : false,
-            'closest_webinar_detail' => $getWebinar ?? null,
+            'closest_webinar_detail' => $getWebinar,
             'is_notification' => $user->notifications()->whereNull('read_at')->count() > 0 ? true : false,
         ];
 
@@ -73,7 +68,13 @@ class ProfileController extends Controller
 
         $validatedData = [
             'name'  => 'required',
-            'phone' => 'required',
+            'phone' => [
+                'required',
+                'numeric',
+                'regex:/^[0-9]{7,15}$/',
+                'not_in:-',
+                Rule::unique('users', 'phone')->ignore($userId, 'id')
+            ],
         ];
 
 
@@ -83,7 +84,10 @@ class ProfileController extends Controller
 
 
         $request->validate($validatedData, [
-            'confirm_password.same' => 'The confirm password and new password must match.'
+            'confirm_password.same' => 'The confirm password and new password must match.',
+            'phone.required'=>'The phone number field is required',
+            'phone.regex' =>'The phone number length must be 7 to 15 digits.',
+            'phone.unique' =>'The phone number already exists.',
         ]);
 
         DB::beginTransaction();

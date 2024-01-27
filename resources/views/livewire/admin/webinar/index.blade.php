@@ -67,6 +67,7 @@
             // timePickerIncrement: 15,
             //minDate: new Date(),
             // maxDate: moment().startOf('day').add(12, 'hour'),
+            minDate: moment().startOf('hour').minute(moment().minute()),
             locale: {
                 format: 'hh:mm A'
             }
@@ -103,6 +104,7 @@
             // timePickerIncrement: 15,
             // minDate: new Date(),
             // maxDate: moment().startOf('day').add(12, 'hour'),
+            minDate: moment().startOf('hour').minute(moment().minute()),
             locale: {
                 format: 'hh:mm A'
             }

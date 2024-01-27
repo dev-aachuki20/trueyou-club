@@ -12,6 +12,11 @@
 
                     <th class="text-gray-500 text-xs">
                         {{ __('cruds.pages.fields.page_name')}}
+
+                        <span wire:click="sortBy('page_name')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'created_at' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'created_at' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
                     </th>
 
                     <th class="text-gray-500 text-xs">
@@ -46,7 +51,7 @@
                     <td>{{ ucwords($page->page_name) }}</td>
                     <td>{{ ucwords($page->title) }}</td>
 
-                    <td>{{ convertDateTimeFormat($page->created_at,'date_month_year') }}</td>
+                    <td>{{ convertDateTimeFormat($page->created_at,'fulldate') }}</td>
                     {{-- <td>
                         <label class="toggle-switch">
                             <input type="checkbox" class="toggleSwitch" wire:click.prevent="$emitUp('toggle',{{$page->id}})" {{ $page->status == 1 ? 'checked' : '' }}>

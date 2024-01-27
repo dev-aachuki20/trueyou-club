@@ -10,9 +10,9 @@
 
                     <th class="text-gray-500 text-xs">
                         {{ __('cruds.contacts.fields.full_name') }}
-                        <span wire:click="sortByName('full_name')" class="float-right text-sm" style="cursor: pointer;">
-                            <i class="fa fa-arrow-up {{ $sortColumnFullName === 'full_name' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down m-0 {{ $sortColumnFullName === 'full_name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        <span wire:click="sortBy('full_name')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'full_name' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'full_name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
 
@@ -37,7 +37,7 @@
                     <td>{{ ucwords($contact->first_name) }} {{ ucwords($contact->last_name) }}</td>
                     <td>{{ ucwords($contact->phone_number) }}</td>
 
-                    <td>{{ convertDateTimeFormat($contact->created_at,'date_month_year') }}</td>
+                    <td>{{ convertDateTimeFormat($contact->created_at,'fulldate') }}</td>
                     <td>
 
                         <div class="update-webinar table-btns">

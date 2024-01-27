@@ -60,7 +60,7 @@ class PageManageTable extends Component
             $query->where('title', 'like', '%' . $searchValue . '%')
                 ->orWhere('page_name', 'like', '%' . $searchValue . '%')
                 ->orWhere('status', $statusSearch)
-                ->orWhereRaw("date_format(created_at, '" . config('constants.search_datetime_format') . "') like ?", ['%' . $searchValue . '%']);
+                ->orWhereRaw("date_format(created_at, '" . config('constants.search_full_date_format') . "') like ?", ['%' . $searchValue . '%']);
         })
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);

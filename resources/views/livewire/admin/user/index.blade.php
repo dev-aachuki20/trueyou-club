@@ -7,11 +7,15 @@
 
                     @if($formMode)
 
-                    @include('livewire.admin.user.form')
+                        @include('livewire.admin.user.form')
 
                     @elseif($viewMode)
 
-                    @livewire('admin.user.show', ['user_id' => $user_id])
+                        @livewire('admin.user.show', ['user_id' => $user_id])
+
+                    @elseif($viewQuoteHistoryMode)
+
+                        @livewire('admin.user.quote-history', ['user_id' => $user_id])
 
                     @else
                     <div wire:loading wire:target="create" class="loader"></div>

@@ -10,6 +10,7 @@ use Livewire\Component;
 use Illuminate\Support\Str;
 use App\Mail\ResetPasswordMail;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Rules\ValidEmail;
 
 class ForgetPassword extends Component
 {
@@ -25,11 +26,14 @@ class ForgetPassword extends Component
     }
 
     public function submit(){
-        $this->validate(['email' => 'required|email|exists:users'], getCommonValidationRuleMsgs());
+        $this->validate(['email' => ['required','email','exists:users',new ValidEmail]], getCommonValidationRuleMsgs());
         DB::beginTransaction();
         try {
 
+            $this->email = strtolower($this->email);
+
             $user = User::where('email',$this->email)->whereHas('roles', function($q){ $q->where('id', 1);})->first();
+           
             if($user){
                 $token = Str::random(64);
                 $email_id = $this->email;
@@ -54,7 +58,7 @@ class ForgetPassword extends Component
                 $this->alert('success', trans('passwords.sent'));
             }else{
                 // Set Flash Message
-                $this->alert('error', 'Something went wrong!');
+                $this->alert('error', 'Invalid email!');
             }
 
         

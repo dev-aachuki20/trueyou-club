@@ -268,6 +268,18 @@ class SettingSeeder extends Seeder
                 'created_by' => 1,
             ],
 
+            [
+                'key'    => 'max_skip_day',
+                'value'  => '',
+                'type'   => 'number',
+                'display_name'  => 'Maximum Skip Day',
+                'group'  => 'quote',
+                'details' => null,
+                'status' => 1,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'created_by' => 1,
+            ],
+
         ];
 
         Setting::insert($settings);

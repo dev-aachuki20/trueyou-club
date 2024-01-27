@@ -16,19 +16,20 @@ use Illuminate\Support\Facades\Validator;
 use App\Mail\WelcomeMail;
 use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\Notification;
+use App\Rules\ValidEmail;
 
 class LoginRegisterController extends Controller
 {
     public function register(Request $request){
         $validator = Validator::make($request->all(), [
             'name'                      => 'required',
-            'email'                     => 'required|email|unique:users,email,NULL,id',
-            'phone'                     => 'required|numeric|digits:10|not_in:-|unique:users,phone,NULL,id',
+            'email'                     => ['required','email','unique:users,email,NULL,id',new ValidEmail],
+            'phone'                     => 'required|numeric|regex:/^[0-9]{7,15}$/|not_in:-|unique:users,phone,NULL,id',
             'password'                  => 'required|min:8',
             'password_confirmation'     => 'required|same:password',
         ],[
             'phone.required'=>'The phone field is required',
-            'phone.digits' =>'The phone must be 10 digits',
+            'phone.regex' =>'The phone length must be 7 to 15 digits.',
             'phone.unique' =>'The phone already exists.',
         ]);
         if($validator->fails()){
@@ -48,6 +49,7 @@ class LoginRegisterController extends Controller
             $input['first_name'] = $nameParts[0]; 
             $input['last_name'] = isset($nameParts[1]) ? $nameParts[1] : null;
         
+            $input['email'] = strtolower($input['email']); 
             $input['password'] = bcrypt($input['password']);
             $user = User::create($input);
 
@@ -87,7 +89,7 @@ class LoginRegisterController extends Controller
 
     public function login(Request $request){
         $validator = Validator::make($request->all(), [
-            'email'             => 'required|email',
+            'email'             => ['required','email',new ValidEmail],
             'password'          => 'required|min:8'
         ]);
         if($validator->fails()){
@@ -104,7 +106,7 @@ class LoginRegisterController extends Controller
 
             $remember_me = !is_null($request->remember) ? true : false;
             $credentialsOnly = [
-                'email'    => $request->email,
+                'email'    => strtolower($request->email),
                 'password' => $request->password,
             ]; 
 
@@ -191,18 +193,18 @@ class LoginRegisterController extends Controller
                     ->where(\DB::raw('CONCAT(start_date, " ", end_time)'), '>', now())
                     ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')->first();
 
+                $getWebinar = null;
                 if ($closestWebinar) {
                     $closestWebinar->image_url = $closestWebinar->image_url ? $closestWebinar->image_url : asset(config('constants.default.no_image'));
+                    $getWebinar = [
+                        'title' => $closestWebinar->title ?? null,
+                        'start_date' => $closestWebinar->start_date ?? null,
+                        'start_time' => $closestWebinar->start_time ?? null,
+                        'end_time' => $closestWebinar->end_time ?? null,
+                        'image_url' => $closestWebinar->image_url ?? null,
+                        'datetime' => $closestWebinar ? convertDateTimeFormat($closestWebinar->start_date.' '.$closestWebinar->start_time,'fulldatetime') .'-'. Carbon::parse($closestWebinar->end_time)->format('h:i A') : null,
+                    ];
                 }
-
-                $getWebinar = [
-                    'title' => $closestWebinar->title ?? null,
-                    'start_date' => $closestWebinar->start_date ?? null,
-                    'start_time' => $closestWebinar->start_time ?? null,
-                    'end_time' => $closestWebinar->end_time ?? null,
-                    'image_url' => $closestWebinar->image_url ?? null,
-                    'datetime' => convertDateTimeFormat($closestWebinar->start_date.' '.$closestWebinar->start_time,'fulldatetime') .'-'. Carbon::parse($closestWebinar->end_time)->format('h:i A')
-                ];
 
                 //Success Response Send
                 $responseData = [
@@ -219,7 +221,7 @@ class LoginRegisterController extends Controller
                     'remember_me_token' => $user->remember_token,
                     'access_token'      => $accessToken,
                     'data'=>[
-                        'closest_webinar_detail' => $getWebinar ?? null,
+                        'closest_webinar_detail' => $getWebinar,
                     ]
                 ];
 
@@ -253,7 +255,7 @@ class LoginRegisterController extends Controller
 
     public function forgotPassword(Request $request){
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|exists:users,email'
+            'email' => ['required','email','exists:users,email',new ValidEmail]
         ]);
 
         if($validator->fails()){
@@ -268,7 +270,7 @@ class LoginRegisterController extends Controller
         DB::beginTransaction();
         try {
             $token = Str::random(64);
-            $email_id = $request->email;
+            $email_id = strtolower($request->email);
             // $user = User::where('email', $email_id)->withTrashed()->first();
             $user = User::where('email', $email_id)->first();
 

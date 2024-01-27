@@ -34,9 +34,10 @@ class WebinarController extends Controller
             } else {
                 $responseData = [
                     'status'  => false,
+                    'data'    => $getAllRecords,
                     'message' => 'No Record Found',
                 ];
-                return response()->json($responseData, 404);
+                return response()->json($responseData, 200);
             }
         } catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());

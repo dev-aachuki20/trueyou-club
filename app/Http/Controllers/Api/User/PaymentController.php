@@ -161,16 +161,22 @@ class PaymentController extends Controller
             
             $bookingDetails = Booking::where('email', $requestEmail)->where('bookingable_id',$userToken->seminar_id)->first();
             
-            $ticketDetails = [
-                'title' => ucwords($bookingDetails->seminar->title),
-                'booking_number' => $bookingDetails->booking_number,
-                'date' => convertDateTimeFormat($bookingDetails->seminar->start_date,'fulldate'),
-                'start_time' => \Carbon\Carbon::parse($bookingDetails->seminar->start_time)->format('h:i A'),
-                'end_time' => \Carbon\Carbon::parse($bookingDetails->seminar->end_time)->format('h:i A'),
-
-                'venue' => $bookingDetails->seminar->venue,
-                'ticket_price' => number_format($bookingDetails->seminar->ticket_price,2),
-            ];
+            $ticketDetails = null;
+            if($bookingDetails){
+                $ticketDetails = [
+                    'name' => ucwords($bookingDetails->name),
+                    'email' => $bookingDetails->email,
+                    'title' => ucwords($bookingDetails->seminar->title),
+                    'booking_number' => $bookingDetails->booking_number,
+                    'date' => convertDateTimeFormat($bookingDetails->seminar->start_date,'fulldate'),
+                    'start_time' => \Carbon\Carbon::parse($bookingDetails->seminar->start_time)->format('h:i A'),
+                    'end_time' => \Carbon\Carbon::parse($bookingDetails->seminar->end_time)->format('h:i A'),
+    
+                    'venue' => $bookingDetails->seminar->venue,
+                    'ticket_price' => number_format($bookingDetails->seminar->ticket_price,2),
+                ];
+            }
+           
 
             $userToken->seminar_id = null;
             $userToken->token = null;
