@@ -9,15 +9,16 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 use Symfony\Component\HttpFoundation\Response;
 
 class Index extends Component
 {
-    use  LivewireAlert, WithFileUploads;
+    use  LivewireAlert, WithFileUploads, WithPagination;
 
     public $formMode = false, $updateMode = false, $viewMode = false, $viewQuoteHistoryMode = false;
 
-    public $user_id = null, $first_name,  $last_name, $phone, $email, $message, $is_active = 1;
+    public $user_id = null, $first_name,  $last_name, $phone, $email, $is_active = 1;
 
     protected $listeners = [
         'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm','viewQuoteHistory'
@@ -110,6 +111,7 @@ class Index extends Component
         $this->formMode = false;
         $this->viewMode = false;
         $this->viewQuoteHistoryMode = true;
+        $this->resetPage();
     }
 
     public function initializePlugins()
@@ -119,7 +121,7 @@ class Index extends Component
 
     public function cancel()
     {
-        $this->reset();
+        $this->reset(['formMode','updateMode','viewMode','viewQuoteHistoryMode','user_id','first_name','last_name','phone','email','is_active']);
         $this->resetValidation();
     }
 

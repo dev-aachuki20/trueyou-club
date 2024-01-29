@@ -51,7 +51,7 @@ class Index extends Component
 
     public function store(){
         $validatedData = $this->validate([
-            'message'        => 'required',
+            'message'        => 'required|string|max:150',
         ]);
 
         Quote::create($validatedData);
@@ -79,7 +79,7 @@ class Index extends Component
 
 
     public function update(){
-        $validatedArray['message']        = 'required';
+        $validatedArray['message']        = 'required|string|max:150';
         $validatedData = $this->validate($validatedArray);
 
         $quote = Quote::find($this->quote_id);

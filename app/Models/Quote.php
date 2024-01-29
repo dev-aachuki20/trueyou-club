@@ -46,6 +46,6 @@ class Quote extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class)->orderBy('quote_user.created_at', 'desc');
+        return $this->belongsToMany(User::class)->withPivot('status','created_at')->orderBy('quote_user.created_at', 'desc');
     }
 }

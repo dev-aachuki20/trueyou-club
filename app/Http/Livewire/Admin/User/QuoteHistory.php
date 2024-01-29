@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin\User;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Models\Quote;
 use App\Models\User;
 
 class QuoteHistory extends Component
@@ -14,7 +15,7 @@ class QuoteHistory extends Component
 
     public $search = null;
 
-    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10;
+    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder="Search By Quote, Status, Created Date & Time";
 
     protected $listeners = [
         'refreshTable' => 'render',
@@ -58,21 +59,29 @@ class QuoteHistory extends Component
     {
         $searchValue = $this->search;
 
-        $completedQuotes = null;
+        $user_id = $this->userId;
 
-        // $completedQuotes = User::query()->where(function ($query) use ($searchValue, $statusSearch, $starNumber) {
-        //     $query->where('name', 'like', '%' . $searchValue . '%')
-        //         ->orWhere('phone', 'like', '%' . $searchValue . '%')
-        //         ->orWhere('star_no', $starNumber)
-        //         ->orWhere('is_active', $statusSearch)
-        //         ->orWhereRaw("date_format(created_at, '" . config('constants.search_full_date_format') . "') like ?", ['%' . $searchValue . '%']);
-        //     })
-        //     ->whereHas('roles', function ($query) {
-        //         $query->where('id', 2);
-        //     })
-        //     ->orderBy($this->sortColumnName, $this->sortDirection)
-        //     ->paginate($this->paginationLength);
+        $userName = User::where('id',$user_id)->value('name');
 
-        return view('livewire.admin.user.quote-history',compact('completedQuotes'));
+        $quotesHistory = Quote::where(function ($query) use ($searchValue) {
+            $query->where('message', 'like', '%' . $searchValue . '%')
+                ->orWhereHas('users', function ($subquery) use ($searchValue) {
+                    $subquery->where('quote_user.status', 'like', '%' . $searchValue . '%')
+                        ->orWhereRaw("date_format(quote_user.created_at, '" . config('constants.search_full_datetime_format') . "') like ?", ['%' . $searchValue . '%'])
+                        ->orderBy('quote_user.created_at', 'desc');
+                });
+        })
+        ->whereHas('users', function ($subquery) use ($user_id) {
+            $subquery->where('user_id', $user_id);
+        })
+        ->withTrashed()
+        ->orderBy($this->sortColumnName, $this->sortDirection)
+        ->paginate($this->paginationLength);
+
+        return view('livewire.admin.user.quote-history',compact('quotesHistory','userName'));
+    }
+
+    public function cancel(){
+        $this->emitUp('cancel');
     }
 }

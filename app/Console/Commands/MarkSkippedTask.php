@@ -37,17 +37,35 @@ class MarkSkippedTask extends Command
             $todayQuote = Quote::whereDate('created_at', $today)->first();
 
             if ($todayQuote) {
-			    $users = User::where('is_active', 1)
+			    $users = User::where('is_active', 0) //0=>Continue , 1=> Break
                 ->whereDoesntHave('quotes', function ($query) use ($todayQuote) {
                     $query->where('quote_id', $todayQuote->id);
                 })
                 ->whereHas('roles', function($q){
-                    $q->where('title', 'User');
+                    $q->where('id', 2);
                 })
                 ->get();
 
+                $maxSkipDay = getSetting('max_skip_day') ?? null;
+
                 foreach($users as $user){
-                    $user->quotes()->attach($todayQuote, ['created_at' => now(), 'status' => 'skipped']);
+                    if($maxSkipDay){
+                        $lastRecords = $user->quotes()->latest()->take($maxSkipDay)->get();
+
+                        $allSkipped = $lastRecords->every(function ($record) {
+                            return $record->pivot->status === 'skipped';
+                        });
+
+                        if($allSkipped){
+                            $user->is_active = 1;
+                            $user->save();
+                        }else{
+                            $user->quotes()->attach($todayQuote, ['created_at' => now(), 'status' => 'skipped']);
+                        }
+                    }else{
+                        $user->quotes()->attach($todayQuote, ['created_at' => now(), 'status' => 'skipped']);
+                    }
+                    
                 }
             }
 			

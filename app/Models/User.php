@@ -118,6 +118,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function quotes()
     {
-        return $this->belongsToMany(Quote::class);
+        return $this->belongsToMany(Quote::class)->withPivot(['status','created_at']);
     }
+
 }

@@ -14,7 +14,7 @@
                         @livewire('admin.user.show', ['user_id' => $user_id])
 
                     @elseif($viewQuoteHistoryMode)
-
+                    
                         @livewire('admin.user.quote-history', ['user_id' => $user_id])
 
                     @else

@@ -53,10 +53,9 @@ class QuoteTable extends Component
 
     public function render()
     {
-        $statusSearch = null;
         $searchValue = $this->search;
 
-        $allQuote = Quote::query()->where(function ($query) use ($searchValue, $statusSearch) {
+        $allQuote = Quote::query()->where(function ($query) use ($searchValue) {
             $query->where('message', 'like', '%' . $searchValue . '%')
             ->orWhereRaw("date_format(created_at, '" . config('constants.search_full_date_format') . "') like ?", ['%' . $searchValue . '%']);
 

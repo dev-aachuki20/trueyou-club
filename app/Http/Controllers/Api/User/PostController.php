@@ -20,8 +20,7 @@ class PostController extends Controller
 
             $getAllRecords = Post::where('type', $postType)
                 ->select('id', 'title', 'slug', 'content', 'publish_date', 'type', 'created_by')
-                ->where('publish_date', '<', $currentDate)
-                ->orWhereDate('publish_date', $currentDate)
+                ->whereDate('publish_date', '<=', $currentDate)
                 ->orderBy('publish_date', 'desc')
                 ->paginate(10);
 
