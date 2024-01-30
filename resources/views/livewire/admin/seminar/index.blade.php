@@ -10,7 +10,7 @@
                     @elseif($viewMode)
                         @livewire('admin.seminar.show', ['seminar_id' => $seminar_id])
                     @elseif($bookingMode)
-                        @livewire('admin.seminar.bookings-table', ['seminar_id' => $seminar_id,'componentKey' => 'seminar-' . time() . $seminar_id])
+                        @livewire('admin.seminar.bookings-table', ['seminar_id' => $seminar_id])
                     @else
                     <div wire:loading wire:target="create" class="loader"></div>
                     <div class="card-title top-box-set">

@@ -38,12 +38,14 @@
                 <!-- content-wrapper start -->
                     @yield('content')
                 <!-- content-wrapper ends -->
+
+                <footer class="footer">            
+                    <span class="copyright-text d-block text-center">© {{ date('Y') }} All Copyrights Reserved By {{ config('constants.app_name') }}</span>
+                </footer>
             </div>            
             <!-- main-panel ends -->            
         </div>
-        <footer class="footer">            
-            <span class="copyright-text d-block text-center">© {{ date('Y') }} All Copyrights Reserved By {{ config('constants.app_name') }}</span>
-        </footer>
+       
         <!-- page-body-wrapper ends -->
         
     </div>

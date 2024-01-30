@@ -1,4 +1,4 @@
-<div wire:key="{{$componentKey}}">
+<div>
     <div wire:loading wire:target="create" class="loader"></div>
     <div class="card-title top-box-set">
         <h4 class="card-title-heading"> {{ ucfirst($seminarName) ?? '' }} </h4>

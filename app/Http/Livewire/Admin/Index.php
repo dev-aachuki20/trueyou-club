@@ -14,7 +14,7 @@ class Index extends Component
 {
     use LivewireAlert;
 
-    protected $layout = null;
+    // protected $layout = null;
 
     public function mount()
     {

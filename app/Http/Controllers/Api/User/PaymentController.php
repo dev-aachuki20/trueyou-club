@@ -25,13 +25,19 @@ class PaymentController extends Controller
     {
        
         $rules['name'] = 'required|string';
-        $rules['email'] = 'required|string|email';
+        $rules['email'] = ['required','email:dns'];
         $rules['seminar'] = 'required|exists:seminars,id';
 
         $request->validate($rules);
 
         try {
             $seminar = Seminar::where('id',$request->seminar)->first();
+
+            if($seminar->bookings()->count() ==  $seminar->total_ticket){
+
+                return response()->json(['status'=>true,'error' => 'Booking Closed!'],505);
+
+            }
 
             // Set your Stripe secret key
             $stripeSecretKey = getSetting('stripe_secret_key') ? getSetting('stripe_secret_key') : config('app.stripe_secret_key');

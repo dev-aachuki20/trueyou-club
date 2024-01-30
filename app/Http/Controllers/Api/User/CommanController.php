@@ -59,7 +59,7 @@ class CommanController extends Controller
                     $latestRecords['news'][$key]['content'] = $news->content;
                     $latestRecords['news'][$key]['type']    = $news->type;
     
-                    $latestRecords['news'][$key]['publish_date'] = convertDateTimeFormat($news->publish_date,'fulldate');
+                    $latestRecords['news'][$key]['datetime'] = convertDateTimeFormat($news->publish_date,'fulldate');
     
                     $latestRecords['news'][$key]['image_url'] = $news->news_image_url ? $news->news_image_url : asset(config('constants.default.no_image'));
 
@@ -112,10 +112,26 @@ class CommanController extends Controller
                 // ->limit(3)
                 // ->get();
 
-                $upcomingSeminars = Seminar::select('id', 'title', 'total_ticket', 'ticket_price', 'start_date', 'start_time', 'end_time', 'venue')
-                ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
-                ->where(\DB::raw('CONCAT(start_date, " ", end_time)'), '>', now())
-                ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
+                // $upcomingSeminars = Seminar::select('id', 'title', 'total_ticket', 'ticket_price', 'start_date', 'start_time', 'end_time', 'venue')
+                // ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+                // ->where(\DB::raw('CONCAT(start_date, " ", end_time)'), '>', now())
+                // ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
+                // ->limit(3)
+                // ->get();
+
+                $upcomingSeminars = Seminar::select([
+                    'id',
+                    'title',
+                    'total_ticket',
+                    'ticket_price',
+                    'start_date',
+                    'start_time',
+                    'end_time',
+                    'venue',
+                ])
+                ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", start_time))) AS time_diff_seconds')
+                ->whereRaw('CONCAT(start_date, " ", start_time) > NOW()')
+                ->orderByRaw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds) ASC')
                 ->limit(3)
                 ->get();
 

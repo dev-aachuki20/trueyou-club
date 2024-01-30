@@ -15,7 +15,7 @@ class BookingsTable extends Component
 
     public string $searchVal = '';
 
-    public $seminarId, $componentKey;
+    public $seminarId;
 
     public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Name, Email, Booking Number, Created";
 
@@ -25,9 +25,8 @@ class BookingsTable extends Component
         'show'
     ];
 
-    public function mount($seminar_id,$componentKey){
+    public function mount($seminar_id){
         $this->seminarId = $seminar_id;
-        $this->componentKey = $componentKey;
     }
 
     public function updatePaginationLength($length)

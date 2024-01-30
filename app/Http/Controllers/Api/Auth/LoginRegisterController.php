@@ -51,6 +51,7 @@ class LoginRegisterController extends Controller
         
             $input['email'] = strtolower($input['email']); 
             $input['password'] = bcrypt($input['password']);
+            $input['is_active'] = 0;
             $user = User::create($input);
 
             //Send welcome mail for user
