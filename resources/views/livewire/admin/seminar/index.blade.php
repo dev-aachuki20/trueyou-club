@@ -55,68 +55,42 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script type="text/javascript">
     document.addEventListener('loadPlugins', function(event) {
-
-        
         $('input[id="start_date"]').daterangepicker({
-                autoApply: true,
-                singleDatePicker: true,
-                showDropdowns: true,
-                minDate: new Date(),
-                locale: {
-                    format: 'DD-MM-YYYY'
-                },
+            autoApply: true,
+            singleDatePicker: true,
+            showDropdowns: true,
+            autoUpdateInput: false,
+            minDate: new Date(),
+            locale: {
+                format: 'DD-MM-YYYY'
             },
-            function(start, end, label) {
-                @this.set('start_date', start.format('YYYY-MM-DD'));
-        });
+        },
+        function(start, end, label) {
+            @this.set('start_date', start.format('YYYY-MM-DD'));
 
-        $('input[id="start_time"]').daterangepicker({
-            autoApply: true,
-            timePicker: true,
-            timePicker24Hour: false,
-            singleDatePicker: true,
-            // timePickerIncrement: 15,
-            // minDate: new Date(),
-            // maxDate: moment().startOf('day').add(12, 'hour'),
-            locale: {
-                format: 'hh:mm A'
+            @this.set('start_time', null);
+            @this.set('end_time', null);
+
+            var now = moment();
+            if (start.isSame(now, 'day')) {
+                UpdateStartTime(moment().startOf('hour').minute(moment().minute()))
+            } else {
+                UpdateStartTime(moment().startOf('day'))
             }
-
-        }, function(start, end, label) {
-            // Handle your apply button logic here
-            // console.log(start.format('HH:mm'));
-
-            @this.set('start_time', start.format('HH:mm'));
-
-
-        }).on('show.daterangepicker', function(ev, picker) {
-            picker.container.find(".calendar-table").hide();
         });
 
-       
-        $('input[id="end_time"]').daterangepicker({
-            autoApply: true,
-            timePicker: true,
-            timePicker24Hour: false,
-            singleDatePicker: true,
-            // timePickerIncrement: 15,
-            // minDate: new Date(),
-            // maxDate: moment().startOf('day').add(12, 'hour'),
-            locale: {
-                format: 'hh:mm A'
-            }
+        if(event.detail.updateMode){
+            var fullStTime = new Date(event.detail.full_start_time);
+            var fullEtTime = new Date(event.detail.full_end_time);
+            
+            UpdateStartTime(moment(fullStTime).startOf('day'), 'update_form');
+            UpdateEndTime(moment(fullStTime).startOf('hour').minute(moment(fullStTime).minute()), 'update_form');
 
-        }, function(start, end, label) {
-            // Handle your apply button logic here
-            // console.log(start.format('HH:mm'));
-
-            @this.set('end_time', start.format('HH:mm'));
-
-
-        }).on('show.daterangepicker', function(ev, picker) {
-            picker.container.find(".calendar-table").hide();
-        });
-
+            $('#start_time').data('daterangepicker').setStartDate(fullStTime);
+            $('#end_time').data('daterangepicker').setStartDate(fullEtTime);
+        } else {
+            UpdateStartTime(moment().startOf('hour').minute(moment().minute()), 'initial');
+        }
 
         $('.dropify').dropify();
         $('.dropify-errors-container').remove();
@@ -179,6 +153,63 @@
     document.addEventListener('closeTicketModal', function(event) {
         $('#ticketBox').modal('hide');
     });
+
+    // Start Time
+    function UpdateStartTime(time, type='picker_update'){
+        if(type == 'picker_update'){
+            $('#start_time').data('daterangepicker').remove();
+        }
+        $('#start_time').daterangepicker({
+            autoApply: true,
+            timePicker: true,
+            timePicker24Hour: false,
+            singleDatePicker: true,
+            autoUpdateInput: false,
+            minDate: time,
+            startDate: time,
+            locale: {
+                format: 'hh:mm A'
+            }
+        }).on('apply.daterangepicker', function(ev, picker) {
+            @this.set('start_time', picker.startDate.format('HH:mm'));
+            @this.set('end_time', null);
+            console.log(picker.startDate)
+            if (picker.startDate) {
+                UpdateEndTime(moment(picker.startDate).startOf('hour').minute(moment(picker.startDate).minute()));
+            } else {
+                UpdateEndTime(moment().startOf('day'));
+            }
+        }).on('show.daterangepicker', function(ev, picker) {
+            picker.container.find(".calendar-table").hide();
+        });
+        if(type != 'update_form'){
+            UpdateEndTime(time, type);
+        }
+        
+    }
+
+    // End Time
+    function UpdateEndTime(time, type='picker_update'){
+        time.add(1, 'minutes');
+        if(type == 'picker_update'){
+            $('#end_time').data('daterangepicker').remove();
+        }
+        $('#end_time').daterangepicker({
+            autoApply: true,
+            timePicker: true,
+            timePicker24Hour: false,
+            singleDatePicker: true,
+            autoUpdateInput: false,
+            minDate: time,
+            locale: {
+                format: 'hh:mm A'
+            }
+        }).on('apply.daterangepicker', function(ev, picker) {
+            @this.set('end_time', picker.startDate.format('HH:mm'));
+        }).on('show.daterangepicker', function(ev, picker) {
+            picker.container.find(".calendar-table").hide();
+        });
+    }
 
 </script>
 @endpush

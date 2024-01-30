@@ -23,7 +23,7 @@ class Index extends Component
 
     public $search = '', $formMode = false , $updateMode = false, $viewMode = false;
 
-    public $webinar_id=null, $title,  $start_date = null, $start_time=null,  $end_time = null, $meeting_link, $image, $originalImage, $status=1;
+    public $webinar_id=null, $title,  $start_date = null, $start_time=null,  $end_time = null, $meeting_link, $image, $originalImage, $status=1,$full_start_time=null,  $full_end_time = null;
 
     public $removeImage = false, $showJoinBtn = false;
 
@@ -33,10 +33,6 @@ class Index extends Component
 
     public function mount(){
         abort_if(Gate::denies('webinar_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $this->start_date = Carbon::now()->format('d-m-Y');
-        $this->start_time = Carbon::now()->format('h:i A');
-        $this->end_time = Carbon::now()->format('h:i A');
     }
 
     public function updatedStartDate(){
@@ -44,13 +40,16 @@ class Index extends Component
     }
 
     public function updatedStartTime(){
-        $this->start_time = Carbon::parse($this->start_time)->format('h:i A');
-        $this->end_time = Carbon::parse($this->start_time)->format('h:i A');
+        if($this->start_time){
+            $this->start_time = Carbon::parse($this->start_time)->format('h:i A');
+        }
     }
 
 
     public function updatedEndTime(){
-        $this->end_time = Carbon::parse($this->end_time)->format('h:i A');
+        if($this->end_time){
+            $this->end_time = Carbon::parse($this->end_time)->format('h:i A');
+        }
     }
 
     public function render()
@@ -123,7 +122,7 @@ class Index extends Component
 
     public function edit($id)
     {
-        $this->initializePlugins();
+
         $this->formMode = true;
         $this->updateMode = true;
 
@@ -137,6 +136,10 @@ class Index extends Component
         $this->status          =  $webinar->status;
         $this->originalImage   =  $webinar->image_url;
 
+        $this->full_start_time =  Carbon::parse($webinar->start_date.' '.$webinar->start_time)->format('Y-m-d H:i:s');
+        $this->full_end_time   =  Carbon::parse($webinar->start_date.' '.$webinar->end_time)->format('Y-m-d H:i:s');
+        
+        $this->initializePlugins();
     }
 
 
@@ -218,7 +221,12 @@ class Index extends Component
 
 
     public function initializePlugins(){
-        $this->dispatchBrowserEvent('loadPlugins');
+        $data = [
+            'updateMode' => $this->updateMode, 
+            'full_start_time' => $this->full_start_time,
+            'full_end_time' => $this->full_end_time,
+        ];
+        $this->dispatchBrowserEvent('loadPlugins', $data);
     }
 
     public function cancel(){
