@@ -251,7 +251,7 @@ if (!function_exists('getVipUsers')) {
 	function getVipUsers(){
 		$vipUsers = User::select('id', 'name', 'vip_at')->whereNotNull('vip_at')->orderBy('vip_at', 'desc')->get();
 		foreach($vipUsers as $vipUser){
-			$vipUser->profile_image_url = $vipUser->profile_image_url ? $vipUser->profile_image_url : asset(config('constants.default.no_image'));
+			$vipUser->profile_image_url = $vipUser->profile_image_url ? $vipUser->profile_image_url : asset(config('constants.default.profile_image'));
 		}
 		return $vipUsers;
 	}

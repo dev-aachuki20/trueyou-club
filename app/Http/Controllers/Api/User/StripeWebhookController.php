@@ -140,6 +140,12 @@ class StripeWebhookController extends Controller
     
                 if($customer){
                     $notification_message = config('constants.seminar_booked_notification_message');
+                    $notification_message .=  ' 📆 Event Details: '.
+                                              ' '.$seminarBooking->title. 
+                                              ' 🅱️ Booking Number : '.$bookingNumber.
+                                              ' 📆 DateTime : '.convertDateTimeFormat($seminarBooking->start_date.' '.$seminarBooking->start_time,'fulldatetime') .' - '.Carbon::parse($seminarBooking->end_time)->format('h:i A').
+                                              ' 📍 Venue : '.ucwords($seminarBooking->venue);
+
                     Notification::send($customer, new UserNotification($customer, $notification_message));    
                 }
               

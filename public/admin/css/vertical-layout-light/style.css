@@ -28609,7 +28609,9 @@ div.tagsinput span.tag a {
 
 .sidebar .nav .nav-item.active > .nav-link {
   background: #006AF2;
-  box-shadow: 8px 6px 15px 0px rgba(0, 97, 222, 0.25);
+  width: 100%;
+  /* box-shadow: 8px 6px 15px 0px rgba(0, 97, 222, 0.25); */
+  box-shadow: 0 4px 4px 0px rgba(0, 97, 222, 0.25);
 }
 
 .sidebar .nav .nav-item.active > .nav-link i,
@@ -28785,9 +28787,10 @@ div.tagsinput span.tag a {
     max-height: calc(100vh - 80px);
     top: 80px;
     bottom: 0;
-        border-left: 1px solid #EAECEB;
+    border-left: 1px solid #EAECEB;
     overflow: auto;
     right: -330px;
+    z-index: 99999;
     -webkit-transition: all 0.25s ease-out;
     -o-transition: all 0.25s ease-out;
     transition: all 0.25s ease-out;

@@ -1765,6 +1765,7 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
 }
 
 .date-time {

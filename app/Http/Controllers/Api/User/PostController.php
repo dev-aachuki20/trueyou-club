@@ -22,7 +22,7 @@ class PostController extends Controller
                 ->select('id', 'title', 'slug', 'content', 'publish_date', 'type', 'created_by')
                 ->whereDate('publish_date', '<=', $currentDate)
                 ->orderBy('publish_date', 'desc')
-                ->paginate(10);
+                ->paginate(12);
 
             if ($getAllRecords->count() > 0) {
 

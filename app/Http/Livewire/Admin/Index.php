@@ -5,7 +5,6 @@ namespace App\Http\Livewire\Admin;
 use App\Models\Quote;
 use App\Models\Seminar;
 use Carbon\Carbon;
-use App\Models\User;
 use App\Models\Webinar;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
@@ -41,12 +40,13 @@ class Index extends Component
         $today = Carbon::today();
         $todaysQuote = Quote::whereDate('created_at', $today)->first();
         $submissionPercentage = 0;
-        $leadUsersList = null;
+        
         if ($todaysQuote) {
-           
             $submissionPercentage = round($todaysQuote->users()->count() / getTotalUsers() * 100);
-            $leadUsersList = $todaysQuote->users;
         }
+
+        $leadUsersList = cacheVipUsers();
+
 
         return view('livewire.admin.index', compact('webinar', 'seminar', 'todaysQuote', 'submissionPercentage', 'leadUsersList'));
     }

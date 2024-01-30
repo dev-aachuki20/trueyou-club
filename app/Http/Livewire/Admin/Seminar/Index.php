@@ -71,8 +71,8 @@ class Index extends Component
     {
         $rules = [
             'title'        => 'required',
-            'total_ticket' => 'required|integer|min:0',
-            'ticket_price' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'total_ticket' => 'required|numeric|min:1',
+            'ticket_price' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/|not_in:0',
             'start_date'   => 'required|date',
             'start_time'   => 'required|date_format:h:i A',
             'end_time'     => 'required|date_format:h:i A',
@@ -97,7 +97,8 @@ class Index extends Component
 
         $validatedData = $this->validate($rules,
             [
-                'end_time.after' => 'The end time must be a time after the start time.',
+                'end_time.after' => 'The end time must be a time after the start time',
+                'ticket_price.not_in'=> 'The ticket price is required'
             ]
         );
 
@@ -156,8 +157,8 @@ class Index extends Component
     public function update()
     {
         $validatedArray['title']        = 'required';
-        $validatedArray['total_ticket'] = 'required|integer|min:0';
-        $validatedArray['ticket_price']  = 'required|numeric|regex:/^\d+(\.\d{1,2})?$/';
+        $validatedArray['total_ticket'] = 'required|numeric|min:1';
+        $validatedArray['ticket_price']  = 'required|numeric|regex:/^\d+(\.\d{1,2})?$/|not_in:0';
 
         $validatedArray['start_date']   = 'required|date';
         $validatedArray['start_time']   = 'required|date_format:h:i A';
@@ -184,7 +185,8 @@ class Index extends Component
         }
 
         $validatedData = $this->validate($validatedArray, [
-            'end_time.after' => 'The end time must be a time after the start time.',
+            'end_time.after' => 'The end time must be a time after the start time',
+            'ticket_price.not_in'=> 'The ticket price is required'
         ]);
 
         $validatedData['title']  = $this->title;

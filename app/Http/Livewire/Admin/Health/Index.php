@@ -119,7 +119,7 @@ class Index extends Component
         }
 
         $validatedData = $this->validate($rules, [
-            'meeting_link.strip_tags' => 'The meeting_link field is required',
+            'content.strip_tags' => 'The content field is required',
         ]);
 
         $validatedData['publish_date']   = Carbon::parse($this->publish_date)->format('Y-m-d');

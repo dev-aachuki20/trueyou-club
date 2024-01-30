@@ -46,7 +46,7 @@ class ContactController extends Controller
 
             $responseData = [
                 'status'        => true,
-                'message'       => "We appreciate you getting in touch with us! Your request has been successfully sent. We'll get in touch shortly.",
+                'message'       => "Thank you! Your message has been successfully sent.",
             ];
             return response()->json($responseData, 200);
         } catch (\Exception $e) {

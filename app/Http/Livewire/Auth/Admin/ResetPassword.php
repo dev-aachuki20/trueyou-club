@@ -21,8 +21,8 @@ class ResetPassword extends Component
     protected function rules()
     {
         return [
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'password_confirmation' => ['required', 'string', 'min:8'],
+            'password' => ['required', 'string', 'min:8', /*'confirmed'*/],
+            'password_confirmation' => ['required', 'string', 'min:8','same:password'],
         ];
     }
 
@@ -35,6 +35,7 @@ class ResetPassword extends Component
             'password.confirmed' => 'The Password should be confirm.',
             'password_confirmation.required' => 'Confirm password is required!',
             'password_confirmation.min' => 'The confirm password should be at least 8 letter.',
+            'password_confirmation.same' => 'The password confirmation and password must match.',
         ];
     }
 
