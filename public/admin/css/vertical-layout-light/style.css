@@ -28790,7 +28790,7 @@ div.tagsinput span.tag a {
     border-left: 1px solid #EAECEB;
     overflow: auto;
     right: -330px;
-    z-index: 99999;
+    z-index: 999;
     -webkit-transition: all 0.25s ease-out;
     -o-transition: all 0.25s ease-out;
     transition: all 0.25s ease-out;

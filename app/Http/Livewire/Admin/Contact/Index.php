@@ -78,11 +78,14 @@ class Index extends Component
     {
         $deleteId = $event['data']['inputAttributes']['deleteId'];
         $model    = Contact::find($deleteId);
-        $model->delete();
-
-        $this->emit('refreshTable');
-
-        $this->alert('success', trans('messages.delete_success_message'));
+        if(!$model){
+            $this->emit('refreshTable'); 
+            $this->alert('error', trans('messages.error_message'));   
+        }else{
+            $model->delete();
+            $this->emit('refreshTable');    
+            $this->alert('success', trans('messages.delete_success_message'));
+        }     
     }
 
     public function toggle($id)

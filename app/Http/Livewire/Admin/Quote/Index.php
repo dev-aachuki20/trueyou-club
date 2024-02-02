@@ -124,11 +124,13 @@ class Index extends Component
     public function deleteConfirm($event){
         $deleteId = $event['data']['inputAttributes']['deleteId'];
         $model    = Quote::find($deleteId);
-        $model->delete();
-        // $model->forceDelete();
-
-        $this->emit('refreshTable');
-
-        $this->alert('success', trans('messages.delete_success_message'));
+        if(!$model){
+            $this->emit('refreshTable'); 
+            $this->alert('error', trans('messages.error_message'));   
+        }else{
+            $model->delete();
+            $this->emit('refreshTable');    
+            $this->alert('success', trans('messages.delete_success_message'));
+        }     
     }
 }

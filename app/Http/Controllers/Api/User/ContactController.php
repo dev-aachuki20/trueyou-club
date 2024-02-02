@@ -25,7 +25,7 @@ class ContactController extends Controller
             'first_name.required'   => 'This field is required',
             'last_name.required'    => 'This field is required',
             'email.required'        => 'This field is required',
-            'phone_number.required' => 'The phone number field is required',
+            'phone_number.required' => 'This field is required',
             'phone_number.regex'    => 'The phone number length must be 7 to 15 digits.',
         ]);
 

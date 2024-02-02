@@ -106,7 +106,7 @@
                         <div class="webinar-item">
                             <div class="webinar-item-inner">
                                 <div class="webinar-img">
-                                    <img class="img-fluid" src="https://trueyouclub.hipl-staging3.com/storage/webinar/image//yl6LJkEMvtqhcJjMHYviHnD9JDDmjMAcNKns4xCs.jpg" alt="">
+                                    <img class="img-fluid" src="{{ $seminar->seminarImage->file_path ? asset('storage/'.$seminar->seminarImage->file_path) : asset(config('constants.default.no_image')) }}"" alt="{{$seminar->title ?? '' }}">
                                 </div>
                                 <div class="webinar-content">
                                 <h3>

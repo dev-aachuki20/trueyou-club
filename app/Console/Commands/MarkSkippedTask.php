@@ -57,6 +57,8 @@ class MarkSkippedTask extends Command
                         });
 
                         if($allSkipped){
+                            $user->quotes()->attach($todayQuote, ['created_at' => now(), 'status' => 'skipped']);
+                            
                             $user->is_active = 1;
                             $user->save();
                         }else{

@@ -33,19 +33,15 @@
                     @endphp
                     <div class="col-12 col-md-6">
                         <div class="webinar-item {{ $endDateTime < $now ? 'webinar-disabled' : '' }} {{ $diffInSeconds > 0 ? 'webinar-item-active' : '' }}" data-diff_in_seconds="{{ $diffInSeconds }}">
-                            <div class="webinar-item-inner">
-                                
+                            <div class="webinar-item-inner">                                
                                 @if($endDateTime < $now)
-                                    <div class="buyer-active-verfiy"><span>Expired Webinar </span></div>
-                                @elseif($now >= $dateTime && $now <= $endDateTime)
-                                    <div class="buyer-active-verfiy"><span>Ongoing </span></div>
+                                    <div class="buyer-active-verfiy"><span>Expired Webinar </span></div>                            
                                 @endif
-
+                                <div class="buyer-active-verfiy ongoingtag {{$now >= $dateTime && $now <= $endDateTime ? '': 'd-none'}} "><span>Ongoing </span></div>
                                 <div class="webinar-img">
                                     <img class="img-fluid" src="{{ $webinar->image_url ? $webinar->image_url : asset(config('constants.default.no_image')) }}" alt="">
                                 </div>
-                                <div class="webinar-content">
-                                
+                                <div class="webinar-content">                                
                                     <h3>
                                         {{ ucwords($webinar->title) }}
                                     </h3>

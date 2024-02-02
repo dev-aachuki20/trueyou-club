@@ -13,7 +13,7 @@
 
     @include('admin.partials.table-show-entries-search-box',['searchBoxPlaceholder'=>$searchBoxPlaceholder])
        
-    <div class="quotes-listing">
+    <div class="quotes-listing quotes-history">
         @if($quotesHistory->count() > 0)
         <ul>
             @foreach($quotesHistory as $serialNo => $quote)

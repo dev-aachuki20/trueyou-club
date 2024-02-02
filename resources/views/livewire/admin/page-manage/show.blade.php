@@ -17,9 +17,9 @@
                     </p>
 
                     @if(json_decode($detail->button, true))
-                    <div class="row">
+                    <div class="row pageHome-show">
                         @foreach(json_decode($detail->button, true) as $button)
-                        <div class="show-btn-box mt-5 text-center mr-1">
+                        <div class="show-btn-box text-center mr-1">
                             <a href="{{ $button ? $button['link'] : '' }}" target="_blank" class="btn joinBtn btn-sm btn-icon-text btn-header">
                                 {{ $button['title'] }}
                             </a>
@@ -29,7 +29,7 @@
                     @endif
 
 
-                    <div class="show-btn-box mt-5 text-center">
+                    <div class="show-btn-box text-center">
                         <button wire:click.prevent="cancel" class="btn btn-secondary">
                             {{ __('global.back')}}
                             <span wire:loading wire:target="cancel">

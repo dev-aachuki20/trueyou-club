@@ -19,9 +19,9 @@ class ProfileController extends Controller
     public function userDetails()
     {
         $closestWebinar = Webinar::query()
-        ->select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
-            ->where(\DB::raw('CONCAT(start_date, " ", end_time)'), '>', now())
-            ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')->first();
+        ->select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", start_time))) AS time_diff_seconds')
+            ->where(\DB::raw('CONCAT(start_date, " ", start_time)'), '>', now())
+            ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')->first();        
 
         $getWebinar = null;
         if ($closestWebinar) {

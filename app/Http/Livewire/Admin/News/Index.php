@@ -21,6 +21,7 @@ class Index extends Component
 
     public $removeImage = false;
     public $type = 'news';
+    public $isButtonDisabled = false;
 
     protected $listeners = [
         'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm'
@@ -201,17 +202,24 @@ class Index extends Component
             },
             'inputAttributes' => ['deleteId' => $id],
         ]);
+        // After confirmation, disable the button
+        $this->isButtonDisabled = true;
     }
 
     public function deleteConfirm($event)
     {
         $deleteId = $event['data']['inputAttributes']['deleteId'];
         $model    = Post::find($deleteId);
-        $model->delete();
-
-        $this->emit('refreshTable');
-
-        $this->alert('success', trans('messages.delete_success_message'));
+        
+        if(!$model){
+            $this->emit('refreshTable'); 
+            $this->alert('error', trans('messages.error_message'));   
+        }else{
+            $model->delete();
+            $this->emit('refreshTable');    
+            $this->alert('success', trans('messages.delete_success_message'));
+        }          
+             
     }
 
     public function toggle($id)

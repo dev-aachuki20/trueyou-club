@@ -16,6 +16,7 @@ class NewsTable extends Component
     use WithPagination;
 
     public $search = null;
+    public $isButtonDisabled = false;
 
     public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Title, Publish Date";
     public $type = 'news';

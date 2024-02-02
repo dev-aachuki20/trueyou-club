@@ -126,6 +126,7 @@
                     $(this).find('.joinBtn').removeClass('d-none');
 
                     $(this).find('.webinar-time-system').remove();
+                    $(this).find('.ongoingtag').removeClass('d-none');
                 } else {
 
                     // Calculate days, hours, minutes, and seconds
