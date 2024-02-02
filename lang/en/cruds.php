@@ -110,7 +110,7 @@ return [
         'title_singular'        => 'Seminar',
         'fields' => [
             'title'         => 'Title',
-            'total_ticket'  => 'Total Ticket',
+            'total_ticket'  => 'Total Numbern of Tickets',
             'ticket_price'  => 'Ticket Price',
             'start_date'    => 'Seminar Date',
             'start_time'    => 'Start Time',
@@ -134,7 +134,7 @@ return [
     ],
 
     'contacts' => [
-        'title'                 => 'Contacts',
+        'title'                 => 'Contact Form',
         'title_singular'        => 'Contact',
         'fields' => [
             'full_name'   => 'Full Name',

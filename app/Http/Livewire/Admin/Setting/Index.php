@@ -143,7 +143,7 @@ class Index extends Component
             foreach($validatedData['state'] as $key=>$stateVal){
                 $setting = Setting::where('key',$key)->first();
 
-                $setting_value = $stateVal;
+                $setting_value = !empty($stateVal) && !is_null($stateVal) ? $stateVal : null;
 
                 if($setting->type == 'image'){
 

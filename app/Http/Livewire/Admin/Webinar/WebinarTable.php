@@ -60,34 +60,8 @@ class WebinarTable extends Component
         // }
 
       
-        $allWebinar = Webinar::query()
-        ->select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
-        ->where(function ($query) use ($searchValue, $statusSearch) {
-
-            $query->where('title', 'like', '%' . $searchValue . '%')
-                ->orWhereRaw("DATE_FORMAT(start_date,  '" . config('constants.search_full_date_format') . "') = ?", [date(config('constants.full_date_format'), strtotime($searchValue))]);
-
-            // Check for month name (e.g., January)
-            $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
-
-            // Check for day and month (e.g., 13 January)
-            $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%e %M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
-        })
-
-        ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
-        ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
-
-            // ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate($this->paginationLength);
-
-
         // $allWebinar = Webinar::query()
-        // ->select('*', DB::raw('
-        //     CASE
-        //         WHEN start_date > CURRENT_DATE OR (start_date = CURRENT_DATE AND start_time > CURRENT_TIME) THEN "upcoming"
-        //         WHEN start_date = CURRENT_DATE AND start_time <= CURRENT_TIME AND end_time >= CURRENT_TIME THEN "ongoing"
-        //         ELSE "expired"
-        //     END AS status'))
+        // ->select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
         // ->where(function ($query) use ($searchValue, $statusSearch) {
 
         //     $query->where('title', 'like', '%' . $searchValue . '%')
@@ -99,24 +73,38 @@ class WebinarTable extends Component
         //     // Check for day and month (e.g., 13 January)
         //     $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%e %M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
         // })
-        // ->orderBy(DB::raw('
-        //     CASE
-        //         WHEN start_date = CURRENT_DATE AND end_time <= CURRENT_TIME AND end_time >= CURRENT_TIME THEN 1
-        //         WHEN start_date > CURRENT_DATE OR (start_date = CURRENT_DATE AND start_time > CURRENT_TIME) THEN 2
-        //         ELSE 3
-        //     END'))
-        // ->orderBy(DB::raw('
-        // CASE
-        //     WHEN start_date <= CURRENT_DATE AND start_time < CURRENT_TIME THEN 4
-        //     ELSE 5
-        // END'))
-        // ->when('expired', function ($query) {
-        //     $query->orderBy('start_date', 'desc')->orderBy('start_time', 'desc');
-        // })
-        // ->orderBy('start_date')
-        // ->orderBy('start_time')
-        // // ->orderBy($this->sortColumnName, $this->sortDirection)
-        // ->paginate($this->paginationLength);
+
+        // ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
+        // ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
+
+        //     // ->orderBy($this->sortColumnName, $this->sortDirection)
+        //     ->paginate($this->paginationLength);
+
+
+        $allWebinar = Webinar::query()
+        ->select('*')
+        ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+        ->where(function ($query) use ($searchValue, $statusSearch) {
+
+            $query->where('title', 'like', '%' . $searchValue . '%')
+                ->orWhereRaw("DATE_FORMAT(start_date,  '" . config('constants.search_full_date_format') . "') = ?", [date(config('constants.full_date_format'), strtotime($searchValue))]);
+
+            // Check for month name (e.g., January)
+            $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
+
+            // Check for day and month (e.g., 13 January)
+            $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%e %M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
+        })
+        ->orderByRaw('
+            CASE 
+                WHEN CONCAT(start_date, " ", end_time) <= NOW() AND CONCAT(start_date, " ", end_time) >= NOW() THEN 0
+                WHEN CONCAT(start_date, " ", end_time) > NOW() THEN 1
+                ELSE 2
+            END ASC,
+            time_diff_seconds > 0 ASC, ABS(time_diff_seconds) ASC
+        ')
+        //->orderBy($this->sortColumnName, $this->sortDirection)
+        ->paginate($this->paginationLength);
 
         return view('livewire.admin.webinar.webinar-table', compact('allWebinar'));
     }

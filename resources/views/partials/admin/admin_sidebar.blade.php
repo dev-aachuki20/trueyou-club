@@ -181,7 +181,7 @@
                     <path d="M20.5 11L20.5 14" stroke="#0A2540" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                     <path d="M20.5 17L20.5 20" stroke="#0A2540" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
-                <span class="menu-title"> {{ __('cruds.contacts.title') }} </span>
+                <span class="menu-title"> {{ __('cruds.contacts.title') }} {{ __('global.list') }}</span>
             </a>
         </li>
         @endcan
