@@ -147,7 +147,7 @@ class HomeController extends Controller
                     return response()->json($responseData, 404);
                 }
             }
-        } catch (\Exception $e) {
+        } catch (\Exception $e) { 
             DB::rollBack();
             // dd($e->getMessage() . '->' . $e->getLine());
             //Return Error Response
@@ -214,7 +214,27 @@ class HomeController extends Controller
                 $responseData = [
                     'status'        => true,
                     'message'       => "Notification deleted successfully",
+                    'data'          => null,
                 ];
+
+                $getNotifications = $user->notifications()->select('id', 'data', 'created_at', 'read_at')->latest()->paginate(10);
+
+                if ($getNotifications->count() > 0) {
+                    foreach ($getNotifications as $key=>$record) {
+                        $now = Carbon::now();
+                        $notificationDate = Carbon::parse($record->created_at)->diffForHumans($now);
+                        $notificationDate = str_replace('before', 'ago', $notificationDate);
+    
+                        $record->notification_date = $notificationDate;
+    
+                        $notificationData = $record->data;
+                        $record->notification_message = $notificationData['message'];
+                    }
+
+                    $responseData['data'] = $getNotifications;
+                }
+
+               
                 return response()->json($responseData, 200);
             } else {
                 $responseData = [

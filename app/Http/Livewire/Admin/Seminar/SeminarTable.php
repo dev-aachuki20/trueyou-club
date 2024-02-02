@@ -6,6 +6,7 @@ use App\Models\Seminar;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\DB;
 
 class SeminarTable extends Component
 {
@@ -79,6 +80,44 @@ class SeminarTable extends Component
     
         // ->orderBy($this->sortColumnName, $this->sortDirection)
         ->paginate($this->paginationLength);
+
+        
+        // $allSeminar = Seminar::query()->select('*', DB::raw('
+        // CASE
+        //     WHEN start_date > CURRENT_DATE OR (start_date = CURRENT_DATE AND start_time > CURRENT_TIME) THEN "upcoming"
+        //     WHEN start_date = CURRENT_DATE AND start_time <= CURRENT_TIME AND end_time >= CURRENT_TIME THEN "ongoing"
+        //     ELSE "expired"
+        // END AS status'))
+        // ->where(function ($query) use ($searchValue, $statusSearch) {
+        //     $query->where('title', 'like', '%' . $searchValue . '%')
+        //         ->orWhere('venue', 'like', '%' . $searchValue . '%')
+        //         ->orWhereRaw("DATE_FORMAT(start_date,  '" . config('constants.search_full_date_format') . "') = ?", [date(config('constants.full_date_format'), strtotime($searchValue))]);
+
+        //     // Check for month name (e.g., January)
+        //     $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
+
+        //     // Check for day and month (e.g., 13 January)
+        //     $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%e %M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
+        // })
+            
+        // ->orderBy(DB::raw('
+        //     CASE
+        //         WHEN start_date = CURRENT_DATE AND start_time <= CURRENT_TIME AND end_time >= CURRENT_TIME THEN 1
+        //         WHEN start_date > CURRENT_DATE OR (start_date = CURRENT_DATE AND start_time > CURRENT_TIME) THEN 2
+        //         ELSE 3
+        //     END'))
+        // ->orderBy(DB::raw('
+        // CASE
+        //     WHEN start_date <= CURRENT_DATE AND start_time < CURRENT_TIME THEN 4
+        //     ELSE 5
+        // END'))
+        // ->when('expired', function ($query) {
+        //     $query->orderBy('start_date', 'desc')->orderBy('start_time', 'desc');
+        // })
+        // ->orderBy('start_date')
+        // ->orderBy('start_time')
+        // // ->orderBy($this->sortColumnName, $this->sortDirection)
+        // ->paginate($this->paginationLength);
 
         return view('livewire.admin.seminar.seminar-table', compact('allSeminar'));
     }

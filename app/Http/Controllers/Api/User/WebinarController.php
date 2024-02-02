@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Webinar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class WebinarController extends Controller
 {
@@ -18,6 +19,30 @@ class WebinarController extends Controller
             ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
             ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
             ->paginate(10);
+
+            // $getAllRecords = Webinar::select('*', DB::raw('
+            //     CASE
+            //         WHEN start_date > CURRENT_DATE OR (start_date = CURRENT_DATE AND start_time > CURRENT_TIME) THEN "upcoming"
+            //         WHEN start_date = CURRENT_DATE AND start_time <= CURRENT_TIME AND end_time >= CURRENT_TIME THEN "ongoing"
+            //         ELSE "expired"
+            //     END AS status'))
+            // ->orderBy(DB::raw('
+            //     CASE
+            //         WHEN start_date = CURRENT_DATE AND start_time <= CURRENT_TIME AND end_time >= CURRENT_TIME THEN 1
+            //         WHEN start_date > CURRENT_DATE OR (start_date = CURRENT_DATE AND start_time > CURRENT_TIME) THEN 2
+            //         ELSE 3
+            //     END'))
+            // ->orderBy(DB::raw('
+            //     CASE
+            //         WHEN start_date <= CURRENT_DATE AND start_time < CURRENT_TIME THEN 4
+            //         ELSE 5
+            //     END'))
+            // ->when('expired', function ($query) {
+            //     $query->orderBy('start_date', 'desc')->orderBy('start_time', 'desc');
+            // })
+            // ->orderBy('start_date')
+            // ->orderBy('start_time')
+            // ->paginate(10);
 
             if ($getAllRecords->count() > 0) {
 
