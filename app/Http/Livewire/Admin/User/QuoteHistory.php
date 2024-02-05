@@ -78,7 +78,15 @@ class QuoteHistory extends Component
         ->orderBy($this->sortColumnName, $this->sortDirection)
         ->paginate($this->paginationLength);
 
-        return view('livewire.admin.user.quote-history',compact('quotesHistory','userName'));
+        $totalSkipped = Quote::whereHas('users', function ($subquery) use ($user_id) {
+            $subquery->where('user_id', $user_id)->where('status','skipped');
+        })->withTrashed()->get()->count();
+
+        $totalAttendence = Quote::whereHas('users', function ($subquery) use ($user_id) {
+            $subquery->where('user_id', $user_id)->where('status','completed');
+        })->withTrashed()->get()->count(); 
+
+        return view('livewire.admin.user.quote-history',compact('quotesHistory','userName','totalSkipped','totalAttendence'));
     }
 
     public function cancel(){

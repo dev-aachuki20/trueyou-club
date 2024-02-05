@@ -2362,6 +2362,94 @@ button.btn.btn-sm.btn-info.copy-btn.mb-1 {
     margin: 1.5rem 0;
 }
 
+.count-history {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.count-history div {
+    font-size: 13px;
+    font-weight: 400;
+    color: #33a133;
+    display: block;
+    padding: 5px 20px;
+    border-radius: 16px;
+    
+}
+
+.count-history div span {
+    font-weight: 700;
+    font-size: 16px;
+    color: #212529;
+}
+
+.count-history .green-box{
+    background-color: #0da30d0d;
+    border: 1px solid #0da30dbf;
+}
+
+.count-history .red-box{
+    color: #c73d3d;
+    background-color: #d90f0f17;
+    border: 1px solid #d90f0fb0;
+}
+
+.overview-item {
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+    height: 100%;
+}
+
+.overview-box-wrapper .col-12.col-md-6.col-lg-4.col-xl-3 {
+    margin-bottom: 30px;
+}
+
+.overview-item .inner-wrap {
+    display: flex;
+    gap: 20px;
+}
+
+.overview-item .inner-wrap .overview-icon-box {
+    max-width: 80px;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+
+.overview-item .inner-wrap .overview-icon-box svg{
+    width: 40px;
+    height: 40px;
+}
+
+.overview-content h3 {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.overview-content .count-listing {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.light-yellow{
+
+    background-color: #FCF6E4;
+}
+
+.titan-white {
+    background-color: #EEEFFF;
+}
+
+.pearl {
+    background-color: #FFEEEF;
+}
+
+.lily-white {
+    background-color: #E3F7FE;
+}
+
 @media(max-width:1440px){
 
     .row.Webinars-main {
@@ -2377,6 +2465,12 @@ button.btn.btn-sm.btn-info.copy-btn.mb-1 {
     }
     .lead-board .card-body ul{
         grid-template-columns: 1fr 1fr;
+    }
+
+    .overview-box-wrapper .col-12.col-md-6.col-lg-4.col-xl-3 {
+        margin-bottom: 30px;
+        flex: 0 0 50%;
+        max-width: 50%;
     }
     
 }
@@ -2566,6 +2660,12 @@ display: none;
 }
 
 @media(max-width:640px){
+
+    .overview-box-wrapper .col-12.col-md-6.col-lg-4.col-xl-3 {
+        margin-bottom: 30px;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 
     .dashboard-wrapper .qoute-listng{
         flex-direction: column;

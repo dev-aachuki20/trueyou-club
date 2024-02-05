@@ -28,7 +28,7 @@ class CommanController extends Controller
             'social_media' => [
                 'youtube'   => getSetting('youtube'),
                 'instagram' => getSetting('instagram'),
-                'twitter'   => getSetting('twitter'),
+                'linkedin'  => getSetting('linkedin'),
                 'facebook'  => getSetting('facebook'),
             ],
         ];

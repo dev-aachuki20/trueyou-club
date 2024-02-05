@@ -1,6 +1,16 @@
 <div>
     <div class="card-title top-box-set">
-        <h4 class="card-title-heading">{{ ucwords($userName) }} Quote History </h4>
+        <div>
+            <h4 class="card-title-heading">{{ ucwords($userName) }} Quote History </h4>
+            <div class="count-history">
+                <div class="green-box">
+                    Total Number of Attendance Days: <span>{{ $totalAttendence }}</span>
+                </div> 
+                <div class="red-box">
+                    Total Number of Skipped Days:  <span>{{ $totalSkipped }}</span>
+                </div>
+            </div>
+        </div>
         <button wire:click.prevent="cancel" class="btn btn-secondary mt-4">
             {{ __('global.back')}}
             <span wire:loading wire:target="cancel">

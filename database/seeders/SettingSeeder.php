@@ -245,10 +245,10 @@ class SettingSeeder extends Seeder
             ],
 
             [
-                'key'    => 'twitter',
+                'key'    => 'linkedin',
                 'value'  => '',
                 'type'   => 'text',
-                'display_name'  => 'Twitter',
+                'display_name'  => 'LinkedIn',
                 'group'  => 'social_media',
                 'details' => null,
                 'status' => 1,
