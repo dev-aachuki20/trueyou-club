@@ -182,6 +182,13 @@ class Index extends Component
                     $setting_value = null;
                 }
 
+                if ($setting->type == 'text_area') {
+                    if($setting->group == 'mail'){
+                        $checkEmpty = trim(strip_tags($stateVal));
+                        $setting_value = !empty($checkEmpty) ? $stateVal : null;
+                    }
+                }
+                
                 $setting->value = $setting_value;
                 $setting->save();
 
