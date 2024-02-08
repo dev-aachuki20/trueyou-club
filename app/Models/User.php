@@ -66,6 +66,19 @@ class User extends Authenticatable implements MustVerifyEmail
         'last_login_at',
     ];
 
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($model) {
+            if ($model->profileImage) {
+                $uploadImageId = $model->profileImage->id;
+                deleteFile($uploadImageId);
+            }
+        });
+    }
+
     public function roles()
     {
         return $this->belongsToMany(Role::class);

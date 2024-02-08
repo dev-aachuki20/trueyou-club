@@ -23,7 +23,7 @@ class LoginRegisterController extends Controller
     public function register(Request $request){
         $validator = Validator::make($request->all(), [
             'name'                      => 'required',
-            'email'                     => ['required','email:dns','unique:users,email,NULL,id',new ValidEmail],
+            'email'                     => ['required','email:dns','unique:users,email,NULL,id,deleted_at,NULL',new ValidEmail],
             'phone'                     => 'required|numeric|regex:/^[0-9]{7,15}$/|not_in:-|unique:users,phone,NULL,id',
             'password'                  => 'required|min:8',
             'password_confirmation'     => 'required|same:password',
