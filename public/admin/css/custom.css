@@ -2452,8 +2452,8 @@ button.btn.btn-sm.btn-info.copy-btn.mb-1 {
 
 /* 13-02-2024 */
 .export-buttons .btn{
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     padding: 0;
     display: flex;
     align-items: center;
@@ -2463,8 +2463,43 @@ button.btn.btn-sm.btn-info.copy-btn.mb-1 {
     height: 18px;
     width: auto;
 }
+.filter-section .card-title{
+    font-size: 18px;
+}
+/* .filter-section{
+    background-color: #f5f7f9 !important;
+} */
+.filter-section .form-group{
+    position: relative;
+}
+.filter-section .form-group label{
+    position: absolute;
+    left: 10px;
+    top: -7px;
+    background-color: #fff;
+    line-height: 16px;
+    padding: 0 5px;
+}
+.filter-section .form-group input{
+    border: none;
+    background-color: transparent;
+}
 .filter-section .btn.joinBtn{
     padding: 16px 32px !important;
+    min-width: 120px;
+    min-height: 50px;
+    border: none;
+}
+.filter-section .btn-secondary{
+    background-color: #333;
+    min-width: 120px;
+    color: #fff !important;
+    min-height: 50px;
+    border: none;
+}
+.filter-section .export-buttons{
+    display: inline-block;
+    float: right;
 }
 
 
@@ -2585,7 +2620,12 @@ button.btn.btn-sm.btn-info.copy-btn.mb-1 {
 
 @media(max-width:767px){
     .filter-section .btn.joinBtn{
-        padding: 12px 24px !important;
+        padding: 12px 12px !important;
+        min-width: 100px;
+    }
+    .filter-section .btn-secondary{
+        font-size: 14px !important;
+        min-width: 100px;
     }
     .inner-show-content .dflex.row.mt-4 {
         gap: 20px;
@@ -2672,6 +2712,7 @@ button.btn.btn-sm.btn-info.copy-btn.mb-1 {
     .btn-blue{
         padding: 10px 30px !important;
     }
+
 }
 
 input::-ms-reveal,
@@ -2799,6 +2840,10 @@ display: none;
     .update-webinar>ul>li a{
         width: 30px;
         height: 30px;
+    }
+    .filter-section .export-buttons{
+        display: block;
+        float: inherit;
     }
 }
 

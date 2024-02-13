@@ -3,31 +3,40 @@
     {{-- Start Filter Form --}}
     <div class="card">
         <div class="card-body filter-section">
-            <h3 class="card-title">Filter</h3>
-
             <form wire:submit.prevent="submitFilterForm" class="forms-sample">
 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group mb-0">
-                            <input type="text" id="filter_date_range" class="form-control" wire:model.defer="filter_date_range" placeholder="Filter Date" autocomplete="off" readonly="true">
+                            <label for="filter_date_range">Select Date</label>
+                            <input type="text" id="filter_date_range" class="form-control" wire:model.defer="filter_date_range" placeholder="Select Date" autocomplete="off" readonly="true">
                         </div>
                         @error('filter_date_range') <span class="error text-danger">{{ $message }}</span>@enderror
                     </div>
 
-                    <div class="col-md-6 mt-2 mt-md-0">
+                    <div class="col-md-6 mt-2 mt-md-0 pl-3 pl-md-1">
                         <button type="submit" class="btn joinBtn" wire:loading.attr="disabled">
                             @lang('global.submit')
                             <span wire:loading wire:target="submitFilterForm">
                                 <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
                             </span>
                         </button>
-                        <button type="button" wire:click.prevent="restFilterForm" wire:loading.attr="disabled" class="btn btn-secondary ml-3">
+                        <button type="button" wire:click.prevent="restFilterForm" wire:loading.attr="disabled" class="btn btn-secondary ml-2 ml-md-3">
                             @lang('global.reset')
                             <span wire:loading wire:target="restFilterForm">
                                 <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
                             </span>
                         </button>
+                        
+                        {{-- Start Custom Export Buttons --}}
+                        <div wire:loading wire:target="exportToExcel" class="loader"></div>
+                        <div class="export-buttons">
+                            <button type="button" wire:click.prevent="exportToExcel" class="btn btn-success" title="Export Excel">
+                                <x-svg-icon icon="excel" />
+                            </button>
+                        </div>
+                        {{-- End Custom Export Buttons --}}
+
                     </div>
                 </div>
 
@@ -35,16 +44,6 @@
         </div>
     </div>
     {{-- End Filter Form --}}
-
-    {{-- Start Custom Export Buttons --}}
-    <div wire:loading wire:target="exportToExcel" class="loader"></div>
-
-    <div class="export-buttons mt-5">
-        <button wire:click="exportToExcel" class="btn btn-success float-right">
-            <x-svg-icon icon="excel" />
-        </button>
-    </div>
-    {{-- End Custom Export Buttons --}}
 
     {{-- Start Datatables --}}
 

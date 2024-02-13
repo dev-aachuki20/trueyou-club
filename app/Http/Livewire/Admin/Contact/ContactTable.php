@@ -90,7 +90,7 @@ class ContactTable extends Component
             'filter_date_range' => 'required',
         ];
         $this->validate($rules,[
-            'filter_date_range'=>'Filter date is required'
+            'filter_date_range'=>'Please select date'
         ]);
 
         $date_range = explode(' - ', $this->filter_date_range);
