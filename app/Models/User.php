@@ -113,17 +113,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return "";
     }
 
-    public function NotificationSendToVerifyEmail()
-    {
-        $user = $this;
-
-        $url = config('constants.front_end_url') . 'email/verify/' . $user->id . '/' . sha1($user->email);
-
-        $subject = 'Verify Email Address';
-
-        Mail::to($user->email)->queue(new VerifyEmailMail($user->name, $url, $subject));
-    }
-
     public function transactions()
     {
         return $this->hasMany(Transaction::class);

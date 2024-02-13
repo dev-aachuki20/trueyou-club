@@ -15,14 +15,13 @@
 
                     @else
                     <div wire:loading wire:target="create" class="loader"></div>
+                    <div wire:loading wire:target="exportToExcel" class="loader"></div>
+
                     <div class="card-title top-box-set">
                         <h4 class="card-title-heading">@lang('cruds.contacts.title') @lang('global.list') </h4>
                     </div>
-                    <div class="table-responsive search-table-data">
 
-                        @livewire('admin.contact.contact-table')
-
-                    </div>
+                    @livewire('admin.contact.contact-table')
 
                     @endif
 
@@ -32,3 +31,4 @@
     </div>
 
 </div>
+

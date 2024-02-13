@@ -31,8 +31,8 @@ class Contact extends Model
         'deleted_at',
     ];
 
-    // public function getFullNameAttribute()
-    // {
-    //     return $this->first_name . ' ' . $this->last_name;
-    // }
+    public function getFullNameAttribute()
+    {
+        return ucwords($this->first_name . ' ' . $this->last_name);
+    }
 }

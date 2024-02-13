@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Mail\ContactReplyNotification;
 use Illuminate\Support\Facades\Mail;
 
-
 class Index extends Component
 {
     use  LivewireAlert, WithFileUploads;
@@ -56,6 +55,7 @@ class Index extends Component
     {
         $this->reset();
         $this->resetValidation();
+        $this->initializePlugins();
     }
 
     public function delete($id)
@@ -160,4 +160,7 @@ class Index extends Component
 
         return redirect()->to('/admin/contacts');
     }
+
+
+   
 }

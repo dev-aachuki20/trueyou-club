@@ -2450,6 +2450,24 @@ button.btn.btn-sm.btn-info.copy-btn.mb-1 {
     background-color: #E3F7FE;
 }
 
+/* 13-02-2024 */
+.export-buttons .btn{
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.export-buttons .btn svg{
+    height: 18px;
+    width: auto;
+}
+.filter-section .btn.joinBtn{
+    padding: 16px 32px !important;
+}
+
+
 @media(max-width:1440px){
 
     .row.Webinars-main {
@@ -2566,7 +2584,9 @@ button.btn.btn-sm.btn-info.copy-btn.mb-1 {
 }
 
 @media(max-width:767px){
-
+    .filter-section .btn.joinBtn{
+        padding: 12px 24px !important;
+    }
     .inner-show-content .dflex.row.mt-4 {
         gap: 20px;
     }
