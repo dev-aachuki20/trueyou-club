@@ -7,6 +7,10 @@ use Livewire\WithPagination;
 use App\Models\User;
 use Illuminate\Support\Str;
 
+use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\UserDatatableExport; 
+
 class UserTable extends Component
 {
     use WithPagination;
@@ -14,6 +18,8 @@ class UserTable extends Component
     public $search = null;
 
     public $sortColumnName = 'updated_at', $sortDirection = 'desc', $paginationLength = 10;
+
+    public $filter_date_range, $filterStartDate, $filterEndDate;
 
     protected $listeners = [
         'refreshTable' => 'render',
@@ -60,9 +66,12 @@ class UserTable extends Component
         }
 
         $starNumber = null;
-        if(in_array($searchValue,array(1,2,3,4,5))){
+        if(in_array($searchValue,config('constants.ratings'))){
             $starNumber = $searchValue;
         }
+
+        $startDate = $this->filterStartDate ? $this->filterStartDate->startOfDay() : null;
+        $endDate = $this->filterEndDate ? $this->filterEndDate->endOfDay() : null;
 
         $allUsers = User::query()->where(function ($query) use ($searchValue, $statusSearch, $starNumber) {
             $query->where('name', 'like', '%' . $searchValue . '%')
@@ -73,10 +82,44 @@ class UserTable extends Component
             })
             ->whereHas('roles', function ($query) {
                 $query->where('id', 2);
-            })
-            ->orderBy($this->sortColumnName, $this->sortDirection)
+            });
+        
+        if(!is_null($startDate) && !is_null($endDate)){
+            $allUsers = $allUsers->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        $allUsers =  $allUsers->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);
             
         return view('livewire.admin.user.user-table', compact('allUsers'));
+    }
+
+    public function submitFilterForm(){
+        $rules = [
+            'filter_date_range' => 'required',
+        ];
+        $this->validate($rules,[
+            'filter_date_range'=>'Please select date'
+        ]);
+
+        $date_range = explode(' - ', $this->filter_date_range);
+        $this->filterStartDate = Carbon::parse(date('Y-m-d',strtotime(str_replace(' ','-',$date_range[0]))));
+        $this->filterEndDate   = Carbon::parse(date('Y-m-d',strtotime(str_replace(' ','-',$date_range[1]))));
+    }
+
+    public function restFilterForm(){
+        $this->reset(['filter_date_range','filterStartDate','filterEndDate']);
+        $this->resetValidation();
+        $this->initializePlugins();
+    }
+
+    public function exportToExcel()
+    {
+        return Excel::download(new UserDatatableExport($this->filterStartDate,$this->filterEndDate,$this->search,$this->sortColumnName,$this->sortDirection), 'user-list.xlsx');
+    }
+
+    public function initializePlugins()
+    {
+        $this->dispatchBrowserEvent('loadPlugins');
     }
 }

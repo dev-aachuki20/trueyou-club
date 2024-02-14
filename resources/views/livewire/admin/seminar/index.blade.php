@@ -27,11 +27,9 @@
                             @endcan
                         </div>
                     </div>
-                    <div class="search-table-data">
+                   
+                    @livewire('admin.seminar.seminar-table')
 
-                        @livewire('admin.seminar.seminar-table')
-
-                    </div>
                     @endif
 
                 </div>

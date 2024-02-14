@@ -7,21 +7,19 @@
 
                     @if($formMode)
 
-                    @include('livewire.admin.contact.form')
+                        @include('livewire.admin.contact.form')
 
                     @elseif($viewMode)
 
-                    @livewire('admin.contact.show', ['contact_id' => $contact_id])
+                        @livewire('admin.contact.show', ['contact_id' => $contact_id])
 
                     @else
-                    <div wire:loading wire:target="create" class="loader"></div>
-                    <div wire:loading wire:target="exportToExcel" class="loader"></div>
+                    
+                        <div class="card-title top-box-set">
+                            <h4 class="card-title-heading">@lang('cruds.contacts.title') @lang('global.list') </h4>
+                        </div>
 
-                    <div class="card-title top-box-set">
-                        <h4 class="card-title-heading">@lang('cruds.contacts.title') @lang('global.list') </h4>
-                    </div>
-
-                    @livewire('admin.contact.contact-table')
+                        @livewire('admin.contact.contact-table')
 
                     @endif
 

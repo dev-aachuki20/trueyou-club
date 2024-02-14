@@ -164,7 +164,9 @@ if (!function_exists('convertDateTimeFormat')) {
 			return $changeFormatValue->format(config('constants.full_datetime_format'));
 		} else if ($type == 'fulldate') {
 			return $changeFormatValue->format(config('constants.full_date_format'));
-		} else if ($type == 'date_month_year') {
+		}else if ($type == 'fulltime') {
+			return $changeFormatValue->format(config('constants.full_time_format'));
+		}else if ($type == 'date_month_year') {
 			return $changeFormatValue->format(config('constants.date_month_year'));
 		}
 		return $changeFormatValue;

@@ -261,7 +261,7 @@ class Index extends Component
     {
         $this->reset();
         $this->resetValidation();
-
+        $this->initializePlugins();
         $this->dispatchBrowserEvent('seminarCounterEvent');
     }
 

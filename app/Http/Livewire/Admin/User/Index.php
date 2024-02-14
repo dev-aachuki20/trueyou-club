@@ -123,6 +123,7 @@ class Index extends Component
     {
         $this->reset(['formMode','updateMode','viewMode','viewQuoteHistoryMode','user_id','first_name','last_name','phone','email','is_active']);
         $this->resetValidation();
+        $this->initializePlugins();
     }
 
     public function delete($id)

@@ -158,7 +158,7 @@
         </div>
     </div>
 
-    {{-- Start Datatables --}}
+    {{-- end Datatables --}}
 
 
 </div>

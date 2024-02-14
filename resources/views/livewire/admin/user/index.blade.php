@@ -18,15 +18,12 @@
                         @livewire('admin.user.quote-history', ['user_id' => $user_id])
 
                     @else
-                    <div wire:loading wire:target="create" class="loader"></div>
-                    <div class="card-title top-box-set">
-                        <h4 class="card-title-heading">@lang('cruds.user.title') @lang('global.list') </h4>
-                    </div>
-                    <div class="table-responsive search-table-data">
 
+                        <div class="card-title top-box-set">
+                            <h4 class="card-title-heading">@lang('cruds.user.title') @lang('global.list') </h4>
+                        </div>
+                    
                         @livewire('admin.user.user-table')
-
-                    </div>
 
                     @endif
 
