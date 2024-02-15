@@ -31,7 +31,7 @@
                         {{-- Start Custom Export Buttons --}}
                         <div wire:loading wire:target="exportToExcel" class="loader"></div>
                         <div class="export-buttons">
-                            <button type="button" wire:click.prevent="exportToExcel('all','All Quote MIS Report')" class="btn btn-success" title="Export All User MIS Report">
+                            <button type="button" wire:click.prevent="exportToExcel('all','All Quote MIS Report')" class="btn btn-success" title="Export All">
                                 <x-svg-icon icon="excel" />
                             </button>
                         </div>
@@ -120,7 +120,7 @@
                                         <ul class="d-flex">
                                         
                                             <li>
-                                                <a href="javascript:void()" wire:click.prevent="exportToExcel('single','Quote {{ convertDateTimeFormat($report->created_at,'fulldate') }}',{{$report->id}})" title="Export MIS Report">
+                                                <a href="javascript:void()" wire:click.prevent="exportToExcel('single','Quote {{ convertDateTimeFormat($report->created_at,'fulldate') }}',{{$report->id}})" title="Export">
                                                     <x-svg-icon icon="excel" />
                                                 </a>
                                             </li>
