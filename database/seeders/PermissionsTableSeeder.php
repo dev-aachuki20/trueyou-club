@@ -314,6 +314,11 @@ class PermissionsTableSeeder extends Seeder
                 'updated_at' => $updateDate,
             ],
 
+            [
+                'title'      => 'mis_report_access',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
 
         ];
 

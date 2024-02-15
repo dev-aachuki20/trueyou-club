@@ -171,4 +171,19 @@ return [
             'bookings'  => 'B',
         ],
     ],
+
+    'mis_reports' => [
+        'title'=>'MIS Reports',
+        'title_singular'=>'MIS Report',
+        'fields'=>[
+            'date' => 'Quote Date',
+            'user_name' => 'User Name',
+            'quote' => 'Quote',
+            'total_skipped' => 'Total Skipped',
+            'total_completed' => 'Total Completed',
+            'total_leave' => 'Total Leave',
+            'total_user' => 'Total User',
+            'status' => 'Status',
+        ]
+    ]
 ];

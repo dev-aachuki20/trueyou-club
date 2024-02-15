@@ -1,5 +1,7 @@
 <?php
 return [
+    'welcome_back'    => 'Welcome Back!',
+
     'add_success_message'    => 'Added successfully',
     'edit_success_message'   => 'Updated successfully',
     'delete_success_message' => 'Deleted successfully',

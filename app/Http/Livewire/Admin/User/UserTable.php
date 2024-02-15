@@ -81,7 +81,7 @@ class UserTable extends Component
                 ->orWhereRaw("date_format(created_at, '" . config('constants.search_full_date_format') . "') like ?", ['%' . $searchValue . '%']);
             })
             ->whereHas('roles', function ($query) {
-                $query->where('id', 2);
+                $query->where('id', config('constants.role.user'));
             });
         
         if(!is_null($startDate) && !is_null($endDate)){

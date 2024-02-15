@@ -1,12 +1,12 @@
 @extends('layouts.admin')
-@section('title','News')
+@section('title','MIS Report')
 
 @section('styles')
 @stop
 
 @section('content')
 
-    @livewire('admin.news.index')
+    @livewire('admin.mis-report.index')
 
 @stop
 

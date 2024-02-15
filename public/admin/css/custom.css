@@ -2235,6 +2235,13 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
     width: 15px;
 }
 
+.mis-report-btn ul>li a svg{
+    height: auto;
+}
+.mis-report-btn ul>li a svg path{
+    fill: #57B657;
+}
+
 .toggleSwitch-wrap .custom-switch {
     padding: 10px 45px 10px 13px;
     width: fit-content;

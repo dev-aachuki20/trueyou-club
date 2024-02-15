@@ -25,6 +25,11 @@ return [
         'no_image' => 'default/no-image.jpg',
     ],
 
+    'role'=>[
+        'super_admin' => 1,
+        'user' => 2, 
+    ],
+
     'profile_image_size' =>'2048', // 1024 = 1 MB
 
     'owner_email' => env('OWNER_MAIL'),
