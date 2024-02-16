@@ -21,7 +21,6 @@ class BookingsTable extends Component
 
     protected $listeners = [
         'refreshTable' => 'render',
-        'updatePaginationLength',
         'show'
     ];
 
@@ -29,10 +28,9 @@ class BookingsTable extends Component
         $this->seminarId = $seminar_id;
     }
 
-    public function updatePaginationLength($length)
+    public function updatedPaginationLength()
     {
         $this->resetPage();
-        $this->paginationLength = $length;
     }
 
     public function updatedSearchVal()
@@ -79,6 +77,8 @@ class BookingsTable extends Component
     }
 
     public function cancel(){
+        $this->resetPage();
+
         $this->emitUp('cancel');
     }
 }

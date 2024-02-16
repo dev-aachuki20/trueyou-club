@@ -8,11 +8,13 @@ use Gate;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
+
 use Symfony\Component\HttpFoundation\Response;
 
 class Index extends Component
 {
-    use  LivewireAlert, WithFileUploads;
+    use  LivewireAlert, WithFileUploads, WithPagination;
 
     public $search = '', $formMode = false, $updateMode = false, $viewMode = false;
 
@@ -38,6 +40,8 @@ class Index extends Component
 
     public function create()
     {
+        $this->resetPage();
+
         $this->initializePlugins();
         $this->formMode = true;
     }
@@ -89,6 +93,8 @@ class Index extends Component
 
     public function edit($id)
     {
+        $this->resetPage();
+
         $this->initializePlugins();
         $this->formMode = true;
         $this->updateMode = true;
@@ -175,6 +181,8 @@ class Index extends Component
 
     public function show($id)
     {
+        $this->resetPage();
+
         $this->page_id = $id;
         $this->formMode = false;
         $this->viewMode = true;
@@ -187,6 +195,8 @@ class Index extends Component
 
     public function cancel()
     {
+        $this->resetPage();
+
         $this->reset();
         $this->resetValidation();
     }

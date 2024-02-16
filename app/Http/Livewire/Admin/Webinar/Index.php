@@ -9,6 +9,7 @@ use Livewire\Component;
 use App\Models\Webinar;
 use App\Notifications\WebinarCreated;
 use Illuminate\Support\Str;
+use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
@@ -17,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Index extends Component
 {
-    use  LivewireAlert, WithFileUploads;
+    use  LivewireAlert, WithFileUploads, WithPagination;
 
     protected $layout = null;
 
@@ -59,6 +60,7 @@ class Index extends Component
 
     public function create()
     {
+        $this->resetPage();
         $this->initializePlugins();
         $this->formMode = true;
     }
@@ -122,7 +124,7 @@ class Index extends Component
 
     public function edit($id)
     {
-
+        $this->resetPage();
         $this->formMode = true;
         $this->updateMode = true;
 
@@ -214,6 +216,7 @@ class Index extends Component
     }
 
     public function show($id){
+        $this->resetPage();
         $this->webinar_id = $id;
         $this->formMode = false;
         $this->viewMode = true;
@@ -230,6 +233,7 @@ class Index extends Component
     }
 
     public function cancel(){
+        $this->resetPage();
         $this->reset();
         $this->resetValidation();
 

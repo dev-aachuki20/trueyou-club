@@ -120,7 +120,7 @@
             </div>
 
             @if($seminarBookings->count() > 0)
-                {{-- {{ $seminarBookings->links('vendor.pagination.custom-pagination') }} --}}
+                {{ $seminarBookings->links('vendor.pagination.custom-pagination') }}
             @endif
         
         </div>

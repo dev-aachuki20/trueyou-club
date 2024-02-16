@@ -22,7 +22,9 @@ class HomeController extends Controller
             $todayQuote = Quote::whereDate('created_at', $today)->first();
 
             // Start: Task Tracking
-                $userQuoteCount = $user->quotes()->withTrashed()->count();
+                // $userQuoteCount = $user->quotes()->withTrashed()->count();
+                $userQuoteCount = $user->quotes()->count();
+
                 if($userQuoteCount >= 63){ // 63 days/tasks = 9 weeks
                     $userQuoteCount = $userQuoteCount%63;
                 }
@@ -34,7 +36,9 @@ class HomeController extends Controller
                 // $daysData = [];
                 if($remainingValue > 0){
                     // get within last 7 days Task details
-                    $uqdata = $user->quotes()->withPivot('status', 'created_at')->orderBy('created_at', 'desc')->limit($remainingValue)->withTrashed()->get()->pluck('pivot');
+                    $uqdata = $user->quotes()->withPivot('status', 'created_at')->orderBy('created_at', 'desc')->limit($remainingValue)
+                    // ->withTrashed()
+                    ->get()->pluck('pivot');
                     foreach($uqdata as $key => $pivotData){
                         $daysData[($remainingValue-$key)] = $pivotData->status == "completed" ? true : false;
                     }
@@ -115,7 +119,8 @@ class HomeController extends Controller
                     if(!$user->is_active){
                         $user->quotes()->attach($todayQuote, ['created_at' => now(), 'status' => 'completed']);
     
-                        $quoteTasksCount = $user->quotes()->withTrashed()->count();
+                        // $quoteTasksCount = $user->quotes()->withTrashed()->count();
+                        $quoteTasksCount = $user->quotes()->count();
                         $countForStar = config('constants.user_star_no_with_task_count');
 
                         if(!$user->vip_at){

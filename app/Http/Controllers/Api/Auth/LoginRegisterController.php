@@ -83,6 +83,7 @@ class LoginRegisterController extends Controller
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
+                // 'error_details' => $e->getMessage().'->'.$e->getLine(),
             ];
             return response()->json($responseData, 500);
         }

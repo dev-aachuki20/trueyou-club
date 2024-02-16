@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\Contact;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Mail;
 
 class Index extends Component
 {
-    use  LivewireAlert, WithFileUploads;
+    use  LivewireAlert, WithFileUploads, WithPagination;
 
     public $search = '', $formMode = false, $updateMode = false, $viewMode = false;
 
@@ -40,7 +41,9 @@ class Index extends Component
     }
 
     public function show($id)
-    {
+    {        
+        $this->resetPage();
+
         $this->contact_id = $id;
         $this->formMode = false;
         $this->viewMode = true;
@@ -53,6 +56,7 @@ class Index extends Component
 
     public function cancel()
     {
+        $this->resetPage();
         $this->reset();
         $this->resetValidation();
         $this->initializePlugins();

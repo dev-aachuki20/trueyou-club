@@ -36,12 +36,16 @@ class Index extends Component
 
     public function create()
     {
+        $this->resetPage();
+
         $this->initializePlugins();
         $this->formMode = true;
     }
 
     public function edit($id)
     {
+        $this->resetPage();
+
         $this->initializePlugins();
         $this->formMode = true;
         $this->updateMode = true;
@@ -101,6 +105,8 @@ class Index extends Component
 
     public function show($id)
     {
+        $this->resetPage();
+
         $this->user_id = $id;
         $this->formMode = false;
         $this->viewMode = true;
@@ -121,6 +127,8 @@ class Index extends Component
 
     public function cancel()
     {
+        $this->resetPage();
+
         $this->reset(['formMode','updateMode','viewMode','viewQuoteHistoryMode','user_id','first_name','last_name','phone','email','is_active']);
         $this->resetValidation();
         $this->initializePlugins();

@@ -32,7 +32,7 @@
                         {{ convertDateTimeFormat($quote->created_at,'fulldate') }}
                     </span>
                     <div class="update-webinar">
-                        <ul class="d-flex">
+                        {{-- <ul class="d-flex">
                             @can('quote_delete')
                             <li>
                                 <a href="javascript:void()" wire:click.prevent="$emitUp('delete', {{$quote->id}})" title="Delete">
@@ -44,7 +44,7 @@
                                 </a>
                             </li>
                             @endcan
-                        </ul>
+                        </ul> --}}
                     </div>
                 </div>
             </li>

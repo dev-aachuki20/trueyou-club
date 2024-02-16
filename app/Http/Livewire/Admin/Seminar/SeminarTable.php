@@ -104,6 +104,8 @@ class SeminarTable extends Component
     }
 
     public function submitFilterForm(){
+        $this->resetPage();
+
         $rules = [
             'filter_date_range' => 'required',
         ];
@@ -119,6 +121,8 @@ class SeminarTable extends Component
     public function restFilterForm(){
         $this->reset(['filter_date_range','filterStartDate','filterEndDate']);
         $this->resetValidation();
+
+        $this->resetPage();
         $this->initializePlugins();
     }
 

@@ -24,7 +24,7 @@
                     <div class="webinar-item">
                         <div class="webinar-item-inner">
                             <div class="webinar-img">
-                                <img class="img-fluid" src="{{ $bookingDetail->seminar->image_url }}" alt="{{ $bookingDetail->bookingable_details ? ucwords($bookingDetail->bookingable_details['title']) : null }}">
+                                <img class="img-fluid" src="{{ $bookingDetail->seminar->image_url ? $bookingDetail->seminar->image_url : asset(config('constants.default.no_image')) }}" alt="{{ $bookingDetail->bookingable_details ? ucwords($bookingDetail->bookingable_details['title']) : null }}">
                             </div>
                             <div class="webinar-content">
                             <h3>
@@ -78,7 +78,7 @@
                             </div>
                             <div>:</div>
                             <div class="total-amount">
-                                ${{ $bookingDetail->bookingable_details ? $bookingDetail->bookingable_details['ticket_price'] : 0.00}}
+                                ${{ $bookingDetail->bookingable_details ? number_format($bookingDetail->bookingable_details['ticket_price'],2) : 0.00}}
                             </div>
                         </div>
                     </div>

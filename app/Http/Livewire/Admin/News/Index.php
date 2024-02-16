@@ -7,13 +7,14 @@ use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\Post;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Symfony\Component\HttpFoundation\Response;
 
 class Index extends Component
 {
-    use  LivewireAlert, WithFileUploads;
+    use  LivewireAlert, WithFileUploads, WithPagination;
 
     public $search = '', $formMode = false, $updateMode = false, $viewMode = false;
 
@@ -46,6 +47,7 @@ class Index extends Component
 
     public function create()
     {
+        $this->resetPage();
         $this->initializePlugins();
         $this->formMode = true;
     }
@@ -95,6 +97,7 @@ class Index extends Component
 
     public function edit($id)
     {
+        $this->resetPage();
         $this->initializePlugins();
         $this->formMode = true;
         $this->updateMode = true;
@@ -175,6 +178,7 @@ class Index extends Component
         $this->news_id = $id;
         $this->formMode = false;
         $this->viewMode = true;
+        $this->resetPage();
     }
 
     public function initializePlugins()
@@ -185,6 +189,7 @@ class Index extends Component
     public function cancel()
     {
         $this->reset();
+        $this->resetPage();
         $this->resetValidation();
     }
 

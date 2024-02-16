@@ -53,33 +53,6 @@ class WebinarTable extends Component
     {
         $statusSearch = null;
         $searchValue = $this->search;
-        // if (Str::contains('active', strtolower($searchValue))) {
-        //     $statusSearch = 1;
-        // } else if (Str::contains('inactive', strtolower($searchValue))) {
-        //     $statusSearch = 0;
-        // }
-
-      
-        // $allWebinar = Webinar::query()
-        // ->select('*')->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
-        // ->where(function ($query) use ($searchValue, $statusSearch) {
-
-        //     $query->where('title', 'like', '%' . $searchValue . '%')
-        //         ->orWhereRaw("DATE_FORMAT(start_date,  '" . config('constants.search_full_date_format') . "') = ?", [date(config('constants.full_date_format'), strtotime($searchValue))]);
-
-        //     // Check for month name (e.g., January)
-        //     $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
-
-        //     // Check for day and month (e.g., 13 January)
-        //     $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%e %M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
-        // })
-
-        // ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
-        // ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
-
-        //     // ->orderBy($this->sortColumnName, $this->sortDirection)
-        //     ->paginate($this->paginationLength);
-
 
         $allWebinar = Webinar::query()
         ->select('*')
