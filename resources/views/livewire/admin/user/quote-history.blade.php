@@ -43,7 +43,7 @@
                         <div class="progress-bar" style="width: {{$quotePercentage}}%">{{ round($quotePercentage) }}%</div>
                     </div>
                     <span>
-                        {{ucwords($quote->users[0]->pivot->status)}}
+                        {{ucwords($quote->users()->where('id',$userId)->first()->pivot->status)}}
                     </span>
                     <span class="quotes-date">
                         <svg width="14" height="15" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">

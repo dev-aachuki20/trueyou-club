@@ -44,8 +44,6 @@ class Index extends Component
 
     public function edit($id)
     {
-        $this->resetPage();
-
         $this->initializePlugins();
         $this->formMode = true;
         $this->updateMode = true;
@@ -105,8 +103,6 @@ class Index extends Component
 
     public function show($id)
     {
-        $this->resetPage();
-
         $this->user_id = $id;
         $this->formMode = false;
         $this->viewMode = true;
@@ -117,7 +113,6 @@ class Index extends Component
         $this->formMode = false;
         $this->viewMode = false;
         $this->viewQuoteHistoryMode = true;
-        $this->resetPage();
     }
 
     public function initializePlugins()
@@ -132,6 +127,9 @@ class Index extends Component
         $this->reset(['formMode','updateMode','viewMode','viewQuoteHistoryMode','user_id','first_name','last_name','phone','email','is_active']);
         $this->resetValidation();
         $this->initializePlugins();
+
+        // dd($this->page);
+        
     }
 
     public function delete($id)

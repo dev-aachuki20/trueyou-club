@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use DB;
 use App\Models\Quote;
+use App\Models\User;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -97,13 +98,20 @@ class AllQuoteExcelReportExport implements FromQuery, WithHeadings,WithMapping, 
     {
        
         $userIds = DB::table('quote_user')->where('quote_id',$row->id)->pluck('user_id')->toArray();
-        $total_leave_users = DB::table('users')->whereNotIn('id',$userIds)->where('deleted_at',null)->count();
-        $total_users = DB::table('users')->where('deleted_at',null)->count();
+        $total_leave_users = User::whereNotIn('id',$userIds)->whereHas('roles', function ($query) {
+                $query->where('id', config('constants.role.user'));
+            })->count();
+        $total_users = User::whereHas('roles', function ($query) {
+                $query->where('id', config('constants.role.user'));
+            })->count();
+
+        $total_user_completed = DB::table('quote_user')->where('quote_id',$row->id)->where('status','completed')->count();
+        $total_user_skipped = DB::table('quote_user')->where('quote_id',$row->id)->where('status','skipped')->count();
   
         return [
             convertDateTimeFormat($row->created_at,'fulldate'),
-            !empty($row->total_completed_users) ? $row->total_completed_users : '0',
-            !empty($row->total_skipped_users) ? $row->total_skipped_users : '0',
+            !empty($total_user_completed) ? $total_user_completed : '0',
+            !empty($total_user_skipped) ? $total_user_skipped : '0',
             !empty($total_leave_users) ? $total_leave_users : '0',
             !empty($total_users) ? $total_users : '0',
         ];

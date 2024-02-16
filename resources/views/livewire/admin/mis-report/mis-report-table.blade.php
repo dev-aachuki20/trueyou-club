@@ -100,8 +100,16 @@
 
                             @php
                                 $userIds = \DB::table('quote_user')->where('quote_id',$report->id)->pluck('user_id')->toArray();
-                                $total_leave_users = \DB::table('users')->whereNotIn('id',$userIds)->where('deleted_at',null)->count();
-                                $total_users = \DB::table('users')->where('deleted_at',null)->count();
+                                $total_leave_users = \App\Models\User::whereNotIn('id',$userIds)->whereHas('roles', function ($query) {
+                                        $query->where('id', config('constants.role.user'));
+                                    })->count();
+                                $total_users = \App\Models\User::whereHas('roles', function ($query) {
+                                        $query->where('id', config('constants.role.user'));
+                                    })->count();
+
+                                $total_user_completed = \DB::table('quote_user')->where('quote_id',$report->id)->where('status','completed')->count();
+                                $total_user_skipped = \DB::table('quote_user')->where('quote_id',$report->id)->where('status','skipped')->count();
+
                             @endphp
 
                             <tr>
@@ -110,8 +118,8 @@
                                 {{-- <td>{!! nl2br($report->message) !!}</td> --}}
                                 <td>{{ convertDateTimeFormat($report->created_at,'fulldate') }}</td>
 
-                                <td>{{ $report->total_completed_users }}</td>
-                                <td>{{ $report->total_skipped_users }}</td>
+                                <td>{{ $total_user_completed }}</td>
+                                <td>{{ $total_user_skipped }}</td>
                                 <td>{{ $total_leave_users }}</td>
                                 <td>{{ $total_users }}</td>
                                 

@@ -63,7 +63,7 @@ class QuoteHistory extends Component
 
         $userName = User::where('id',$user_id)->value('name');
 
-        $quotesHistory = Quote::where(function ($query) use ($searchValue) {
+        $quotesHistory = Quote::query()->with('users')->where(function ($query) use ($searchValue) {
             $query->where('message', 'like', '%' . $searchValue . '%')
                 ->orWhereHas('users', function ($subquery) use ($searchValue) {
                     $subquery->where('quote_user.status', 'like', '%' . $searchValue . '%')
