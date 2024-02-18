@@ -23,8 +23,11 @@ class ContactTable extends Component
 
     protected $listeners = [
         'refreshTable' => 'render',
-        'updatePaginationLength',
     ];
+
+    public function mount(){
+        $this->search = session('datatable_search', null);
+    }
 
     public function updatedPaginationLength()
     {
@@ -34,7 +37,9 @@ class ContactTable extends Component
     public function updatedSearch()
     {
         $this->resetPage();
+        session(['datatable_search' => $this->search]);
     }
+
 
     public function sortBy($columnName)
     {
@@ -54,9 +59,9 @@ class ContactTable extends Component
     {
         return $this->sortDirection === 'asc' ? 'desc' : 'asc';
     }
+
     public function render()
     {
-       
         $searchValue = $this->search;
       
         $startDate = $this->filterStartDate ? $this->filterStartDate->startOfDay() : null;
@@ -117,5 +122,6 @@ class ContactTable extends Component
     {
         $this->dispatchBrowserEvent('loadPlugins');
     }
+
 
 }

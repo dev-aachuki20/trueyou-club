@@ -34,8 +34,6 @@ class HealthTable extends Component
 
     public function sortBy($columnName)
     {
-        $this->resetPage();
-
         if ($this->sortColumnName === $columnName) {
             $this->sortDirection = $this->swapSortDirection();
         } else {

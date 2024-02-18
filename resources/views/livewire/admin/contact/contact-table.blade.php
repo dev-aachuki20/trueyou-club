@@ -222,5 +222,11 @@
         }, cb);
 
     }
+
+    window.addEventListener('load', function () {
+        Livewire.emit('pageReload');
+        // console.log('destroy session');
+    });
+
 </script>
 @endpush

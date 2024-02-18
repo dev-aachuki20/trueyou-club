@@ -15,6 +15,10 @@ use App\Notifications\SeminarCreated;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PurchasedSeminarTicketMail;
+use Illuminate\Support\Str;
+
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SeminarDatatableExport; 
 
 class Index extends Component
 {
@@ -22,7 +26,14 @@ class Index extends Component
 
     // protected $layout = null;
 
-    public $search = '', $formMode = false, $updateMode = false, $viewMode = false, $bookingMode=false;
+    public $search = null;
+
+    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Title, Venue, Date";
+
+    public $filter_date_range, $filterStartDate, $filterEndDate;
+
+
+    public $formMode = false, $updateMode = false, $viewMode = false, $bookingMode=false;
 
     public $seminar_id = null, $title, $total_ticket, $ticket_price=null, $start_date = null, $start_time = null,  $end_time = null,  $venue, $image, $originalImage, $status = 1, $full_start_time=null,  $full_end_time = null;
 
@@ -37,6 +48,109 @@ class Index extends Component
         abort_if(Gate::denies('seminar_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
     }
 
+    
+    public function updatedPaginationLength()
+    {
+        $this->resetPage();
+    }
+
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function sortBy($columnName)
+    {
+        if ($this->sortColumnName === $columnName) {
+            $this->sortDirection = $this->swapSortDirection();
+        } else {
+            $this->sortDirection = 'asc';
+        }
+
+        $this->sortColumnName = $columnName;
+    }
+
+    public function swapSortDirection()
+    {
+        return $this->sortDirection === 'asc' ? 'desc' : 'asc';
+    }
+
+    public function render()
+    {
+        $statusSearch = null;
+        $searchValue = $this->search;
+        // if (Str::contains('active', strtolower($searchValue))) {
+        //     $statusSearch = 1;
+        // } else if (Str::contains('inactive', strtolower($searchValue))) {
+        //     $statusSearch = 0;
+        // }
+
+        $startDate = $this->filterStartDate ? $this->filterStartDate->startOfDay() : null;
+        $endDate = $this->filterEndDate ? $this->filterEndDate->endOfDay() : null;
+        
+        $allSeminar = Seminar::query()->select('*')
+        ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+
+        ->where(function ($query) use ($searchValue, $statusSearch) {
+            $query->where('title', 'like', '%' . $searchValue . '%')
+                ->orWhere('venue', 'like', '%' . $searchValue . '%')
+                ->orWhereRaw("DATE_FORMAT(start_date,  '" . config('constants.search_full_date_format') . "') = ?", [date(config('constants.full_date_format'), strtotime($searchValue))]);
+
+            // Check for month name (e.g., January)
+            $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
+
+            // Check for day and month (e.g., 13 January)
+            $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%e %M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
+        });
+
+        if(!is_null($startDate) && !is_null($endDate)){
+            $allSeminar = $allSeminar->whereBetween('start_date', [$startDate, $endDate]);
+        }
+
+        $allSeminar = $allSeminar->orderByRaw('
+            CASE 
+                WHEN CONCAT(start_date, " ", end_time) <= NOW() AND CONCAT(start_date, " ", end_time) >= NOW() THEN 0
+                WHEN CONCAT(start_date, " ", end_time) > NOW() THEN 1
+                ELSE 2
+            END ASC,
+            time_diff_seconds > 0 ASC, ABS(time_diff_seconds) ASC
+        ');
+
+        // ->orderBy($this->sortColumnName, $this->sortDirection)
+        $allSeminar = $allSeminar->paginate($this->paginationLength);
+
+        return view('livewire.admin.seminar.index',compact('allSeminar'));
+    }
+
+    public function submitFilterForm(){
+        $this->resetPage();
+
+        $rules = [
+            'filter_date_range' => 'required',
+        ];
+        $this->validate($rules,[
+            'filter_date_range'=>'Please select date'
+        ]);
+
+        $date_range = explode(' - ', $this->filter_date_range);
+        $this->filterStartDate = Carbon::parse(date('Y-m-d',strtotime(str_replace(' ','-',$date_range[0]))));
+        $this->filterEndDate   = Carbon::parse(date('Y-m-d',strtotime(str_replace(' ','-',$date_range[1]))));
+    }
+
+    public function restFilterForm(){
+        $this->reset(['filter_date_range','filterStartDate','filterEndDate']);
+        $this->resetValidation();
+
+        $this->resetPage();
+        $this->initializePlugins();
+    }
+
+    public function exportToExcel()
+    {
+        return Excel::download(new SeminarDatatableExport($this->filterStartDate,$this->filterEndDate,$this->search,$this->sortColumnName,$this->sortDirection), 'seminar-list.xlsx');
+    }
+
     public function updatedStartDate()
     {
         $this->start_date = Carbon::parse($this->start_date)->format('d-m-Y');
@@ -49,7 +163,6 @@ class Index extends Component
         }
     }
 
-
     public function updatedEndTime()
     {
         if($this->end_time){
@@ -57,14 +170,9 @@ class Index extends Component
         }
     }
 
-    public function render()
-    {
-        return view('livewire.admin.seminar.index');
-    }
 
     public function create()
     {
-        $this->resetPage();
         $this->initializePlugins();
         $this->formMode = true;
     }
@@ -121,9 +229,7 @@ class Index extends Component
         $users = User::whereHas('roles', function($q){ $q->where('title', 'User');})->get();
         Notification::send($users, new SeminarCreated($seminar));
 
-        $this->formMode = false;
-
-        $this->reset();
+        $this->resetAllFields();
 
         $this->flash('success', trans('messages.add_success_message'));
 
@@ -132,11 +238,8 @@ class Index extends Component
 
     public function edit($id)
     {
-        $this->resetPage();
-        
         $this->formMode = true;
         $this->updateMode = true;
-
 
         $seminar = Seminar::findOrFail($id);
         $this->seminar_id      =  $seminar->id;
@@ -224,20 +327,15 @@ class Index extends Component
 
         $seminar->update($validatedData);
 
-        $this->formMode = false;
-        $this->updateMode = false;
+        $this->alert('success', trans('messages.edit_success_message'));
 
-        $this->flash('success', trans('messages.edit_success_message'));
+        $this->cancel();
 
-        $this->reset();
-
-        return redirect()->route('admin.seminars');
+        // return redirect()->route('admin.seminars');
     }
 
     public function show($id)
     {
-        $this->resetPage();
-
         $this->seminar_id = $id;
         $this->formMode = false;
         $this->viewMode = true;
@@ -245,8 +343,6 @@ class Index extends Component
 
     public function viewBookings($id)
     {
-        $this->resetPage();
-
         $this->seminar_id = $id;
         $this->formMode = false;
         $this->viewMode = false;
@@ -266,12 +362,15 @@ class Index extends Component
 
     public function cancel()
     {
-        $this->resetPage();
-
-        $this->reset();
+        $this->resetAllFields();
         $this->resetValidation();
         $this->initializePlugins();
         $this->dispatchBrowserEvent('seminarCounterEvent');
+    }
+
+    public function resetAllFields(){
+        
+        $this->reset(['formMode','updateMode','viewMode','bookingMode','title','total_ticket','ticket_price','start_date','start_time','end_time','venue','image','originalImage','removeImage','full_start_time','full_end_time','seminar_id']);
     }
 
     public function delete($id)
@@ -295,11 +394,14 @@ class Index extends Component
         $deleteId = $event['data']['inputAttributes']['deleteId'];
         $model    = Seminar::find($deleteId);
         if(!$model){
-            $this->emit('refreshTable'); 
+            // $this->emit('refreshTable'); 
             $this->alert('error', trans('messages.error_message'));   
         }else{
+            
+            $this->resetPage();
+
             $model->delete();
-            $this->emit('refreshTable');    
+            // $this->emit('refreshTable');    
             $this->alert('success', trans('messages.delete_success_message'));
         }     
     }
@@ -326,7 +428,7 @@ class Index extends Component
         $model = Seminar::find($seminarId);
         $model->update(['status' => !$model->status]);
 
-        $this->emit('refreshTable');
+        // $this->emit('refreshTable');
 
         $this->alert('success', trans('messages.change_status_success_message'));
     }

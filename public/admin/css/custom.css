@@ -2727,6 +2727,10 @@ input::-ms-clear {
 display: none;
 }
 
+.swal2-popup.swal2-toast .swal2-close{
+  display: block !important;
+}
+
 @media(max-width:640px){
 
     .overview-box-wrapper .col-12.col-md-6.col-lg-4.col-xl-3 {

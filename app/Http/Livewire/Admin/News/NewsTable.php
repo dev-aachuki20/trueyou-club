@@ -16,7 +16,6 @@ class NewsTable extends Component
     use WithPagination;
 
     public $search = null;
-    public $isButtonDisabled = false;
 
     public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Title, Publish Date";
     public $type = 'news';
@@ -37,8 +36,6 @@ class NewsTable extends Component
 
     public function sortBy($columnName)
     {
-        $this->resetPage();
-
         if ($this->sortColumnName === $columnName) {
             $this->sortDirection = $this->swapSortDirection();
         } else {

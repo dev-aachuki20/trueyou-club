@@ -23,7 +23,6 @@ class UserTable extends Component
 
     protected $listeners = [
         'refreshTable' => 'render',
-        'updatePaginationLength',
     ];
 
     public function updatedPaginationLength()

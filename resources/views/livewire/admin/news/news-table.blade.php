@@ -83,6 +83,6 @@
             {{ $allNews->links('vendor.pagination.custom-pagination') }}
         </div>
 
-</div>
+    </div>
 
 </div>

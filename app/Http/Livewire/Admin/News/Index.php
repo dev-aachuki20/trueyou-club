@@ -12,18 +12,21 @@ use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Symfony\Component\HttpFoundation\Response;
 
+use Illuminate\Support\Str;
+
 class Index extends Component
 {
     use  LivewireAlert, WithFileUploads, WithPagination;
 
-    public $search = '', $formMode = false, $updateMode = false, $viewMode = false;
+    public $search = null, $formMode = false, $updateMode = false, $viewMode = false;
+
+    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Title, Publish Date";
 
     public $news_id = null, $title,  $publish_date = null,  $content, $image, $originalImage, $status = 1;
 
     public $removeImage = false;
     public $type = 'news';
-    public $isButtonDisabled = false;
-
+    
     protected $listeners = [
         'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm'
     ];
@@ -34,20 +37,75 @@ class Index extends Component
         $this->publish_date = Carbon::now()->format('d-m-Y');
     }
 
+    public function updatedPaginationLength()
+    {
+        $this->resetPage();
+    }
+
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function sortBy($columnName)
+    {
+        if ($this->sortColumnName === $columnName) {
+            $this->sortDirection = $this->swapSortDirection();
+        } else {
+            $this->sortDirection = 'asc';
+        }
+
+        $this->sortColumnName = $columnName;
+    }
+
+    public function swapSortDirection()
+    {
+        return $this->sortDirection === 'asc' ? 'desc' : 'asc';
+    }
+
+    public function render()
+    {
+        $statusSearch = null;
+        $searchValue = $this->search;
+        if (Str::contains('active', strtolower($searchValue))) {
+            $statusSearch = 1;
+        } else if (Str::contains('inactive', strtolower($searchValue))) {
+            $statusSearch = 0;
+        }
+
+        $currentDate = now()->format('Y-m-d');
+
+        $allNews = Post::query()->where('type', $this->type)->where(function ($query) use ($searchValue, $statusSearch) {
+            $query->where('title', 'like', '%' . $searchValue . '%')
+                // ->orWhere('status', $statusSearch)
+                ->orWhereRaw("date_format(publish_date, '" . config('constants.search_full_date_format') . "') like ?", ['%' . $searchValue . '%']);
+        })
+            
+            ->orderByRaw('CASE 
+                    WHEN publish_date >= "'.$currentDate.'" THEN 0
+                    WHEN publish_date <= "'.$currentDate.'" THEN 1
+                    ELSE 3
+                END,
+                publish_date'
+            )
+
+            // ->orderBy('publish_date', $this->sortDirection)
+
+            // ->orderBy($this->sortColumnName, $this->sortDirection)
+            ->paginate($this->paginationLength);
+
+
+        return view('livewire.admin.news.index',compact('allNews'));
+    }
+
     public function updatedPublishDate()
     {
         $this->publish_date = Carbon::parse($this->publish_date)->format('d-m-Y');
     }
 
-    public function render()
-    {
-        return view('livewire.admin.news.index');
-    }
-
-
     public function create()
     {
-        $this->resetPage();
         $this->initializePlugins();
         $this->formMode = true;
     }
@@ -79,11 +137,9 @@ class Index extends Component
                 uploadImage($news, $this->image, 'news/image/', "news", 'original', 'save', null);
             }
 
-            $this->formMode = false;
-
             DB::commit();
 
-            $this->reset(['title', 'publish_date', 'content', 'status', 'image', 'type']);
+            $this->resetAllFields();
 
             $this->flash('success', trans('messages.add_success_message'));
 
@@ -97,7 +153,6 @@ class Index extends Component
 
     public function edit($id)
     {
-        $this->resetPage();
         $this->initializePlugins();
         $this->formMode = true;
         $this->updateMode = true;
@@ -156,16 +211,15 @@ class Index extends Component
 
             $news->update($validatedData);
 
-            $this->formMode = false;
-            $this->updateMode = false;
-
             DB::commit();
 
-            $this->flash('success', trans('messages.edit_success_message'));
+            // $this->flash('success', trans('messages.edit_success_message'));
 
-            $this->reset(['title', 'publish_date', 'content', 'status', 'image', 'type']);
+            $this->alert('success', trans('messages.edit_success_message'));
 
-            return redirect()->route('admin.news');
+            $this->cancel();
+
+            // return redirect()->route('admin.news');
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -178,7 +232,6 @@ class Index extends Component
         $this->news_id = $id;
         $this->formMode = false;
         $this->viewMode = true;
-        $this->resetPage();
     }
 
     public function initializePlugins()
@@ -188,9 +241,12 @@ class Index extends Component
 
     public function cancel()
     {
-        $this->reset();
-        $this->resetPage();
+        $this->resetAllFields();
         $this->resetValidation();
+    }
+
+    public function resetAllFields(){
+        $this->reset(['formMode','updateMode','viewMode','news_id','title','publish_date','content','image','originalImage','status','removeImage']);
     }
 
     public function delete($id)
@@ -207,8 +263,7 @@ class Index extends Component
             },
             'inputAttributes' => ['deleteId' => $id],
         ]);
-        // After confirmation, disable the button
-        $this->isButtonDisabled = true;
+        
     }
 
     public function deleteConfirm($event)
@@ -217,11 +272,14 @@ class Index extends Component
         $model    = Post::find($deleteId);
         
         if(!$model){
-            $this->emit('refreshTable'); 
+            // $this->emit('refreshTable'); 
             $this->alert('error', trans('messages.error_message'));   
         }else{
             $model->delete();
-            $this->emit('refreshTable');    
+
+            $this->resetPage();
+            
+            // $this->emit('refreshTable');    
             $this->alert('success', trans('messages.delete_success_message'));
         }          
              
@@ -249,7 +307,7 @@ class Index extends Component
         $model = Post::find($newsId);
         $model->update(['status' => !$model->status]);
 
-        $this->emit('refreshTable');
+        // $this->emit('refreshTable');
 
         $this->alert('success', trans('messages.change_status_success_message'));
     }

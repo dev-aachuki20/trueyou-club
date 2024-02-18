@@ -22,7 +22,9 @@ class Index extends Component
 
     protected $layout = null;
 
-    public $search = '', $formMode = false , $updateMode = false, $viewMode = false;
+    public $search = null, $sortColumnName = 'created_at', $sortDirection = 'asc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Title, Date";
+
+    public $formMode = false , $updateMode = false, $viewMode = false;
 
     public $webinar_id=null, $title,  $start_date = null, $start_time=null,  $end_time = null, $meeting_link, $image, $originalImage, $status=1,$full_start_time=null,  $full_end_time = null;
 
@@ -34,6 +36,68 @@ class Index extends Component
 
     public function mount(){
         abort_if(Gate::denies('webinar_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+    }
+
+    public function updatedPaginationLength()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function sortBy($columnName)
+    {
+        $this->resetPage();
+
+        if ($this->sortColumnName === $columnName) {
+            $this->sortDirection = $this->swapSortDirection();
+        } else {
+            $this->sortDirection = 'asc';
+        }
+
+        $this->sortColumnName = $columnName;
+    }
+
+    public function swapSortDirection()
+    {
+        return $this->sortDirection === 'asc' ? 'desc' : 'asc';
+    }
+
+    
+    public function render()
+    {
+        $statusSearch = null;
+        $searchValue = $this->search;
+
+        $allWebinar = Webinar::query()
+        ->select('*')
+        ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
+        ->where(function ($query) use ($searchValue, $statusSearch) {
+
+            $query->where('title', 'like', '%' . $searchValue . '%')
+                ->orWhereRaw("DATE_FORMAT(start_date,  '" . config('constants.search_full_date_format') . "') = ?", [date(config('constants.full_date_format'), strtotime($searchValue))]);
+
+            // Check for month name (e.g., January)
+            $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
+
+            // Check for day and month (e.g., 13 January)
+            $query->orWhereRaw('LOWER(DATE_FORMAT(start_date, "%e %M")) LIKE ?', ['%' . strtolower($searchValue) . '%']);
+        })
+        ->orderByRaw('
+            CASE 
+                WHEN CONCAT(start_date, " ", end_time) <= NOW() AND CONCAT(start_date, " ", end_time) >= NOW() THEN 0
+                WHEN CONCAT(start_date, " ", end_time) > NOW() THEN 1
+                ELSE 2
+            END ASC,
+            time_diff_seconds > 0 ASC, ABS(time_diff_seconds) ASC
+        ')
+        //->orderBy($this->sortColumnName, $this->sortDirection)
+        ->paginate($this->paginationLength);
+
+        return view('livewire.admin.webinar.index',compact('allWebinar'));
     }
 
     public function updatedStartDate(){
@@ -53,14 +117,9 @@ class Index extends Component
         }
     }
 
-    public function render()
-    {
-        return view('livewire.admin.webinar.index');
-    }
 
     public function create()
     {
-        $this->resetPage();
         $this->initializePlugins();
         $this->formMode = true;
     }
@@ -113,9 +172,7 @@ class Index extends Component
             uploadImage($webinar, $this->image, 'webinar/image/',"webinar", 'original', 'save', null);
         }
 
-        $this->formMode = false;
-
-        $this->reset();
+        $this->resetAllFields();
 
         $this->flash('success',trans('messages.add_success_message'));
 
@@ -124,7 +181,6 @@ class Index extends Component
 
     public function edit($id)
     {
-        $this->resetPage();
         $this->formMode = true;
         $this->updateMode = true;
 
@@ -205,18 +261,14 @@ class Index extends Component
 
         $webinar->update($validatedData);
 
-        $this->formMode = false;
-        $this->updateMode = false;
+        $this->alert('success',trans('messages.edit_success_message'));
 
-        $this->flash('success',trans('messages.edit_success_message'));
+        $this->cancel();
 
-        $this->reset();
-
-        return redirect()->route('admin.webinars');
+        // return redirect()->route('admin.webinars');
     }
 
     public function show($id){
-        $this->resetPage();
         $this->webinar_id = $id;
         $this->formMode = false;
         $this->viewMode = true;
@@ -233,11 +285,14 @@ class Index extends Component
     }
 
     public function cancel(){
-        $this->resetPage();
-        $this->reset();
+        $this->resetAllFields();
         $this->resetValidation();
 
         $this->dispatchBrowserEvent('webinarCounterEvent');
+    }
+
+    public function resetAllFields(){
+        $this->reset(['formMode','updateMode','viewMode','webinar_id','title','start_date','start_time','end_time','meeting_link','image','originalImage','status','full_start_time','full_end_time','removeImage','showJoinBtn']);
     }
 
     public function delete($id)
@@ -260,11 +315,14 @@ class Index extends Component
         $deleteId = $event['data']['inputAttributes']['deleteId'];
         $model    = Webinar::find($deleteId);
         if(!$model){
-            $this->emit('refreshTable'); 
+            // $this->emit('refreshTable'); 
             $this->alert('error', trans('messages.error_message'));   
         }else{
             $model->delete();
-            $this->emit('refreshTable');    
+            
+            $this->resetPage();
+
+            // $this->emit('refreshTable');    
             $this->alert('success', trans('messages.delete_success_message'));
         }     
     }
@@ -290,7 +348,7 @@ class Index extends Component
         $model = Webinar::find($webinarId);
         $model->update(['status' => !$model->status]);
 
-        $this->emit('refreshTable');
+        // $this->emit('refreshTable');
 
         $this->alert('success', trans('messages.change_status_success_message'));
     }
