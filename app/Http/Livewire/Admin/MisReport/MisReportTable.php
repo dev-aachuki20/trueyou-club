@@ -128,7 +128,7 @@ class MisReportTable extends Component
         if($type == 'all'){
             return Excel::download(new AllQuoteExcelReportExport($this->filterStartDate,$this->filterEndDate,$this->search,$this->sortColumnName,$this->sortDirection), $exportFileName.'.xlsx');
         }elseif($type == 'single'){
-            return Excel::download(new QuoteExcelReportExport($quoteId,$this->filterStartDate,$this->filterEndDate,$this->search,$this->sortColumnName,$this->sortDirection), $exportFileName.'.xlsx');
+            return Excel::download(new QuoteExcelReportExport($quoteId), $exportFileName.'.xlsx');
         }
     }
 

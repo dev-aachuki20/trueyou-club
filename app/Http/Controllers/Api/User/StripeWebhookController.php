@@ -99,12 +99,14 @@ class StripeWebhookController extends Controller
             $transaction = Transaction::where('payment_intent_id', $eventDataObject->payment_intent)->where('status','success')->exists();
             if (!$transaction) {
 
+                $userName = $eventDataObject->metadata->user_name ? ucwords($eventDataObject->metadata->user_name) : $customerName;
                 $seminarObj = json_decode($eventDataObject->metadata->seminar);
 
                 // Save data to transactions table
                 Transaction::create([
                     'user_id' => $customer ? $customer->id : null,
-                    'name'  => $customerDetails->name ?? null,
+                    // 'name'  => $customerDetails->name ?? null,
+                    'name'  => $userName ?? null,
                     'email' => $customerDetails->email ?? null,
                     'user_json' => $customerDetails,
                     'ticket_id' => $seminarObj->id,
@@ -126,7 +128,8 @@ class StripeWebhookController extends Controller
                 $seminarBooking = Seminar::find($seminarObj->id);
                 $booking = $seminarBooking->bookings()->create([
                     'user_id' => $customer ? $customer->id : null,
-                    'name'  => $customerDetails->name ?? null,
+                    // 'name'  => $customerDetails->name ?? null,
+                    'name'  => $userName ?? null,
                     'email' => $customerDetails->email ?? null,
                     'user_details' =>  $customerDetails,
                     'bookingable_details'=> json_decode($eventDataObject->metadata->seminar,true),
@@ -136,7 +139,7 @@ class StripeWebhookController extends Controller
 
 
                 $subject = 'Seminar Ticket Purchased';
-                Mail::to($customerEmail)->queue(new PurchasedSeminarTicketMail($subject, $customerName, $customerEmail,$seminarBooking,$bookingNumber));
+                Mail::to($customerEmail)->queue(new PurchasedSeminarTicketMail($subject, $userName, $customerEmail,$seminarBooking,$bookingNumber));
     
                 if($customer){
                     $notification_message = config('constants.seminar_booked_notification_message');
@@ -169,6 +172,8 @@ class StripeWebhookController extends Controller
             $customerName = $eventDataObject->customer_details->name;
             $customerEmail = $eventDataObject->customer_details->email;
 
+            $userName = $eventDataObject->metadata->user_name ? ucwords($eventDataObject->metadata->user_name) : $customerName;
+
             $seminarObj = json_decode($eventDataObject->metadata->seminar);
 
             $transaction = Transaction::where('payment_intent_id', $eventDataObject->payment_intent)->where('status','failed')->exists();
@@ -177,7 +182,8 @@ class StripeWebhookController extends Controller
                 // Save data to transactions table
                 Transaction::create([
                     'user_id' => $customer ? $customer->id : null,
-                    'name'  => $customerDetails->name ?? null,
+                    // 'name'  => $customerDetails->name ?? null,
+                    'name'  => $userName ?? null,
                     'email' => $customerDetails->email ?? null,
                     'user_json' => $customerDetails,
                     'ticket_id' => $seminarObj->id,

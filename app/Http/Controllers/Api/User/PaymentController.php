@@ -31,6 +31,8 @@ class PaymentController extends Controller
         $request->validate($rules);
 
         try {
+            $request->email = strtolower($request->email);
+
             $seminar = Seminar::where('id',$request->seminar)->first();
 
             if($seminar->bookings()->count() ==  $seminar->total_ticket){
@@ -92,6 +94,7 @@ class PaymentController extends Controller
             }
 
             $metadata = [
+                'user_name' => $request->name ?? null,
                 'seminar' => json_encode([
                     'id' => $seminar->id,
                     'title' => ucwords($seminar->title),
@@ -165,7 +168,7 @@ class PaymentController extends Controller
 
         if ($userToken) {
             
-            $bookingDetails = Booking::where('email', $requestEmail)->where('bookingable_id',$userToken->seminar_id)->first();
+            $bookingDetails = Booking::where('email', $requestEmail)->where('bookingable_id',$userToken->seminar_id)->orderBy('id','desc')->first();
             
             $ticketDetails = null;
             if($bookingDetails){
