@@ -27,6 +27,7 @@ class Seminar extends Model
         'end_time',
         'venue',
         'status',
+        'cron_status',
         'created_by',
         'created_at',
         'updated_at',

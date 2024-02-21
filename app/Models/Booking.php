@@ -28,6 +28,8 @@ class Booking extends Model
         'bookingable_details',
         'booking_number',
         'type',
+        'passcode',
+        'status',
         'created_at',
         'updated_at',
     ];

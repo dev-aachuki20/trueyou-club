@@ -17,6 +17,8 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 
 class QuoteExcelReportExport implements  WithHeadings,WithMapping, WithStyles, /*ShouldAutoSize,*/ WithColumnWidths, FromCollection
 {
+    private $rowNumber = 1;
+
     protected  $quoteReport, $quote_id, $quote_message, $quote_date, $total_users, $total_user_completed, $total_user_skipped, $total_leave_users;
 
     public function __construct($quote_id)
@@ -45,8 +47,8 @@ class QuoteExcelReportExport implements  WithHeadings,WithMapping, WithStyles, /
     public function columnWidths(): array
     {
         return [
-            'A' => 16,
-            'B' => 13,
+            'A' => 10,
+            'B' => 16,
             'C' => 11,
             'D' => 10,
         ];
@@ -61,19 +63,19 @@ class QuoteExcelReportExport implements  WithHeadings,WithMapping, WithStyles, /
             ['Date', $this->quote_date],
             [],
             [
+                trans('cruds.mis_reports.fields.total_user'),
                 trans('cruds.mis_reports.fields.total_completed'),
                 trans('cruds.mis_reports.fields.total_skipped'),
                 trans('cruds.mis_reports.fields.total_leave'),
-                trans('cruds.mis_reports.fields.total_user'),
             ],
             [
+                !empty($this->total_users) ? $this->total_users : '0',
                 !empty($this->total_user_completed) ? $this->total_user_completed : '0',
                 !empty($this->total_user_skipped) ? $this->total_user_skipped : '0',
                 !empty($this->total_leave_users) ? $this->total_leave_users : '0',
-                !empty($this->total_users) ? $this->total_users : '0',
             ],
             [],
-            ['User Name', 'Status'],
+            ['Sno.','User Name', 'Status'],
         ];
 
     }
@@ -90,7 +92,7 @@ class QuoteExcelReportExport implements  WithHeadings,WithMapping, WithStyles, /
     public function map($row): array
     {
         return [
-            [ucwords($row->name), ucwords($row->pivot->status)],
+            [$this->rowNumber++, ucwords($row->name), ucwords($row->pivot->status)],
         ];
     }
 
@@ -115,7 +117,7 @@ class QuoteExcelReportExport implements  WithHeadings,WithMapping, WithStyles, /
             ],
         ]);
 
-        $sheet->getStyle('A7:B7')->applyFromArray([
+        $sheet->getStyle('A7:C7')->applyFromArray([
             'font' => [
                 'bold' => true,
             ],

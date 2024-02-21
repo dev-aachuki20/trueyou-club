@@ -39,6 +39,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_active',
         'vip_at',
         'star_no',
+        'booking_id',
         'last_login_at',
         'email_verified_at',
         'phone_verified_at',
