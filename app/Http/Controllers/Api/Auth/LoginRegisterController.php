@@ -30,7 +30,7 @@ class LoginRegisterController extends Controller
             // 'password'                  => 'required|min:8|regex:/^(?!.*\s)(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
             'password'                  => 'required|min:8',
             'password_confirmation'     => 'required|same:password',
-            'passcode'                  => ['nullable'],
+            'passcode'                  => ['required'],
         ],[
             'phone.required'=>'The phone field is required',
             'phone.regex' =>'The phone length must be 7 to 15 digits.',
@@ -50,7 +50,7 @@ class LoginRegisterController extends Controller
         $input = $request->all();
            
         if(!is_null($request->passcode) && !empty($request->passcode)){
-            $booking = Booking::where('passcode',$request->passcode)->first();
+            $booking = Booking::where('passcode',$request->passcode)->where('status',0)->first();
             if($booking){
                 $input['booking_id'] = $booking->id;
                 $booking->status = 1;

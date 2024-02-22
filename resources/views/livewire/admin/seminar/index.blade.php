@@ -188,7 +188,7 @@
                                                 @endcan
 
                                                 @can('seminar_delete')
-                                                @if(!($seminar->bookings()->where('type','seminar')->count() > 0))
+                                                @if((!($seminar->bookings()->where('type','seminar')->count() > 0)) || ($endDateTime < $now))
                                                 <li>
                                                     <a href="javascript:void()" wire:click.prevent="$emitUp('delete', {{$seminar->id}})" title="Delete">
                                                         <svg width="18" height="18" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
