@@ -12,6 +12,8 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Crypt;
+
 
 if (!function_exists('convertToFloat')) {
 	function convertToFloat($value)
@@ -292,3 +294,23 @@ if (!function_exists('generateBookingNumber')) {
 		return  $currentYear.$seminarId.$formattedTicketNumber;
    }
 }
+
+if (!function_exists('encryptValue')) {
+
+	function encryptValue($id)
+	{
+		$encryptedId = Crypt::encryptString($id);
+		return $encryptedId;
+	}
+}
+
+if (!function_exists('decryptValue')) {
+
+	function decryptValue($encryptedId)
+	{
+		$decryptedId = Crypt::decryptString($decodedId);
+		return $decryptedId;
+
+	}
+}
+

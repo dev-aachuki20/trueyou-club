@@ -97,7 +97,11 @@ class CommanController extends Controller
     
                     $latestRecords['seminar']['imageUrl'] = $latestSeminar->image_url ? $latestSeminar->image_url : asset(config('constants.default.no_image'));
     
-                    $latestRecords['seminar']['remain_ticket'] = (int)$latestSeminar->total_ticket - (int)$latestSeminar->bookings()->where('type','seminar')->count();    
+                    $latestRecords['seminar']['remain_ticket'] = (int)$latestSeminar->total_ticket - (int)$latestSeminar->bookings()->where('type','seminar')->count();   
+                    
+                    $seminarStartDateTime = Carbon::parse($latestSeminar->start_date . ' ' . $latestSeminar->start_time);
+
+                    $latestRecords['seminar']['isBookingClosed'] = (((int)$latestRecords['seminar']['remain_ticket'] == 0) || (now() >= $seminarStartDateTime) ) ? true : false;
                 }
               
                 // End Latest Seminar Details
@@ -144,6 +148,10 @@ class CommanController extends Controller
                         $seminar->imageUrl = $seminar->image_url ? $seminar->image_url : asset(config('constants.default.no_image'));
 
                         $seminar->remain_ticket = (int)$seminar->total_ticket - (int)$seminar->bookings()->where('type','seminar')->count();
+
+                        $seminarStartDateTime = Carbon::parse($seminar->start_date . ' ' . $seminar->start_time);
+
+                        $seminar->isBookingClosed = (((int)$seminar->remain_ticket == 0) || (now() >= $seminarStartDateTime) ) ? true : false;
                         
                     }
 

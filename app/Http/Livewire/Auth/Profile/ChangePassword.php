@@ -31,7 +31,7 @@ class ChangePassword extends Component
     {
         return [
             'current_password'  => ['required', 'string','min:8',new MatchOldPassword],
-            'password'   => ['required', 'string', 'min:8', /*'confirmed',*/ 'different:current_password'],
+            'password'   => ['required', 'string', 'min:8', /*'confirmed',*/ 'different:current_password',/*'regex:/^(?!.*\s)(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/'*/],
             'password_confirmation' => ['required','min:8','same:password'],
         ];
     }
@@ -40,7 +40,8 @@ class ChangePassword extends Component
     {
         // return getCommonValidationRuleMsgs();
         return [
-            'password_confirmation.same' => 'The password confirmation and new password must match.'
+            'password_confirmation.same' => 'The password confirmation and new password must match.',
+            'password.regex' => 'The :attribute must be at least 8 characters and contain at least one uppercase character, one number, and one special character.',
         ];
     }
   

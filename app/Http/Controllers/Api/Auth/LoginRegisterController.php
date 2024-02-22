@@ -17,6 +17,8 @@ use App\Mail\WelcomeMail;
 use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\Notification;
 use App\Rules\ValidEmail;
+use App\Models\Booking;
+
 
 class LoginRegisterController extends Controller
 {
@@ -25,13 +27,17 @@ class LoginRegisterController extends Controller
             'name'                      => 'required',
             'email'                     => ['required','email:dns','unique:users,email,NULL,id,deleted_at,NULL',new ValidEmail],
             'phone'                     => 'required|numeric|regex:/^[0-9]{7,15}$/|not_in:-|unique:users,phone,NULL,id',
+            // 'password'                  => 'required|min:8|regex:/^(?!.*\s)(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
             'password'                  => 'required|min:8',
             'password_confirmation'     => 'required|same:password',
+            'passcode'                  => ['nullable'],
         ],[
             'phone.required'=>'The phone field is required',
             'phone.regex' =>'The phone length must be 7 to 15 digits.',
             'phone.unique' =>'The phone already exists.',
+            'password.regex' => 'The :attribute must be at least 8 characters and contain at least one uppercase character, one number, and one special character.',
         ]);
+        
         if($validator->fails()){
              //Error Response Send
              $responseData = [
@@ -41,9 +47,27 @@ class LoginRegisterController extends Controller
             return response()->json($responseData, 422);
         }
 
+        $input = $request->all();
+           
+        if(!is_null($request->passcode) && !empty($request->passcode)){
+            $booking = Booking::where('passcode',$request->passcode)->first();
+            if($booking){
+                $input['booking_id'] = $booking->id;
+                $booking->status = 1;
+                $booking->save();
+            }else{
+                 //Error Response Send
+                $validationMessage['passcode'] = 'Invalid passcode. Please try again.'; 
+                $responseData = [
+                    'status'        => false,
+                    'errors' =>  $validationMessage,
+                ];
+                return response()->json($responseData, 422);
+            }
+        }
+
         DB::beginTransaction();
         try {
-            $input = $request->all();
            
             $nameParts = explode(' ', $input['name']);
             $input['first_name'] = $nameParts[0]; 
@@ -257,7 +281,7 @@ class LoginRegisterController extends Controller
 
     public function forgotPassword(Request $request){
         $validator = Validator::make($request->all(), [
-            'email' => ['required','email','exists:users,email',new ValidEmail]
+            'email' => ['required','email','exists:users,email,deleted_at,NULL',new ValidEmail]
         ]);
 
         if($validator->fails()){
@@ -296,7 +320,7 @@ class LoginRegisterController extends Controller
             // }
 
             $userDetails = array();
-            $userDetails['name'] = ucwords($user->first_name.' '.$user->last_name);
+            $userDetails['name'] = ucwords($user->name);
 
             $userDetails['reset_password_url'] = env('FRONTEND_URL').'reset-password/'.$token;
 
@@ -328,6 +352,7 @@ class LoginRegisterController extends Controller
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine(),
             ];
             return response()->json($responseData, 500);
         }

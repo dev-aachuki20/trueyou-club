@@ -172,6 +172,8 @@
                                             <ul class="d-flex">
                                                 @can('seminar_edit')
                                                 @if($endDateTime > $now)
+
+                                                @if(!($seminar->bookings()->where('type','seminar')->count() > 0))
                                                 <li>
                                                     <a href="javascript:void()" wire:click.prevent="$emitUp('edit', {{$seminar->id}})" title="Edit">
                                                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -182,9 +184,11 @@
                                                     </a>
                                                 </li>
                                                 @endif
+                                                @endif
                                                 @endcan
 
                                                 @can('seminar_delete')
+                                                @if(!($seminar->bookings()->where('type','seminar')->count() > 0))
                                                 <li>
                                                     <a href="javascript:void()" wire:click.prevent="$emitUp('delete', {{$seminar->id}})" title="Delete">
                                                         <svg width="18" height="18" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -194,6 +198,7 @@
                                                         </svg>
                                                     </a>
                                                 </li>
+                                                @endif
                                                 @endcan
 
                                                 @can('seminar_show')

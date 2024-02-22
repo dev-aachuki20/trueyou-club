@@ -306,7 +306,7 @@
                                     </div>
                                     <a href="javascript:voide(0);" class="btn btn-primary joinBtn book-seats">
                                        <span>
-                                          0 / {{$seminar->total_ticket}}
+                                          {{ $seminar->bookings()->where('type','seminar')->count() }} / {{$seminar->total_ticket}}
                                        </span>
                                        Available Tickets
                                     </a>

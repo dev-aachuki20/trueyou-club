@@ -170,6 +170,18 @@ class SettingSeeder extends Seeder
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'created_by' => 1,
             ],
+
+            [
+                'key'    => 'passcode_mail_content',
+                'value'  =>  null,
+                'type'   => 'text_area',
+                'display_name'  => 'Passcode Mail Content',
+                'group'  => 'mail',
+                'details' => '[NAME], [PASSCODE], [SITE_URL], [SUPPORT_EMAIL], [SUPPORT_PHONE], [APP_NAME]',
+                'status' => 1,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'created_by' => 1,
+            ],
          
            
             [

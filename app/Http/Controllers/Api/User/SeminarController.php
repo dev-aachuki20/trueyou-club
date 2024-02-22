@@ -35,6 +35,11 @@ class SeminarController extends Controller
                     $record->imageUrl = $record->image_url ? $record->image_url : asset(config('constants.default.no_image'));
 
                     $record->remain_ticket = (int)$record->total_ticket - (int)$record->bookings()->where('type','seminar')->count();
+
+                    $seminarStartDateTime = Carbon::parse($record->start_date . ' ' . $record->start_time);
+
+                    $record->isBookingClosed = (((int)$record->remain_ticket == 0) || (now() >= $seminarStartDateTime) ) ? true : false;
+
                 }
 
                 $responseData = [

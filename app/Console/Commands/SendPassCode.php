@@ -5,8 +5,11 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use App\Models\Seminar;
 use App\Models\Booking;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
+use App\Mail\SendPassCodeMail;
+use Illuminate\Support\Facades\Mail;
 
 class SendPassCode extends Command
 {
@@ -39,23 +42,28 @@ class SendPassCode extends Command
             foreach($seminars as $seminar){
                 
                 //Update Seminar Status
-                // Seminar::where('id',$seminar->id)->update(['cron_status'=>1]);
+                Seminar::where('id',$seminar->id)->update(['cron_status'=>1]);
 
                 //Retrieve all seminar bookings
-                $bookings = Booking::where('bookingable_id',$seminar->id)->get();
+                $bookings = Booking::where('bookingable_id',$seminar->id)->where('status',0)->get();
 
                 foreach($bookings as $booking){
 
-                    $passcode =  explode(' ',$booking->name)[0].Str::random(12);
+                    $checkUser = User::where('email',$booking->email)->first();
+                    if(!$checkUser){
+                        // $passcode =  explode(' ',$booking->name)[0].Str::random(10);
 
-                    Booking::where('id',$booking->id)->update(['passcode'=> $passcode]);
-                
+                        $passcode = $booking->booking_number.Str::random(8);
+
+                        Booking::where('id',$booking->id)->update(['passcode'=> $passcode]);
+                    
+                        //Send welcome mail for user
+                        $subject = 'Welcome to ' . config('app.name').'! Complete your registration with your passcode.';
+                        Mail::to($booking->email)->queue(new SendPassCodeMail($subject, $booking->name, $passcode));
+                    }
                 }
                
             }
-
-            // dd($seminars->count());
-
 
             \Log::info("End send passcode command!");
 

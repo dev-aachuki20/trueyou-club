@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
         \Log::info("Start schedule the commands");
         $schedule->command('quote-task-skipped')->dailyAt('23:55')->withoutOverlapping();
         $schedule->command('queue:work --stop-when-empty')->everyMinute()->withoutOverlapping();
+        $schedule->command('send-passcode')->everyThirtyMinutes()->withoutOverlapping();
     }
 
     /**
