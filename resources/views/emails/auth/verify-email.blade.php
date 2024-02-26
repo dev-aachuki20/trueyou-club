@@ -2,7 +2,7 @@
 
 @section('email-content')
 
-    <h4 style="font-family: 'Barlow', sans-serif; color: #464B70; font-weight: 700; font-size: 18px;margin-top: 0;">Hello {{ $name ?? "" }}</h4>
+    <h4 style="font-family: 'Barlow', sans-serif; color: #464B70; font-weight: 700; font-size: 18px;margin-top: 0;">Dear {{ $name ?? "" }}</h4>
 
     <p style="font-size: 18px; line-height: 25.5px; font-weight: 600; font-family: 'Nunito Sans', sans-serif; color: #464B70; margin-bottom: 27px;">Please click the button below to verify your email address.</p>
 

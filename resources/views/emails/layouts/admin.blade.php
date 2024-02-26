@@ -27,7 +27,7 @@
 			<tfoot>
 				<tr>
 					<td>
-						<p class="copyright" style="margin: 0; background-color: #212529; padding:22px 0; text-align:center; font-size: 12px; font-weight: 400; font-family: 'Nunito Sans', sans-serif; color:#fff;">© {{ date('Y') }} All Copyrights Reserved By {{config('app.name')}}</p>
+						<p class="copyright" style="box-sizing:border-box;line-height:1.5em;margin-top:0;margin:0;background-color: #dffeef;padding:22px 0;text-align:center;font-size: 14px;font-weight: 700;font-family:'Nunito Sans',sans-serif;color: #0a2540;">© {{ date('Y') }} All Copyrights Reserved By {{config('app.name')}}</p>
 					</td>
 				</tr>
 			</tfoot>

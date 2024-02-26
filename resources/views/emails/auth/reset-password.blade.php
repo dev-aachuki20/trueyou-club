@@ -15,7 +15,7 @@
 @if($mailContent)
     {!! $mailContent !!}
 @else
-    <h4 style="font-family: 'Barlow', sans-serif; color: #464B70; font-weight: 700; font-size: 18px;margin-top: 0;">Hello {{ $name ?? "" }}</h4>
+    <h4 style="font-family: 'Barlow', sans-serif; color: #464B70; font-weight: 700; font-size: 18px;margin-top: 0;">Dear {{ $name ?? "" }}</h4>
     <p style="font-size: 18px; line-height: 25.5px; font-weight: 600; font-family: 'Nunito Sans', sans-serif; color: #464B70; margin-bottom: 27px;">You are receiving this email because we received a password reset request for your account</p>
     <p style="font-size: 18px; line-height: 25.5px; font-weight: 600; font-family: 'Nunito Sans', sans-serif; color: #464B70; margin-bottom: 27px;">Please click on the link below to reset your password and get access to your account :</p>
 

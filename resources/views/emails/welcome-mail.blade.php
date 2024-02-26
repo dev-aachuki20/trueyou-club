@@ -17,7 +17,7 @@
         <tr>
             <td>
                 <p class="mail-title" style="font-size:14px;">
-                    <b>Hello</b> {{ ucwords($name) }},
+                    Dear {{ ucwords($name) }},
                 </p>
                 <div class="mail-desc">
                     <p style="font-size:14px;">Congratulations and welcome to {{ config('app.name') }}! We are thrilled to have you on board and look forward to your success in our program. This email serves as a confirmation of your successful registration.

@@ -51,14 +51,14 @@ class SendPassCode extends Command
 
                     $checkUser = User::where('email',$booking->email)->first();
                     if(!$checkUser){
-                        // $passcode =  explode(' ',$booking->name)[0].Str::random(10);
-
-                        $passcode = $booking->booking_number.Str::random(8);
+                        $generateRandom = Str::random(8);
+                        
+                        $passcode = $booking->booking_number.strtoupper($generateRandom);
 
                         Booking::where('id',$booking->id)->update(['passcode'=> $passcode]);
                     
                         //Send welcome mail for user
-                        $subject = 'Welcome to ' . config('app.name').'! Complete your registration with your passcode.';
+                        $subject = 'Welcome to ' . config('app.name').'! Complete your registration with the “Golden Gateway Code”';
                         Mail::to($booking->email)->queue(new SendPassCodeMail($subject, $booking->name, $passcode));
                     }
                 }

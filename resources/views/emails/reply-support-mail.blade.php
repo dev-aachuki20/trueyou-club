@@ -2,7 +2,7 @@
 
  @section('email-content')
 		<p class="mail-title">
-			<b>Hello {{ ucwords($name) }},</b>
+			Hello {{ ucwords($name) }},
 		</p>
 		<div class="mail-desc">
             <p style="margin-bottom: 0;font-weight: normal;">{!! $reply ?? '' !!}</p>

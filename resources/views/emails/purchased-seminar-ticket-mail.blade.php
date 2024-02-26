@@ -166,7 +166,7 @@ body{
             <tr>
                 <td>
                     <p class="mail-title" style="font-size:14px;">
-                        Hello <b>{{ ucwords($name) }}</b>,
+                        Dear {{ ucwords($name) }},
                     </p>
                     <div class="mail-desc">
                         <p style="font-size:14px;">Congratulations! Your recent purchase of seminar tickets has been successfully completed. We're thrilled to have you join us at {{$seminar->title ?? null}}!

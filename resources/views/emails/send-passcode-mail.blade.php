@@ -4,7 +4,7 @@
     @php
         $mailContent  = getSetting('passcode_mail_content');
         $mailContent  = str_replace('[NAME]',ucwords($name),$mailContent);
-        $mailContent  = str_replace('[PASSCODE]',ucwords($passcode),$mailContent);
+        $mailContent  = str_replace('[GOLDEN_GATEWAY_CODE]',ucwords($passcode),$mailContent);
         $mailContent  = str_replace('[SITE_URL]',config('constants.front_end_url').'register',$mailContent);
         $mailContent  = str_replace('[SUPPORT_EMAIL]', getSetting('support_email'), $mailContent);
         $mailContent  = str_replace('[SUPPORT_PHONE]', getSetting('support_phone'), $mailContent);
@@ -18,21 +18,29 @@
         <tr>
             <td>
                 <p class="mail-title" style="font-size:14px;">
-                    <b>Hello</b> {{ ucwords($name) }},
+                    Dear {{ ucwords($name) }},
                 </p>
                 <div class="mail-desc">
                     <p style="font-size:14px;">
-                        Thank you for your interest in {{ config('app.name') }}! We're excited to have you onboard as a guest user.
+                        Thank you for attending the event I’m glad you’ve enjoyed it!
                     </p>
 
-                    <p style="font-size:14px;">To access all the features and benefits of {{ config('app.name') }}, you'll need to complete your registration using the unique passcode we've provided:</p>
+                    <p style="font-size:14px;">As a token of our appreciation, we are delighted to offer you exclusive access to our membership program with the “Golden Gateway Code.”</p>
                     <div class="mail-desc">
-                            <p style="font-size:14px;"><span style="width:100%;box-sizing: border-box;line-height: 1.5em;margin-top: 0;margin: 0;background-color: #212529;padding: 9px 10px;text-align: center;font-size: 14px;font-weight: 400;font-family: 'Nunito Sans',sans-serif;color: #fff;display: inline-block;">{{ $passcode }}</span></p>
-                            <p style="font-size:14px;">Url : <a href="{{ config('constants.front_end_url').'register' }}">{{ config('constants.front_end_url').'register' }}</a></p>
+                        <p style="font-size:14px;"><span style="width:100%;box-sizing: border-box;line-height: 1.5em;margin-top: 0;margin: 0;background-color: #212529;padding: 9px 10px;text-align: center;font-size: 14px;font-weight: 400;font-family: 'Nunito Sans',sans-serif;color: #fff;display: inline-block;">{{ $passcode }}</span></p>
                     </div>
                 </div>
             </td>
         
+            <tr>
+                <td>
+                    <p style="font-size:14px;">
+                       Simply input the Golden Gateway Code during signup, and embrace this novel journey with {{ config('app.name') }}.
+                    </p>
+                    <p style="font-size:14px;">Url : <a href="{{ config('constants.front_end_url').'register' }}">{{ config('constants.front_end_url').'register' }}</a></p>
+                </td>
+            </tr>
+            
             <tr>
                 <td>
                     <p style="font-size:14px;">

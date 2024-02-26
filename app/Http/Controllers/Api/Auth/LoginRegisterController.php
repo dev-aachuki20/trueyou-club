@@ -36,6 +36,8 @@ class LoginRegisterController extends Controller
             'phone.regex' =>'The phone length must be 7 to 15 digits.',
             'phone.unique' =>'The phone already exists.',
             'password.regex' => 'The :attribute must be at least 8 characters and contain at least one uppercase character, one number, and one special character.',
+        ],[
+           'passcode'=>'golden gateway code',
         ]);
         
         if($validator->fails()){
@@ -57,7 +59,7 @@ class LoginRegisterController extends Controller
                 $booking->save();
             }else{
                  //Error Response Send
-                $validationMessage['passcode'] = 'Invalid passcode. Please try again.'; 
+                $validationMessage['passcode'] = 'Invalid golden gateway code. Please try again.'; 
                 $responseData = [
                     'status'        => false,
                     'errors' =>  $validationMessage,
