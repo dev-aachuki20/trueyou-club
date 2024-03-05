@@ -13,7 +13,7 @@
         </div>
     </div>
     <ul class="nav">
-        <li class="nav-item {{ request()->is('admin/dashboard') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is('dashboard') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.dashboard') }}">
                 <x-svg-icon icon="dashboard" />
                 <span class="menu-title">{{__('global.dashboard')}}</span>
@@ -21,7 +21,7 @@
         </li>
 
         @can('webinar_access')
-        <li class="nav-item {{ request()->is('admin/webinars') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is('webinars') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.webinars') }}">
                 <x-svg-icon icon="webinar" />
                 <span class="menu-title"> {{ __('cruds.webinar.title') }} </span>
@@ -30,7 +30,7 @@
         @endcan
 
         @can('seminar_access')
-        <li class="nav-item {{ request()->is('admin/seminars') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is('seminars') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.seminars') }}">
                 <x-svg-icon icon="seminar" />
                 <span class="menu-title"> {{ __('cruds.seminar.title') }} </span>
@@ -39,7 +39,7 @@
         @endcan
 
         @can('news_access')
-        <li class="nav-item {{ request()->is('admin/news') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is('news') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.news') }}">
                 <x-svg-icon icon="news" />
                 <span class="menu-title"> {{ __('cruds.news.title') }} </span>
@@ -48,7 +48,7 @@
         @endcan
 
         @can('health_access')
-        <li class="nav-item {{ request()->is('admin/health') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is('health') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.health') }}">
                 <x-svg-icon icon="health" />
                 <span class="menu-title"> {{ __('cruds.health.title') }} </span>
@@ -57,7 +57,7 @@
         @endcan
 
         @can('quote_access')
-        <li class="nav-item {{ request()->is('admin/quotes') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is('quotes') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.quotes') }}">
                 <x-svg-icon icon="quote" />
                 <span class="menu-title"> {{ __('cruds.quote.title') }} </span>
@@ -66,7 +66,7 @@
         @endcan
 
         @can('contact_access')
-        <li class="nav-item {{ request()->is('admin/contacts') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is('contacts') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.contacts') }}">
                 <x-svg-icon icon="contact" />
                 <span class="menu-title"> {{ __('cruds.contacts.title') }} {{ __('global.list') }}</span>
@@ -75,7 +75,7 @@
         @endcan
 
         @can('user_access')
-        <li class="nav-item {{ request()->is('admin/users') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is('users') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.users') }}">
                 <x-svg-icon icon="user" />
                 <span class="menu-title"> {{ __('cruds.user.title') }} </span>
@@ -84,7 +84,7 @@
         @endcan
 
         @can('page_access')
-        <li class="nav-item {{ request()->is('admin/page-manage') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is('page-manage*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.page-manage') }}">
                 <x-svg-icon icon="page" />
                 <span class="menu-title"> {{ __('cruds.pages.title') }} </span>
@@ -93,7 +93,7 @@
         @endcan
 
         @can('transaction_access')
-        {{-- <li class="nav-item {{ request()->is('admin/transactions') ? 'active' : '' }}">
+        {{-- <li class="nav-item {{ request()->is('transactions') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.transactions') }}">
             <x-svg-icon icon="transaction" />
             <span class="menu-title"> {{ __('cruds.transaction.title') }} </span>
@@ -102,7 +102,7 @@
         @endcan
 
         @can('mis_report_access')
-        <li class="nav-item {{ request()->is('admin/misreport') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is('misreport') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.mis-report') }}">
                 <x-svg-icon icon="mis_report" />
                 <span class="menu-title"> {{ __('cruds.mis_reports.title_singular') }} </span>
@@ -112,7 +112,7 @@
         
         {{-- Settings --}}
         @can('setting_access')
-        <li class="nav-item {{ request()->is('admin/settings') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is('settings') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.settings') }}">
             <x-svg-icon icon="setting" />
             <span class="menu-title"> {{ __('cruds.setting.title') }} </span>
