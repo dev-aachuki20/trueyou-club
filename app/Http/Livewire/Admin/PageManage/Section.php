@@ -55,7 +55,7 @@ class Section extends Component
         $rules['content_text'] = 'required|strip_tags';
 
         if($this->selectedSection->is_image){
-            $rules['image'] = 'required|image|mimes:jpeg,png,jpg|max:' . config('constants.img_max_size');
+            $rules['image'] = 'nullable|image|mimes:jpeg,png,jpg|max:' . config('constants.img_max_size');
         }
        
         $customMessages = [
