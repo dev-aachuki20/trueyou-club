@@ -109,20 +109,6 @@ class CommanController extends Controller
 
             }elseif($pageName == 'home'){
                 // Start upcomming Seminar Details
-                // $upcomingSeminars = Seminar::select('id','title','venue','start_date','start_time','end_time','ticket_price','total_ticket')
-                // ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
-                // ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
-                // ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
-                // ->limit(3)
-                // ->get();
-
-                // $upcomingSeminars = Seminar::select('id', 'title', 'total_ticket', 'ticket_price', 'start_date', 'start_time', 'end_time', 'venue')
-                // ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
-                // ->where(\DB::raw('CONCAT(start_date, " ", end_time)'), '>', now())
-                // ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
-                // ->limit(3)
-                // ->get();
-
                 $upcomingSeminars = Seminar::select([
                     'id',
                     'title',
@@ -138,7 +124,7 @@ class CommanController extends Controller
                 ->orderByRaw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds) ASC')
                 ->limit(3)
                 ->get();
-
+              
                 if($upcomingSeminars->count() > 0){
 
                     foreach($upcomingSeminars as $seminar){
