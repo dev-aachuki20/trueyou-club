@@ -49,9 +49,18 @@ class Index extends Component
 
         $leadUsersList = cacheVipUsers();
 
-        $totalRegisteredUser = User::count();
-        $totalActiveUser = User::where('is_active',0)->count();
-        $totalVIPUser = User::whereNotNull('vip_at')->count();
+        $totalRegisteredUser = User::whereHas('roles',function($query){
+          $query->where('id',config('constants.role.user'));
+        })->count();
+      
+        $totalActiveUser = User::whereHas('roles',function($query){
+          $query->where('id',config('constants.role.user'));
+        })->where('is_active',0)->count();
+      
+        $totalVIPUser = User::whereHas('roles',function($query){
+          $query->where('id',config('constants.role.user'));
+        })->whereNotNull('vip_at')->count();
+      
         $totalSeminarTikcketPurchased = Booking::count();
 
 
