@@ -71,6 +71,9 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
 
         Route::view('page-manage', 'admin.page-manage.index')->name('page-manage');
 
+        Route::view('page-manage/{slug}/sections', 'admin.page-manage.section')->name('page-sections');
+
+
         Route::view('misreport', 'admin.mis-report.index')->name('mis-report');
 
     });

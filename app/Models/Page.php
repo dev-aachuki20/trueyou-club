@@ -68,4 +68,9 @@ class Page extends Model
     {
         return Str::slug($this->title) . '-' . encrypt($this->getAttribute('id'));
     }
+
+    public function sections()
+    {
+        return $this->hasMany(Section::class);
+    }
 }

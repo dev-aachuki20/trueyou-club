@@ -28,7 +28,6 @@
                         </div>
                     </div>
                    
-                   {{-- @livewire('admin.seminar.seminar-table') --}}
 
                     {{-- Start Filter Form --}}
                     <div class="card">

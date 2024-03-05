@@ -160,6 +160,17 @@ return [
         ]
     ],
 
+    'sections' => [
+        'title'          => 'Sections',
+        'title_singular' => 'Section',
+        'fields' => [
+            'title'          => 'Title',
+            'content_text'   => 'Content Text',
+            'button'         => 'Button Title',
+            'link'           => 'Link',
+        ]
+    ],
+
     'booking' => [
         'title'                 => 'Bookings',
         'title_singular'        => 'Booking',

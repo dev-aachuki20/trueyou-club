@@ -11,7 +11,7 @@
 
                     @elseif($viewMode)
 
-                    @livewire('admin.page-manage.show', ['page_id' => $page_id])
+                        @livewire('admin.page-manage.show', ['page_id' => $page_id])
 
                     @else
                     <div wire:loading wire:target="create" class="loader"></div>
