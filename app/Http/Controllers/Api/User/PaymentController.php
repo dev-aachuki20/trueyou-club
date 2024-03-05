@@ -138,7 +138,7 @@ class PaymentController extends Controller
             return response()->json(['status'=>true,'session' => $session]);
         } catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());
-            return response()->json(['status'=>false,'error' => trans('messages.error_message')], 500);
+            return response()->json(['status'=>false,'error' => trans('messages.error_message'),'error_detail'=>$e->getMessage().'->'.$e->getLine()], 500);
         }
     }
 
