@@ -37,7 +37,7 @@ class SendPassCode extends Command
         try {
             \Log::info("Start send passcode command!");
 
-            $seminars = Seminar::whereRaw('CONCAT(start_date, " ", end_time) <= NOW()')->where('cron_status',0)->get();
+            $seminars = Seminar::whereRaw('CONCAT(start_date, " ", end_time) <= NOW()')->where('status',1)->where('cron_status',0)->get();
 
             foreach($seminars as $seminar){
                 

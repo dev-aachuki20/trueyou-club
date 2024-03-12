@@ -69,16 +69,10 @@ class CommanController extends Controller
                 // End Latest News Details
 
                 // Start Latest Seminar Details
-                // $latestSeminar = Seminar::select('*')
-                // ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
-                // ->orderByRaw('CASE WHEN CONCAT(start_date, " ", end_time) < NOW() THEN 1 ELSE 0 END') 
-                // ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
-                // ->limit(1)
-                // ->first();
-
                 $latestSeminar = Seminar::select('id', 'title', 'total_ticket', 'ticket_price', 'start_date', 'start_time', 'end_time', 'venue')
                 ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", end_time))) AS time_diff_seconds')
                 ->where(\DB::raw('CONCAT(start_date, " ", end_time)'), '>', now())
+                ->where('status',1)
                 ->orderBy(\DB::raw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds)'), 'asc')
                 ->limit(1)
                 ->first();
@@ -121,6 +115,7 @@ class CommanController extends Controller
                 ])
                 ->selectRaw('(TIMESTAMPDIFF(SECOND, NOW(), CONCAT(start_date, " ", start_time))) AS time_diff_seconds')
                 ->whereRaw('CONCAT(start_date, " ", start_time) > NOW()')
+                ->where('status',1)
                 ->orderByRaw('time_diff_seconds > 0 DESC, ABS(time_diff_seconds) ASC')
                 ->limit(3)
                 ->get();

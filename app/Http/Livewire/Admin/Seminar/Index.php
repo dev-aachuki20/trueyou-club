@@ -40,7 +40,7 @@ class Index extends Component
     public $removeImage = false;
 
     protected $listeners = [
-        'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm', 'viewBookings'
+        'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm', 'viewBookings',
     ];
 
     public function mount()
@@ -382,9 +382,6 @@ class Index extends Component
             'confirmButtonText' => 'Yes, delete it!',
             'cancelButtonText' => 'No, cancel!',
             'onConfirmed' => 'deleteConfirm',
-            'onCancelled' => function () {
-                // Do nothing or perform any desired action
-            },
             'inputAttributes' => ['deleteId' => $id],
         ]);
     }
@@ -394,14 +391,11 @@ class Index extends Component
         $deleteId = $event['data']['inputAttributes']['deleteId'];
         $model    = Seminar::find($deleteId);
         if(!$model){
-            // $this->emit('refreshTable'); 
             $this->alert('error', trans('messages.error_message'));   
         }else{
             
             $this->resetPage();
-
-            $model->delete();
-            // $this->emit('refreshTable');    
+            $model->delete();  
             $this->alert('success', trans('messages.delete_success_message'));
         }     
     }
@@ -415,20 +409,17 @@ class Index extends Component
             'confirmButtonText' => 'Yes Confirm!',
             'cancelButtonText' => 'No Cancel!',
             'onConfirmed' => 'confirmedToggleAction',
-            'onCancelled' => function () {
-                // Do nothing or perform any desired action
-            },
             'inputAttributes' => ['seminarId' => $id],
         ]);
+
     }
 
     public function confirmedToggleAction($event)
     {
         $seminarId = $event['data']['inputAttributes']['seminarId'];
         $model = Seminar::find($seminarId);
-        $model->update(['status' => !$model->status]);
 
-        // $this->emit('refreshTable');
+        $model->update(['status' => !$model->status]);
 
         $this->alert('success', trans('messages.change_status_success_message'));
     }

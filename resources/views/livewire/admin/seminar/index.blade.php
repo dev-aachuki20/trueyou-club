@@ -169,6 +169,19 @@
                                         </div>
                                         <div class="update-webinar">
                                             <ul class="d-flex">
+                                                
+                                                @if($endDateTime > $now)
+                                                <li>
+                                                    <label class="toggle-switch mt-3">
+                                                        @php
+                                                          $generatRadomId = $seminar->id.generateRandomString(10);
+                                                        @endphp
+                                                        <input type="checkbox" id="toggleSwitch-{{ $generatRadomId }}" class="toggleSwitch" wire:change.prevent="toggle('{{$seminar->id}}')" value="{{ $seminar->status }}" {{ $seminar->status ==1 ? 'checked' : '' }}>
+                                                        <span class="switch-slider"></span>
+                                                    </label>
+                                                </li>
+                                                @endif
+
                                                 @can('seminar_edit')
                                                 @if($endDateTime > $now)
 
