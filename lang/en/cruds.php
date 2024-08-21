@@ -56,7 +56,7 @@ return [
 
         ],
     ],
-    'volunteer'   => [
+    'heroe'   => [
         'title'          => 'Heroes',
         'title_singular' => 'Heroe',
         'list'           => 'Our Heroes',
