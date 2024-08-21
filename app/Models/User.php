@@ -101,6 +101,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->roles()->where('id', 2)->exists();
     }
 
+    public function getIsVolunteerAttribute()
+    {
+        return $this->roles()->where('id', 3)->exists();
+    }
+
     public function profileImage()
     {
         return $this->morphOne(Uploads::class, 'uploadsable')->where('type', 'profile');

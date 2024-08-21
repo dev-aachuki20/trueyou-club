@@ -69,6 +69,10 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
 
         Route::view('users', 'admin.user.index')->name('users');
 
+        Route::view('volunteers', 'admin.volunteer.index')->name('volunteers');
+
+        Route::view('heroes', 'admin.heroe.index')->name('heroes');
+
         Route::view('page-manage', 'admin.page-manage.index')->name('page-manage');
 
         Route::view('page-manage/{slug}/sections', 'admin.page-manage.section')->name('page-sections');

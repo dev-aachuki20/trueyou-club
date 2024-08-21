@@ -21,6 +21,11 @@ return [
 
     'stripe_secret_key' => env('STRIPE_SECRET_KEY', 'TrueYouClub'),
 
+    'roleid' => [
+        'super_admin' => 1 ,
+        'user' => 2 ,        
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

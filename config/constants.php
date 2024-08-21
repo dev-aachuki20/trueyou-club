@@ -28,6 +28,7 @@ return [
     'role'=>[
         'super_admin' => 1,
         'user' => 2, 
+        'volunteer' => 3 ,
     ],
 
     'profile_image_size' =>'2048', // 1024 = 1 MB

@@ -83,6 +83,15 @@
         </li>
         @endcan
 
+        @can('volunteer_access')    
+        <li class="nav-item {{ request()->is('volunteers') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin.volunteers') }}">
+                <x-svg-icon icon="user" />
+                <span class="menu-title"> {{ __('cruds.volunteer.list') }} </span>
+            </a>
+        </li>
+        @endcan
+
         @can('page_access')
         <li class="nav-item {{ request()->is('page-manage*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.page-manage') }}">
