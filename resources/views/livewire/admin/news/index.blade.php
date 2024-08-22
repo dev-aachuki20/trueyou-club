@@ -29,9 +29,7 @@
                             @endcan
                         </div>
                     </div>
-                    <div class="search-table-data">
-
-                       {{-- @livewire('admin.news.news-table') --}}
+                    <div class="search-table-data">                     
 
                        <div class="relative">
 

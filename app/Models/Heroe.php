@@ -54,7 +54,7 @@ class Heroe extends Model
         return $this->morphOne(Uploads::class, 'uploadsable')->where('type', 'heroe');
     }
 
-    public function getImageUrlAttribute()
+    public function getFeaturedImageUrlAttribute()
     {
         if ($this->featuredImage) {
             return $this->featuredImage->file_url;

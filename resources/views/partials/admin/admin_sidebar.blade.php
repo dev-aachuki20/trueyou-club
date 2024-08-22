@@ -47,6 +47,15 @@
         </li>
         @endcan
 
+        @can('heroes_access')
+        <li class="nav-item {{ request()->is('heroes') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin.heroes') }}">
+                <x-svg-icon icon="news" />
+                <span class="menu-title"> {{ __('cruds.heroe.title') }} </span>
+            </a>
+        </li>
+        @endcan
+
         @can('health_access')
         <li class="nav-item {{ request()->is('health') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.health') }}">

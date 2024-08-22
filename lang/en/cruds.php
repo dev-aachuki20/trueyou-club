@@ -56,23 +56,16 @@ return [
 
         ],
     ],
+
     'heroe'   => [
         'title'          => 'Heroes',
         'title_singular' => 'Heroe',
         'list'           => 'Our Heroes',
         'fields'         => [
-            'id'                       => 'ID',
-            'first_name'               => 'First Name',
-            'last_name'                => 'Last Name',
-            'name'                     => 'Name',
-            'full_name'                => 'Full name',
-            'desciption'               => 'Description',
-            'phone'                    => 'Phone Number',
-            'profile_image'            => 'Profile Image',
-            'status'                   => 'Status',
-            'password'                 => 'Password',
-            'confirm_password'         => 'Password Confirm',
-            'role'                     => 'User Level',
+            'id'                       => 'ID',            
+            'name'                     => 'Name',            
+            'desciption'               => 'Description',            
+            'status'                   => 'Status',       
             'created_at'               => 'Created',
             'updated_at'               => 'Updated',
             'deleted_at'               => 'Deleted',
