@@ -1,7 +1,7 @@
 
 <h4 class="card-title">
     {{ $updateMode ? __('global.edit') : __('global.create') }}
-    {{ __('cruds.education.title')}}</h4>
+    {{ __('cruds.education.title_singular')}}</h4>
 
 <form wire:submit.prevent="{{ $updateMode ? 'update' : 'store' }}" class="forms-sample">
 
