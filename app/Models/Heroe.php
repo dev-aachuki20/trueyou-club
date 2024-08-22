@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 
 class Heroe extends Model
@@ -21,6 +22,7 @@ class Heroe extends Model
 
     protected $fillable = [
         'name',
+        'slug',
         'description',
         'status',
         'created_by',
@@ -33,7 +35,12 @@ class Heroe extends Model
     {
         parent::boot();
         static::creating(function (Heroe $model) {
+            $model->slug = Str::slug($model->name) . '-' . bin2hex(random_bytes(10));
             $model->created_by = auth()->user()->id;
+        });
+
+        static::updating(function (Education $model) {
+            $model->slug = Str::slug($model->name) . '-' . bin2hex(random_bytes(10));
         });
 
         static::deleting(function ($model) {
