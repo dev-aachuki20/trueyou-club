@@ -101,6 +101,24 @@
         </li>
         @endcan
 
+        @can('category_access')    
+        <li class="nav-item {{ request()->is('categories') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin.categories') }}">
+                <x-svg-icon icon="user" />
+                <span class="menu-title"> {{ __('cruds.category.list') }} </span>
+            </a>
+        </li>
+        @endcan
+
+        @can('education_access')    
+        <li class="nav-item {{ request()->is('education') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin.education') }}">
+                <x-svg-icon icon="user" />
+                <span class="menu-title"> {{ __('cruds.education.list') }} </span>
+            </a>
+        </li>
+        @endcan
+
         @can('page_access')
         <li class="nav-item {{ request()->is('page-manage*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.page-manage') }}">

@@ -70,6 +70,8 @@ Route::group(['middleware' => ['auth', 'preventBackHistory']], function () {
         Route::view('users', 'admin.user.index')->name('users');
 
         Route::view('volunteers', 'admin.volunteer.index')->name('volunteers');
+        Route::view('categories', 'admin.category.index')->name('categories');
+        Route::view('education', 'admin.education.index')->name('education');
 
         Route::view('heroes', 'admin.heroe.index')->name('heroes');
 

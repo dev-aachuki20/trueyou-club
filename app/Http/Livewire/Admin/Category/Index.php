@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Livewire\Admin\Heroe;
+namespace App\Http\Livewire\Admin\Category;
 
-use App\Models\Heroe;
+use App\Models\Category;
 use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -22,9 +22,7 @@ class Index extends Component
 
     public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Name, Created Date";
 
-    public $heroe_id = null, $name, $description, $created_at ,$image, $originalImage, $status = 1;
-
-    public $removeImage = false;    
+    public $category_id = null, $name,$created_at, $status = 1;   
     
     protected $listeners = [
         'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm'
@@ -32,7 +30,7 @@ class Index extends Component
 
     public function mount()
     {
-        abort_if(Gate::denies('heroes_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('category_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $this->created_at = Carbon::now()->format('d-m-Y');
     }
 
@@ -75,7 +73,7 @@ class Index extends Component
 
         $currentDate = now()->format('Y-m-d');
 
-        $allHeroe = Heroe::query()->where(function ($query) use ($searchValue, $statusSearch) {
+        $allCategory = Category::query()->where(function ($query) use ($searchValue, $statusSearch) {
             $query->where('name', 'like', '%' . $searchValue . '%')
                 // ->orWhere('status', $statusSearch)
                 ->orWhereRaw("date_format(created_at, '" . config('constants.search_full_date_format') . "') like ?", ['%' . $searchValue . '%']);
@@ -89,19 +87,11 @@ class Index extends Component
                 created_at'
             )
 
-            // ->orderBy('created_at', $this->sortDirection)
-
-            // ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);
 
 
-        return view('livewire.admin.heroe.index',compact('allHeroe'));
-    }
-
-    public function updatedPublishDate()
-    {
-        $this->created_at = Carbon::parse($this->created_at)->format('d-m-Y');
-    }
+        return view('livewire.admin.category.index',compact('allCategory'));
+    }   
 
     public function create()
     {
@@ -113,21 +103,14 @@ class Index extends Component
     {
         $validatedData = $this->validate([
             'name'        => 'required',           
-            'description'      => 'required|strip_tags',
             'status'       => 'required',
-            'image'        => 'nullable|image|max:' . config('constants.img_max_size'),
-        ], [
-            'description.strip_tags' => 'The description field is required',
         ]);
 
         DB::beginTransaction();
         try {
-            $validatedData['status'] = $this->status;            
-            $heroe = Heroe::create($validatedData);
 
-            if ($this->image) {
-                uploadImage($heroe, $this->image, 'heroe/image/', "heroe", 'original', 'save', null);
-            }
+            $validatedData['status'] = $this->status;
+            $category = Category::create($validatedData);           
 
             DB::commit();
 
@@ -135,7 +118,7 @@ class Index extends Component
 
             $this->flash('success', trans('messages.add_success_message'));
 
-            return redirect()->route('admin.heroes');
+            return redirect()->route('admin.categories');
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -149,51 +132,27 @@ class Index extends Component
         $this->formMode = true;
         $this->updateMode = true;
 
-        $heroe = Heroe::findOrFail($id);
-        $this->heroe_id         =  $heroe->id;
-        $this->name             =  $heroe->name;
-        $this->description      =  $heroe->description;
-        $this->status           =  $heroe->status;
-        $this->originalImage    =  $heroe->featured_image_url;        
+        $category = Category::findOrFail($id);
+        $this->category_id         =  $category->id;
+        $this->name           =  $category->name;
+        $this->status          =  $category->status;       
     }
 
 
     public function update()
-    {  
+    {
         $validatedData = $this->validate([
-            'name'        => 'required',           
-            'description'      => 'required|strip_tags',
-            'status'       => 'required',
-            'image'        => 'nullable|image|max:' . config('constants.img_max_size'),
-        ], [
-            'description.strip_tags' => 'The description field is required',
+            'name'        => 'required',         
         ]);
-
+        
         $validatedData['status'] = $this->status;        
 
         DB::beginTransaction();
         try {
 
-            $heroe = Heroe::find($this->heroe_id);
+            $category = Category::find($this->category_id);         
 
-            // Check if the image has been changed
-            if ($this->image) {
-                if ($heroe->featuredImage) {
-                    $uploadImageId = $heroe->featuredImage->id;
-                    uploadImage($heroe, $this->image, 'heroe/image/', "heroe", 'original', 'update', $uploadImageId);
-                } else {
-                    uploadImage($heroe, $this->image, 'heroe/image/', "heroe", 'original', 'save', null);
-                }
-            }
-
-            if ($this->removeImage) {
-                if ($heroe->featuredImage) {
-                    $uploadImageId = $heroe->featuredImage->id;
-                    deleteFile($uploadImageId);
-                }
-            }
-
-            $heroe->update($validatedData);
+            $category->update($validatedData);
 
             DB::commit();
 
@@ -203,7 +162,7 @@ class Index extends Component
 
             $this->cancel();
 
-            // return redirect()->route('admin.heroes');
+            // return redirect()->route('admin.categories');
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -213,7 +172,7 @@ class Index extends Component
 
     public function show($id)
     {
-        $this->heroe_id = $id;
+        $this->category_id = $id;
         $this->formMode = false;
         $this->viewMode = true;
     }
@@ -230,7 +189,7 @@ class Index extends Component
     }
 
     public function resetAllFields(){
-        $this->reset(['formMode','updateMode','viewMode','heroe_id','name','description','image','originalImage','status','removeImage']);
+        $this->reset(['formMode','updateMode','viewMode','category_id','name','status']);
     }
 
     public function delete($id)
@@ -253,7 +212,7 @@ class Index extends Component
     public function deleteConfirm($event)
     {
         $deleteId = $event['data']['inputAttributes']['deleteId'];
-        $model    = Heroe::find($deleteId);
+        $model    = Category::find($deleteId);
         
         if(!$model){
             // $this->emit('refreshTable'); 
@@ -281,14 +240,14 @@ class Index extends Component
             'onCancelled' => function () {
                 // Do nothing or perform any desired action
             },
-            'inputAttributes' => ['heroeId' => $id],
+            'inputAttributes' => ['categoryId' => $id],
         ]);
     }
 
     public function confirmedToggleAction($event)
     {
-        $heroeId = $event['data']['inputAttributes']['heroeId'];
-        $model = Heroe::find($heroeId);
+        $categoryId = $event['data']['inputAttributes']['categoryId'];
+        $model = Category::find($categoryId);
         $model->update(['status' => !$model->status]);
 
         // $this->emit('refreshTable');

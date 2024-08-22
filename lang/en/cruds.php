@@ -64,13 +64,47 @@ return [
         'fields'         => [
             'id'                       => 'ID',            
             'name'                     => 'Name',            
-            'desciption'               => 'Description',            
+            'description'              => 'Description',            
             'status'                   => 'Status',       
             'created_at'               => 'Created',
             'updated_at'               => 'Updated',
             'deleted_at'               => 'Deleted',
         ],
     ],
+
+    'category'   => [
+        'title'          => 'Category Management',
+        'title_singular' => 'Category',
+        'list'           => 'Category List',
+        'fields'         => [
+            'id'                       => 'ID',            
+            'name'                     => 'Name',            
+            'status'                   => 'Status',                   
+            'created_at'               => 'Created',
+            'updated_at'               => 'Updated',
+            'deleted_at'               => 'Deleted',
+        ],
+    ],
+
+    'education'   => [
+        'title'          => 'Education',
+        'title_singular' => 'Education',
+        'list'           => 'Education List',
+        'fields'         => [
+            'id'                       => 'ID',            
+            'title'                    => 'Title',            
+            'description'               => 'Description',            
+            'video_link'               => 'Video Link',            
+            'category'                 => 'Category Id',            
+            'status'                   => 'Status',       
+            'created_at'               => 'Created',
+            'updated_at'               => 'Updated',
+            'deleted_at'               => 'Deleted',
+            'select_category'          => 'Select Category',
+            'view_video'               => 'View Video',
+        ],
+    ],
+
 
     'permission'     => [
         'title'          => 'Permissions',
