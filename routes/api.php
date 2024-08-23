@@ -99,6 +99,8 @@ Route::get('/page/{slug}', [PageController::class, 'getPageDetails']);
 
 Route::post('/contact-us', [ContactController::class, 'store']);
 
+Route::get('/get-heroes', [HeroController::class, 'index']);
+
 //Payments Routes
 Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
 
