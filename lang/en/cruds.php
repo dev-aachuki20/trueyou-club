@@ -105,6 +105,21 @@ return [
         ],
     ],
 
+    'event'   => [
+        'title'          => 'Events',
+        'title_singular' => 'Event',
+        'list'           => 'Event List',
+        'fields'         => [
+            'id'                       => 'ID',            
+            'title'                    => 'Title',            
+            'description'              => 'Description',                              
+            'status'                   => 'Status',       
+            'created_at'               => 'Created',
+            'updated_at'               => 'Updated',
+            'deleted_at'               => 'Deleted',            
+        ],
+    ],
+
 
     'permission'     => [
         'title'          => 'Permissions',

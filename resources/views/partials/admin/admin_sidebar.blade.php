@@ -101,6 +101,15 @@
         </li>
         @endcan
 
+        @can('event_access')    
+        <li class="nav-item {{ request()->is('events') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin.events') }}">
+                <x-svg-icon icon="user" />
+                <span class="menu-title"> {{ __('cruds.event.list') }} </span>
+            </a>
+        </li>
+        @endcan
+
         @can('category_access')    
         <li class="nav-item {{ request()->is('categories') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.categories') }}">
