@@ -18,6 +18,7 @@ use App\Exports\UserDatatableExport;
 use App\Mail\SendInviteEventMail;
 use App\Models\Event;
 use App\Models\EventRequest;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 class Index extends Component
@@ -33,7 +34,7 @@ class Index extends Component
 
     public $formMode = false, $updateMode = false, $viewMode = false, $viewQuoteHistoryMode = false;
 
-    public $user_id = null, $first_name,  $last_name, $phone, $email, $is_active = 1;
+    public $user_id = null, $first_name,  $last_name, $phone, $email,$password,$password_confirmation, $is_active = 1;
     public $events = [];
     public $event_id = null;
     public $volunteer_id = null , $user = null;
@@ -156,16 +157,26 @@ class Index extends Component
             'phone'      => 'required|digits:10',
             'email'      => 'required|email',
             'is_active'  => 'required',
+            'password' => 'required|string|min:8|confirmed',
+            'password_confirmation' => 'required|string|min:8|same:password',
         ],[
             'first_name.required' => 'The first name is required',
             'last_name.required' => 'The last name is required',
             'phone.digits' => '10 digit phone number is required',
+            'password.required' => 'Password is required!',
+            'password.min' => 'The Password should be at least 8 letter.',
+            'password.confirmed' => 'The Password should be confirm.',
+            'password_confirmation.required' => 'Confirm password is required!',
+            'password_confirmation.min' => 'The confirm password should be at least 8 letter.',
+            'password_confirmation.same' => 'The password confirmation and password must match.',
         ]);
 
         try
         {
             DB::beginTransaction();
             $validatedData['name'] = $this->first_name.' '.$this->last_name ; 
+            $validatedData['password'] =  Hash::make($this->password);
+            unset($validatedData['password_confirmation']);
             $user = User::create($validatedData);
             $user->roles()->sync([config('constants.role.volunteer')]);                 // Assign user Role        
             DB::commit();
