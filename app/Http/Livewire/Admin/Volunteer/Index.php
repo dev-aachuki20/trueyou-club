@@ -14,7 +14,11 @@ use Livewire\WithPagination;
 use Symfony\Component\HttpFoundation\Response;
 
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\UserDatatableExport; 
+use App\Exports\UserDatatableExport;
+use App\Mail\SendInviteEventMail;
+use App\Models\Event;
+use App\Models\EventRequest;
+use Illuminate\Support\Facades\Mail;
 
 class Index extends Component
 {
@@ -30,6 +34,11 @@ class Index extends Component
     public $formMode = false, $updateMode = false, $viewMode = false, $viewQuoteHistoryMode = false;
 
     public $user_id = null, $first_name,  $last_name, $phone, $email, $is_active = 1;
+    public $events = [];
+    public $event_id = null;
+    public $volunteer_id = null , $user = null;
+    public $custom_message = '';
+
 
     protected $listeners = [
         'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm','viewQuoteHistory'
@@ -313,5 +322,43 @@ class Index extends Component
 
     public function resetAllFields(){
         $this->reset(['formMode','updateMode','viewMode','viewQuoteHistoryMode','user_id','first_name','last_name','phone','email','is_active']);
+    }
+
+    public function triggerInviteModal(User $user)
+    {
+        $this->volunteer_id = $user->id;
+        $this->user = $user;
+        $this->events = Event::where('status',1)->get();       
+    }
+
+    public function closeModal()
+    {
+        $this->reset(['event_id', 'volunteer_id', 'custom_message']);
+    }
+
+    public function submitSendInvite()
+    {
+        $validatedData = $this->validate([
+            'event_id' => 'required|exists:events,id',
+            'custom_message' => 'required|string',
+        ],[
+            'event_id.required' => 'The Event field is required',            
+            'custom_message.required' => 'The Message field is required',
+        ]);
+
+        $validatedData['volunteer_id'] = $this->volunteer_id;
+
+        $eventrequest = EventRequest::create($validatedData);   
+        $event= Event::where('id',$eventrequest->event_id)->first();
+        $eventDetail= $event->toArray();
+        $eventDetail['featured_image_url'] = $event->featured_image_url ? $event->featured_image_url : asset(config('constants.default.no_image'));        
+        $subject = 'Event Invitation !';    
+        Mail::to($this->user->email)->queue(new SendInviteEventMail($this->user->name, $subject, $this->user->email, $this->custom_message,$eventDetail));
+
+        $this->closeModal();
+        $this->dispatchBrowserEvent('close-modal');
+        $this->flash('success',trans('messages.add_success_message'));
+        return redirect()->route('admin.volunteers');
+        
     }
 }

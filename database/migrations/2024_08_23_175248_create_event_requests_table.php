@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('event_id');          
             $table->unsignedBigInteger('volunteer_id');          
             $table->longText('custom_message')->nullable()->default(null); 
-            $table->tinyInteger('status')->default(1)->comment('0=> declined, 1=> accepted');
+            $table->tinyInteger('status')->default(0)->comment('0=> declined, 1=> accepted');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamps();
             $table->softDeletes();

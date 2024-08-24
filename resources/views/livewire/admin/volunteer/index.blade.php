@@ -1,4 +1,5 @@
 <div class="content-wrapper">
+    @include('livewire.admin.volunteer.invite-modal')
 
     <div class="row">
         <div class="col-lg-12 grid-margin stretch-card">
@@ -28,9 +29,8 @@
                                 </button>
                                 @endcan
                             </div>
-                        </div>
-                    
-                        @livewire('admin.volunteer.invite-modal')                       
+                        </div>                  
+                                             
 
                         {{-- Start Filter Form --}}
                         <div class="card">
@@ -144,11 +144,7 @@
                                                             <input type="checkbox" class="custom-control-input" id="customSwitch{{$user->id}}" wire:click.prevent="$emitUp('toggle',{{$user->id}})" {{ $user->is_active == 1 ? 'checked' : '' }}>
                                                             <label class="custom-control-label" for="customSwitch{{$user->id}}">Break</label>
                                                         </div>
-                                                    </div>
-                                                    {{-- <label class="toggle-switch">
-                                                        <input type="checkbox" class="toggleSwitch" wire:click.prevent="$emitUp('toggle',{{$user->id}})" {{ $user->is_active == 1 ? 'checked' : '' }}>
-                                                        <div class="switch-slider-other round"></div>
-                                                    </label> --}}
+                                                    </div>                                                    
                                                 </td>
 
                                                 <td>
@@ -192,7 +188,8 @@
                                                             
                                                             @can('event_invite_volunteer_access')
                                                             <li>
-                                                                <a href="javascript:void();" class="InviteBtn" wire:click="$emit('showInviteModal', {{ $user->id }})">Invite</a>
+                                                                <a role="button" class="InviteBtn" wire:click="triggerInviteModal({{ $user->id }})" data-toggle="modal" data-target="#InviteModal">Invite</a>
+                                                                
                                                             </li>
                                                             @endcan
                                                             
@@ -223,7 +220,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 @push('styles')
@@ -286,15 +282,7 @@
 
     }
 
-    document.addEventListener('livewire:load', function () {
-        Livewire.on('showInviteModal', function () {
-            console.log(2);
-            $('#InviteModal').modal('show');
-        });
-
-        Livewire.on('hideInviteModal', function () {
-            $('#InviteModal').modal('hide');
-        });
-    });
+    
+    
 </script>
 @endpush

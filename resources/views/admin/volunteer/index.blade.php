@@ -12,4 +12,8 @@
 @stop
 
 @section('scripts')
+    window.addEventListener('close-modal',event =>{
+        $(#InviteModal).modal('hide');
+    });
+
 @stop
