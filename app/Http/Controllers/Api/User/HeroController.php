@@ -14,24 +14,24 @@ class HeroController extends Controller
 
             $currentDate = now()->toDateString();
             $getAllRecords = Heroe::select('id', 'name', 'slug', 'description', 'created_at', 'created_by')                
-                ->orderBy('publish_date', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->paginate(12);
 
-            if ($getAllRecords->count() > 0) {
-
-                foreach ($getAllRecords as $key=>$record)
-                {                   
-                    $record->created_at = convertDateTimeFormat($record->created_at, 'fulldate');                
-
-                    $record->image_url = $record->featured_image_url ? $record->featured_image_url : asset(config('constants.default.no_image'));                   
-
-                    $record->created_by  = $record->user->name ?? null;
-                }
-
-
+            if ($getAllRecords->count() > 0)
+            {                
                 $responseData = [
                     'status'  => true,
-                    'data'    => $getAllRecords,
+                    'data' => $getAllRecords->map(function ($record) {
+                        return [
+                            'id' => $record->id,
+                            'name' => $record->name,
+                            'slug' => $record->slug,
+                            'description' => $record->description,
+                            'created_at' => convertDateTimeFormat($record->created_at, 'fulldate'),
+                            'created_by'  => $record->user->name ?? null,
+                            'image_url' => $record->featured_image_url ? $record->featured_image_url : asset(config('constants.default.no_image')),                            
+                        ];
+                    }),
                 ];
                 return response()->json($responseData, 200);
             } else {
@@ -44,7 +44,6 @@ class HeroController extends Controller
             }
         } catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());
-
             $responseData = [
                 'status'  => false,
                 'error'   => trans('messages.error_message'),

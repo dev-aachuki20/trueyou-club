@@ -34,7 +34,7 @@
                                         @php
                                             $quotePercentage = 0;
                                             $totalUsers = getTotalUsers();
-                                            $quotePercentage = ($todayQuote->users()->count() / (int)$totalUsers) * 100;
+                                            $quotePercentage = $totalUsers ? ($todayQuote->users()->count() / (int)$totalUsers) * 100 : 0;                                 
                                         @endphp
                                         <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
                                             <div class="progress-bar" style="width: {{$quotePercentage}}%">{{ round($quotePercentage) }}%</div>

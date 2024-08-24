@@ -17,8 +17,7 @@ use App\Http\Controllers\Api\User\WebinarController;
 use App\Http\Controllers\Api\User\PostController;
 use App\Http\Controllers\Api\User\PageController;
 use App\Http\Controllers\Api\User\ContactController;
-
-
+use App\Http\Controllers\Api\User\HeroController;
 
 /*
 |--------------------------------------------------------------------------
