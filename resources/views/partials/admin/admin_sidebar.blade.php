@@ -49,8 +49,8 @@
 
         @can('heroes_access')
         <li class="nav-item {{ request()->is('heroes') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('admin.heroes') }}">
-                <x-svg-icon icon="news" />
+            <a class="nav-link fillIcon" href="{{ route('admin.heroes') }}">
+                <x-svg-icon icon="heroes" />
                 <span class="menu-title"> {{ __('cruds.heroe.title') }} </span>
             </a>
         </li>
@@ -94,8 +94,8 @@
 
         @can('volunteer_access')    
         <li class="nav-item {{ request()->is('volunteers') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('admin.volunteers') }}">
-                <x-svg-icon icon="user" />
+            <a class="nav-link fillIcon" href="{{ route('admin.volunteers') }}">
+                <x-svg-icon icon="volunteer_list" />
                 <span class="menu-title"> {{ __('cruds.volunteer.list') }} </span>
             </a>
         </li>
@@ -103,8 +103,8 @@
 
         @can('event_access')    
         <li class="nav-item {{ request()->is('events') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('admin.events') }}">
-                <x-svg-icon icon="user" />
+            <a class="nav-link fillIcon" href="{{ route('admin.events') }}">
+                <x-svg-icon icon="event_list" />
                 <span class="menu-title"> {{ __('cruds.event.list') }} </span>
             </a>
         </li>
@@ -112,8 +112,8 @@
 
         @can('category_access')    
         <li class="nav-item {{ request()->is('categories') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('admin.categories') }}">
-                <x-svg-icon icon="user" />
+            <a class="nav-link fillIcon" href="{{ route('admin.categories') }}">
+                <x-svg-icon icon="category_list" />
                 <span class="menu-title"> {{ __('cruds.category.list') }} </span>
             </a>
         </li>
@@ -121,8 +121,8 @@
 
         @can('education_access')    
         <li class="nav-item {{ request()->is('education') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('admin.education') }}">
-                <x-svg-icon icon="user" />
+            <a class="nav-link fillIcon" href="{{ route('admin.education') }}">
+                <x-svg-icon icon="education_list" />
                 <span class="menu-title"> {{ __('cruds.education.list') }} </span>
             </a>
         </li>

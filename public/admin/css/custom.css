@@ -1177,13 +1177,25 @@ input::-webkit-inner-spin-button {
     background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none"><g clip-path="url(%23clip0_355_2)"><path d="M12.545 13.5454C12.4017 13.5456 12.2598 13.5174 12.1274 13.4625C11.9951 13.4077 11.8749 13.3272 11.7737 13.2258L0.864626 2.31671C0.438354 1.89041 0.438354 1.20011 0.864626 0.774107C1.2909 0.348207 1.98117 0.347907 2.40717 0.774107L12.545 10.912L22.6828 0.774107C23.109 0.347907 23.7993 0.347907 24.2253 0.774107C24.6513 1.20041 24.6516 1.89071 24.2253 2.31671L13.3162 13.2258C13.2151 13.3272 13.0948 13.4077 12.9625 13.4625C12.8301 13.5174 12.6882 13.5456 12.545 13.5454Z" fill="%23121212"/></g><defs><clipPath id="clip0_355_2"><rect width="14" height="25" fill="white" transform="matrix(0 -1 1 0 0 14)"/></clipPath></defs></svg>');
     background-position: calc(100% - 12px) center;
     background-repeat: no-repeat;
-    background-size: 14px;
+    background-size: 12px;
 }
 .inviteModal .form-group textarea{
     height: 100px;
 }
 .inviteModal .modal-header .close{
     margin: -17px -17px -25px auto;
+}
+
+.eventAttendanceStatus button{
+    width: auto !important;
+    height: 32px;
+    padding: 8px 15px;
+    border-radius: 4px !important;
+    transition: all .3s ease-in-out;
+    box-shadow: 8px 10px 23px 0px rgba(199, 212, 220, 0.32);
+    font-size: 0.875rem !important;
+    min-width: 95px;
+    font-weight: 400;
 }
 
 @media (min-width: 576px){
@@ -1909,6 +1921,12 @@ body.sidebar-icon-only .sidebar .nav .nav-item .nav-link{
 .sidebar .nav .nav-item.active .nav-link svg path,
 .sidebar .nav .nav-item:hover .nav-link svg path {
     stroke: #ffffff;
+}
+
+.sidebar .nav .nav-item.active .nav-link.fillIcon svg path,
+.sidebar .nav .nav-item:hover .nav-link.fillIcon svg path{
+    stroke: none;
+    fill: #fff;
 }
 
 .limit-description p {

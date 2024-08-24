@@ -64,7 +64,7 @@
                                                 
                                                 <td>
                                                     @can('event_request_edit')
-                                                    <div>
+                                                    <div class="eventAttendanceStatus">
                                                         <button class="btn {{ $eventrequest->status == 1 ? 'btn-success' : 'btn-danger' }}">
                                                             {{ $eventrequest->status == 1 ? 'Accepted' : 'Declined' }}
                                                         </button>
