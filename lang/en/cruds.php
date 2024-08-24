@@ -109,6 +109,7 @@ return [
         'title'          => 'Events',
         'title_singular' => 'Event',
         'list'           => 'Event List',
+        'event_attendance'      => 'Event Attendance',
         'fields'         => [
             'id'                       => 'ID',            
             'title'                    => 'Title',            
@@ -117,6 +118,7 @@ return [
             'created_at'               => 'Created',
             'updated_at'               => 'Updated',
             'deleted_at'               => 'Deleted',            
+            'select_event'             => 'Select Event',            
         ],
     ],
 

@@ -91,6 +91,11 @@ return [
 
     'ratings'=>[
         1,2,3,4,5
+    ],
+   
+    'event_request_status'=>[
+        1=>'accepted',
+        0=>'declined',
     ]
 
 

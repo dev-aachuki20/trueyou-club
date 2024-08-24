@@ -440,6 +440,19 @@ class PermissionsTableSeeder extends Seeder
             ],
 
             [
+                'title'      => 'event_request_edit',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+
+            [
+                'title'      => 'event_invite_volunteer_access',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+
+
+            [
                 'title'      => 'mis_report_access',
                 'created_at' => $createDate,
                 'updated_at' => $updateDate,
