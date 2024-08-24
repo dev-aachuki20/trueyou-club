@@ -13,8 +13,7 @@
 
                         @livewire('admin.volunteer.show', ['user_id' => $user_id])                   
 
-                    @else
-                        
+                    @else                        
                         <div wire:loading wire:target="create" class="loader"></div>
                         <div class="card-title top-box-set">
                             <h4 class="card-title-heading">@lang('cruds.volunteer.list') </h4>
@@ -31,9 +30,9 @@
                             </div>
                         </div>
                     
-                       {{-- @livewire('admin.volunteer.volunteer-table') --}}
+                        @livewire('admin.volunteer.invite-modal')                       
 
-                       {{-- Start Filter Form --}}
+                        {{-- Start Filter Form --}}
                         <div class="card">
                             <div class="card-body filter-section">
                                 <form wire:submit.prevent="submitFilterForm" class="forms-sample">
@@ -191,31 +190,14 @@
                                                             </li>
                                                             @endcan   
                                                             
+                                                            @can('event_invite_volunteer_access')
                                                             <li>
-                                                                <a href="javascript:void()" class="InviteBtn" data-toggle="modal" data-target="#InviteModal">Invite</a>
+                                                                <a href="javascript:void();" class="InviteBtn" wire:click="$emit('showInviteModal', {{ $user->id }})">Invite</a>
                                                             </li>
+                                                            @endcan
                                                             
                                                         </ul>
-                                                    </div>
-                                                    {{--
-                                                    @can('user_show')
-                                                    <button title="Show" type="button" wire:click.prevent="$emit('show', {{$user->id}})" class="btn btn-info view-btn btn-rounded btn-icon">
-                                                    <i class="ti-eye"></i>
-                                                    </button>
-                                                    @endcan
-
-                                                    @can('user_edit')
-                                                    <button title="Edit" type="button" wire:click.prevent="$emit('edit', {{$user->id}})" class="btn btn-info btn-rounded btn-icon">
-                                                        <i class="ti-pencil"></i>
-                                                    </button>
-                                                    @endcan
-
-                                                    @can('user_delete')
-                                                    <button title="Delete" type="button" wire:click.prevent="$emit('delete', {{$user->id}})" class="btn btn-danger btn-rounded btn-icon">
-                                                        <i class="ti-trash"></i>
-                                                    </button>
-                                                    @endcan
-                                                    --}}
+                                                    </div>                                                   
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -242,38 +224,6 @@
         </div>
     </div>
 
-</div>
-
-<div class="modal fade inviteModal" id="InviteModal" tabindex="-1" aria-labelledby="InviteModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="InviteModalLabel">Volunteer Invite</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body pt-4">
-        <form>
-            <div class="form-group">
-                <label>Event List</label>
-                <select class="form-control">
-                    <option>Event List 1</option>
-                    <option>Event List 2</option>
-                    <option>Event List 3</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Message</label>
-                <textarea class="form-control"></textarea>
-            </div>
-            <div class="text-center">
-                <button type="button" class="btn btn-primary">Send Invite</button>
-            </div>
-        </form>
-      </div>
-    </div>
-  </div>
 </div>
 
 @push('styles')
@@ -335,5 +285,16 @@
         }, cb);
 
     }
+
+    document.addEventListener('livewire:load', function () {
+        Livewire.on('showInviteModal', function () {
+            console.log(2);
+            $('#InviteModal').modal('show');
+        });
+
+        Livewire.on('hideInviteModal', function () {
+            $('#InviteModal').modal('hide');
+        });
+    });
 </script>
 @endpush
