@@ -283,6 +283,22 @@
     }
 
     
+
+    $(document).on('click', '.toggle-password', function() {
+        // Toggle the "eye-open" class
+        $(this).toggleClass("eye-open");
+
+        // Find the associated input field
+        var input = $(this).siblings('input');
+
+        // Toggle the input type between 'password' and 'text'
+        input.attr('type') === 'password' ? input.attr('type', 'text') : input.attr('type', 'password');
+
+    });
+
+
+ 
+    
     
 </script>
 @endpush

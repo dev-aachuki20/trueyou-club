@@ -46,7 +46,8 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="font-weight-bold justify-content-start">{{ __('cruds.volunteer.fields.password')}}<i class="fas fa-asterisk"></i></label>
-                    <input type="password" class="form-control" wire:model.defer="password" placeholder="{{ __('cruds.volunteer.fields.password')}}" autocomplete="off">
+                    <input type="password" class="form-control" wire:model.defer="password" id="password" placeholder="{{ __('cruds.volunteer.fields.password')}}" autocomplete="off">
+                    <span toggle="#password-field" class="form-icon-password toggle-password"><img src="{{ asset('admin/images/eye.svg') }}" class="img-fluid" alt=""></span>
                     @error('password') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
@@ -54,11 +55,13 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="font-weight-bold justify-content-start">{{ __('cruds.volunteer.fields.confirm_password')}}<i class="fas fa-asterisk"></i></label>
-                    <input type="password" class="form-control" wire:model.defer="password_confirmation" placeholder="{{ __('cruds.volunteer.fields.confirm_password')}}" autocomplete="off">
+                    <input type="password" class="form-control" wire:model.defer="password_confirmation" id="password_confirmation" placeholder="{{ __('cruds.volunteer.fields.confirm_password')}}" autocomplete="off">
+                    <span toggle="#password-field" class="form-icon-password toggle-password"><img src="{{ asset('admin/images/eye.svg') }}" class="img-fluid" alt=""></span>
                     @error('password_confirmation') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
-        </div>
+        </div>       
+        
     @endif
     
 
