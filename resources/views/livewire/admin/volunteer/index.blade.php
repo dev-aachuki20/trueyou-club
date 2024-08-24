@@ -189,7 +189,11 @@
                                                                     </svg>
                                                                 </a>
                                                             </li>
-                                                            @endcan                                                            
+                                                            @endcan   
+                                                            
+                                                            <li>
+                                                                <a href="javascript:void()" class="InviteBtn" data-toggle="modal" data-target="#InviteModal">Invite</a>
+                                                            </li>
                                                             
                                                         </ul>
                                                     </div>
@@ -238,6 +242,38 @@
         </div>
     </div>
 
+</div>
+
+<div class="modal fade inviteModal" id="InviteModal" tabindex="-1" aria-labelledby="InviteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="InviteModalLabel">Volunteer Invite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pt-4">
+        <form>
+            <div class="form-group">
+                <label>Event List</label>
+                <select class="form-control">
+                    <option>Event List 1</option>
+                    <option>Event List 2</option>
+                    <option>Event List 3</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Message</label>
+                <textarea class="form-control"></textarea>
+            </div>
+            <div class="text-center">
+                <button type="button" class="btn btn-primary">Send Invite</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 
 @push('styles')

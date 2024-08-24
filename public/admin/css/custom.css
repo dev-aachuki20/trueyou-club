@@ -1144,6 +1144,48 @@ input::-webkit-inner-spin-button {
     width: 30px;
 }
 
+/* 24-08-2024 (Volunteer List) */
+.InviteBtn{
+    width: auto !important;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #fff;
+    background-color: #006AF2 !important;
+    border-color: #006AF2 !important;
+}
+.InviteBtn:hover,
+.InviteBtn:focus{
+    background-color: #0659c5 !important;
+    border-color: #0659c5 !important;
+    color: #fff;
+}
+
+.inviteModal .form-group>label{
+    display: block;
+    width: 100%;
+}
+.inviteModal .form-group select,
+.inviteModal .form-group textarea{
+    width: 100%;
+    outline: none;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit--appearance: none;
+}
+
+.inviteModal .form-group select{
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="25" height="14" viewBox="0 0 25 14" fill="none"><g clip-path="url(%23clip0_355_2)"><path d="M12.545 13.5454C12.4017 13.5456 12.2598 13.5174 12.1274 13.4625C11.9951 13.4077 11.8749 13.3272 11.7737 13.2258L0.864626 2.31671C0.438354 1.89041 0.438354 1.20011 0.864626 0.774107C1.2909 0.348207 1.98117 0.347907 2.40717 0.774107L12.545 10.912L22.6828 0.774107C23.109 0.347907 23.7993 0.347907 24.2253 0.774107C24.6513 1.20041 24.6516 1.89071 24.2253 2.31671L13.3162 13.2258C13.2151 13.3272 13.0948 13.4077 12.9625 13.4625C12.8301 13.5174 12.6882 13.5456 12.545 13.5454Z" fill="%23121212"/></g><defs><clipPath id="clip0_355_2"><rect width="14" height="25" fill="white" transform="matrix(0 -1 1 0 0 14)"/></clipPath></defs></svg>');
+    background-position: calc(100% - 12px) center;
+    background-repeat: no-repeat;
+    background-size: 14px;
+}
+.inviteModal .form-group textarea{
+    height: 100px;
+}
+.inviteModal .modal-header .close{
+    margin: -17px -17px -25px auto;
+}
+
 @media (min-width: 576px){
     .modal-dialog-centered {
         min-height: 100% !important;
