@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\User\PostController;
 use App\Http\Controllers\Api\User\PageController;
 use App\Http\Controllers\Api\User\ContactController;
 use App\Http\Controllers\Api\User\HeroController;
+use App\Http\Controllers\Api\User\EvenRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,6 +83,12 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
     Route::delete('/notification/{id}', [HomeController::class, 'deleteNotification']);
 
     Route::get('/reward', [HomeController::class, 'getReward']);
+
+    Route::get('/get-heroes', [HeroController::class, 'index']);
+
+    Route::get('/get-event-list', [EvenRequestController::class, 'index']);
+
+    Route::post('/update-status', [EvenRequestController::class, 'updateStatus']);
 });
 
 
@@ -98,7 +105,7 @@ Route::get('/page/{slug}', [PageController::class, 'getPageDetails']);
 
 Route::post('/contact-us', [ContactController::class, 'store']);
 
-Route::get('/get-heroes', [HeroController::class, 'index']);
+
 
 //Payments Routes
 Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);

@@ -30,14 +30,14 @@ class LoginRegisterController extends Controller
             // 'password'                  => 'required|min:8|regex:/^(?!.*\s)(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
             'password'                  => 'required|min:8',
             'password_confirmation'     => 'required|same:password',
-            'passcode'                  => ['required'],
+            // 'passcode'                  => ['required'],
         ],[
             'phone.required'=>'The phone field is required',
             'phone.regex' =>'The phone length must be 7 to 15 digits.',
             'phone.unique' =>'The phone already exists.',
             'password.regex' => 'The :attribute must be at least 8 characters and contain at least one uppercase character, one number, and one special character.',
         ],[
-           'passcode'=>'golden gateway code',
+        //    'passcode'=>'golden gateway code',
         ]);
         
         if($validator->fails()){
@@ -50,7 +50,8 @@ class LoginRegisterController extends Controller
         }
 
         $input = $request->all();
-           
+        
+        /*
         if(!is_null($request->passcode) && !empty($request->passcode)){
             $booking = Booking::where('passcode',$request->passcode)->where('status',0)->first();
             if($booking){
@@ -67,6 +68,7 @@ class LoginRegisterController extends Controller
                 return response()->json($responseData, 422);
             }
         }
+        */
 
         DB::beginTransaction();
         try {
@@ -180,7 +182,7 @@ class LoginRegisterController extends Controller
                 $user = Auth::user();
 
                 // Check if the authenticated user has the 'user' role
-                if (!$user->is_user) {
+                if (!($user->is_user || $user->is_volunteer)) {
                   
                     $user = $request->user();
        
