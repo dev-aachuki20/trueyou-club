@@ -50,4 +50,28 @@ class HeroController extends Controller
         }
     }
 
+    public function getheroDetail(Heroe $hero)
+    {
+        // dd($hero);
+        try{
+            $hero->created_at = convertDateTimeFormat($hero->created_at, 'fulldate');             
+            $hero->image_url = $hero->featured_image_url ? $hero->featured_image_url : asset(config('constants.default.no_image'));                   
+            $hero->created_by  = $record->user->name ?? null;                    
+            $hero->makeHidden(['user', 'featuredImage']);   
+            $responseData = [
+                'status'  => true,
+                'data' => $hero,
+            ];
+            return response()->json($responseData, 200);  
+
+        } catch (\Exception $e) {
+            // dd($e->getMessage().'->'.$e->getLine());
+            $responseData = [
+                'status'  => false,
+                'error'   => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 500);
+        }
+    }
+
 }

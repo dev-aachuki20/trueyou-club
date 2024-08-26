@@ -105,6 +105,9 @@ Route::post('/contact-us', [ContactController::class, 'store']);
 
 Route::get('/get-heroes', [HeroController::class, 'index']);
 
+Route::get('/heroe-detail/{hero}', [HeroController::class, 'getheroDetail']);
+
+
 //Payments Routes
 Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
 
