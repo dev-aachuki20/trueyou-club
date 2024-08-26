@@ -179,6 +179,8 @@ class Index extends Component
             unset($validatedData['password_confirmation']);
             $user = User::create($validatedData);
             $user->roles()->sync([config('constants.role.volunteer')]);                 // Assign user Role        
+            //Verification mail sent
+            $user->NotificationSendToVerifyEmail();
             DB::commit();
             $this->resetAllFields();
             $this->flash('success',trans('messages.add_success_message'));
