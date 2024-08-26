@@ -62,12 +62,12 @@ class EvenRequestController extends Controller
     }
 
     public function updateStatus(Request $request)
-    {        
+    {     
         try{            
             $volunteer_id = Auth::user()->id;
             $request->validate([
                 'id' => 'required|numeric|exists:event_requests,id',
-                'status' => 'required|in:1,0'
+                'status' => 'required|in:'.implode(',',array_keys(config('constants.event_request_status')))
             ]);
 
             EventRequest::where('id',$request->id)->where('volunteer_id',$volunteer_id)->update(['status'=> $request->status]);
@@ -80,7 +80,7 @@ class EvenRequestController extends Controller
             return response()->json($responseData, 200);
 
         }catch(\Exception $e){
-            // dd($e->getMessage().'->'.$e->getLine());
+            dd($e->getMessage().'->'.$e->getLine());
             $responseData = [
                 'status'  => false,
                 'error'   => trans('messages.error_message'),

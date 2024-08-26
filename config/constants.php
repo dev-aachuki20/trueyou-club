@@ -94,8 +94,9 @@ return [
     ],
    
     'event_request_status'=>[
+        0=>'pending',
         1=>'accepted',
-        0=>'declined',
+        2=>'declined',
     ]
 
 
