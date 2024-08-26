@@ -18,20 +18,18 @@ class HeroController extends Controller
                 ->paginate(12);
 
             if ($getAllRecords->count() > 0)
-            {                
+            {             
+                foreach ($getAllRecords as $key=>$record)
+                {                   
+                    $record->created_at = convertDateTimeFormat($record->created_at, 'fulldate');             
+                    $record->image_url = $record->featured_image_url ? $record->featured_image_url : asset(config('constants.default.no_image'));                   
+                    $record->created_by  = $record->user->name ?? null;                    
+                    $record->makeHidden(['user', 'featuredImage']);                    
+                }                    
+                    
                 $responseData = [
                     'status'  => true,
-                    'data' => $getAllRecords->map(function ($record) {
-                        return [
-                            'id' => $record->id,
-                            'name' => $record->name,
-                            'slug' => $record->slug,
-                            'description' => $record->description,
-                            'created_at' => convertDateTimeFormat($record->created_at, 'fulldate'),
-                            'created_by'  => $record->user->name ?? null,
-                            'image_url' => $record->featured_image_url ? $record->featured_image_url : asset(config('constants.default.no_image')),                            
-                        ];
-                    }),
+                    'data' => $getAllRecords,
                 ];
                 return response()->json($responseData, 200);
             } else {

@@ -82,9 +82,7 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
     Route::get('/notifications', [HomeController::class, 'userNotifications']);
     Route::delete('/notification/{id}', [HomeController::class, 'deleteNotification']);
 
-    Route::get('/reward', [HomeController::class, 'getReward']);
-
-    Route::get('/get-heroes', [HeroController::class, 'index']);
+    Route::get('/reward', [HomeController::class, 'getReward']);    
 
     Route::get('/get-event-list', [EvenRequestController::class, 'index']);
 
@@ -105,7 +103,7 @@ Route::get('/page/{slug}', [PageController::class, 'getPageDetails']);
 
 Route::post('/contact-us', [ContactController::class, 'store']);
 
-
+Route::get('/get-heroes', [HeroController::class, 'index']);
 
 //Payments Routes
 Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
