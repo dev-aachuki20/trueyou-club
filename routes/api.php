@@ -103,7 +103,7 @@ Route::get('/page/{slug}', [PageController::class, 'getPageDetails']);
 
 Route::post('/contact-us', [ContactController::class, 'store']);
 
-Route::get('/get-heroes', [HeroController::class, 'index']);
+Route::get('/heroes/{type?}', [HeroController::class, 'index']);
 
 Route::get('/hero-detail/{slug}', [HeroController::class, 'getheroDetail']);
 

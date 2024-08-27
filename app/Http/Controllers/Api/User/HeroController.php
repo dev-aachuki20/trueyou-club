@@ -8,14 +8,20 @@ use Illuminate\Http\Request;
 
 class HeroController extends Controller
 {
-    public function index()
+    public function index($type=null)
     {
         try {
 
-            $currentDate = now()->toDateString();
-            $getAllRecords = Heroe::select('id', 'name', 'slug', 'description', 'created_at', 'created_by')                
+            if($type == 'home'){
+                $getAllRecords = Heroe::select('id', 'name', 'slug', 'description', 'created_at', 'created_by')                
+                ->orderBy('created_at', 'desc')
+                ->limit(6)->get();
+            }else{
+                $getAllRecords = Heroe::select('id', 'name', 'slug', 'description', 'created_at', 'created_by')                
                 ->orderBy('created_at', 'desc')
                 ->paginate(12);
+            }
+            
 
             if ($getAllRecords->count() > 0)
             {             
