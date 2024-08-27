@@ -93,6 +93,12 @@ return [
         1,2,3,4,5
     ],
    
+    'event_invite_status' => [
+        'pending'   => 0,
+        'accepted'  => 1,
+        'declined'  => 2,
+    ],
+
     'event_request_status'=>[
         0=>'pending',
         1=>'accepted',

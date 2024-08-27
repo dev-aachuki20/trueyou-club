@@ -51,8 +51,7 @@ class HeroController extends Controller
     }
 
     public function getheroDetail(Heroe $hero)
-    {
-        // dd($hero);
+    {        
         try{
             $hero->created_at = convertDateTimeFormat($hero->created_at, 'fulldate');             
             $hero->image_url = $hero->featured_image_url ? $hero->featured_image_url : asset(config('constants.default.no_image'));                   

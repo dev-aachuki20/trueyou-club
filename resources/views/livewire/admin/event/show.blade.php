@@ -64,13 +64,25 @@
                                                 
                                                 <td>
                                                     @can('event_request_edit')
-                                                    <div class="eventAttendanceStatus">
-                                                        <button class="btn {{ $eventrequest->status == 1 ? 'btn-success' : 'btn-danger' }}">
-                                                            {{ $eventrequest->status == 1 ? 'Accepted' : 'Declined' }}
+                                                    <div class="eventAttendanceStatus">                                                       
+                                                        <button class="btn 
+                                                            @if($eventrequest->status == config('constants.event_invite_status.accepted'))
+                                                                btn-success
+                                                            @elseif($eventrequest->status == config('constants.event_invite_status.pending'))
+                                                                btn-warning
+                                                            @else
+                                                                btn-danger
+                                                            @endif">
+                                                            @if($eventrequest->status == config('constants.event_invite_status.accepted'))
+                                                                {{ __('Accepted') }}
+                                                            @elseif($eventrequest->status == config('constants.event_invite_status.pending'))
+                                                                {{ __('Pending') }}
+                                                            @else
+                                                                {{ __('Declined') }}
+                                                            @endif
                                                         </button>
                                                     </div>                                                    
-                                                    @endcan 
-                                                   
+                                                    @endcan                                                   
                                                 </td>
                                             </tr>
                                             @endforeach
