@@ -50,27 +50,44 @@ class HeroController extends Controller
         }
     }
 
-    public function getheroDetail(Heroe $hero)
-    {        
-        try{
-            $hero->created_at = convertDateTimeFormat($hero->created_at, 'fulldate');             
-            $hero->image_url = $hero->featured_image_url ? $hero->featured_image_url : asset(config('constants.default.no_image'));                   
-            $hero->created_by  = $record->user->name ?? null;                    
-            $hero->makeHidden(['user', 'featuredImage']);   
-            $responseData = [
-                'status'  => true,
-                'data' => $hero,
-            ];
-            return response()->json($responseData, 200);  
+    public function getheroDetail(string $slug)
+    { 
+        $hero = Heroe::where('slug',$slug)->where('status',1)->first();
+        if($hero){
+            try{
+                $responseData = [
+                    'status'       => true,
+                    'data'         => [
+                        'id'           => $hero->id,
+                        'name'         => $hero->name,
+                        'description'  => $hero->description,
+                        'slug'         => $hero->slug,
+                        'status'       => $hero->status,
+                        'created_at'   => convertDateTimeFormat($hero->created_at, 'fulldate'),
+                        'updated_at'   => convertDateTimeFormat($hero->updated_at, 'fulldate'),
+                        'image_url'    => $hero->featured_image_url ? $hero->featured_image_url : asset(config('constants.default.no_image')),
+                        'created_by'   => $hero->user->name ?? null,                       
+                    ],
+                ];
+                return response()->json($responseData, 200);  
+    
+            } catch (\Exception $e) {
+                // dd($e->getMessage().'->'.$e->getLine());
+                $responseData = [
+                    'status'  => false,
+                    'error'   => trans('messages.error_message'),
+                ];
+                return response()->json($responseData, 500);
+            }
+        }else{
 
-        } catch (\Exception $e) {
-            // dd($e->getMessage().'->'.$e->getLine());
             $responseData = [
                 'status'  => false,
-                'error'   => trans('messages.error_message'),
+                'error'   => 'Record Does not exists',
             ];
             return response()->json($responseData, 500);
         }
+        
     }
 
 }

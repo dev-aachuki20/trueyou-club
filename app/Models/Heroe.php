@@ -30,7 +30,7 @@ class Heroe extends Model
         'updated_at',
         'deleted_at',
     ];
-
+  
     protected static function boot()
     {
         parent::boot();
@@ -73,4 +73,6 @@ class Heroe extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+   
 }
