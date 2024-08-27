@@ -29,13 +29,14 @@ class EvenRequestController extends Controller
                             'id' => $record->id,
                             'status' => $record->status,
                             'custom_message' => $record->custom_message ?? '',
-                            'created_at' => $record->created_at,
+                            'created_at' => $record->created_at->format('d-m-Y'),
+                            'time' => $record->created_at->format('H:i A'),
                             'event' => [
                                 'id' => $record->event->id,
                                 'title' => $record->event->title ?? '',
                                 'slug' => $record->event->slug ?? '',
                                 'description' => $record->event->description ?? '',
-                                'created_at' => $record->created_at,
+                                'created_at' => $record->event->created_at->format('d-m-Y H:i A'),
                                 'created_by'  => $record->user->name ?? null,
                                 'image_url' => $record->featured_image_url ? $record->featured_image_url : asset(config('constants.default.no_image')),  
                             ]                                                      
