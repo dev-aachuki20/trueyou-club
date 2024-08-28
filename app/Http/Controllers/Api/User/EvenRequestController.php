@@ -21,28 +21,25 @@ class EvenRequestController extends Controller
                 ->paginate(12);
             
             if ($getAllRecords->count() > 0)
-            {                
+            {  
+                foreach ($getAllRecords as $key=>$record)
+                {        
+                    $record->formatted_date  = convertDateTimeFormat($record->created_at, 'fulldate');                            
+                    $record->time = $record->created_at->format('H:i A');             
+                    $record->image_url = $record->featured_image_url ? $record->featured_image_url : asset(config('constants.default.no_image'));                   
+                    $record->created_by  = $record->user->name ?? null;                    
+                    $record->makeHidden(['user', 'featuredImage']);
+                    
+                    $record->event->formatted_date = convertDateTimeFormat($record->event->created_at, 'fulldate');             
+                    $record->event->image_url = $record->featured_image_url ? $record->featured_image_url : asset(config('constants.default.no_image'));                   
+                    $record->event->created_by  = $record->user->name ?? null;                    
+                    $record->event->makeHidden(['user', 'featuredImage']);       
+                }                    
+                 
                 $responseData = [
                     'status'  => true,
-                    'data' => $getAllRecords->map(function ($record) {
-                        return [
-                            'id' => $record->id,
-                            'status' => $record->status,
-                            'custom_message' => $record->custom_message ?? '',
-                            'created_at' => $record->created_at->format('d-m-Y'),
-                            'time' => $record->created_at->format('H:i A'),
-                            'event' => [
-                                'id' => $record->event->id,
-                                'title' => $record->event->title ?? '',
-                                'slug' => $record->event->slug ?? '',
-                                'description' => $record->event->description ?? '',
-                                'created_at' => $record->event->created_at->format('d-m-Y H:i A'),
-                                'created_by'  => $record->user->name ?? null,
-                                'image_url' => $record->featured_image_url ? $record->featured_image_url : asset(config('constants.default.no_image')),  
-                            ]                                                      
-                        ];
-                    }),
-                ];
+                    'data' => $getAllRecords,
+                ];                 
                 return response()->json($responseData, 200);
             } else {
                 $responseData = [

@@ -17,8 +17,10 @@ use App\Http\Controllers\Api\User\WebinarController;
 use App\Http\Controllers\Api\User\PostController;
 use App\Http\Controllers\Api\User\PageController;
 use App\Http\Controllers\Api\User\ContactController;
+use App\Http\Controllers\Api\User\EducationCategoryController;
 use App\Http\Controllers\Api\User\HeroController;
 use App\Http\Controllers\Api\User\EvenRequestController;
+use App\Http\Controllers\Api\User\EducationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,8 +107,14 @@ Route::post('/contact-us', [ContactController::class, 'store']);
 
 Route::get('/heroes/{type?}', [HeroController::class, 'index']);
 
-Route::get('/hero-detail/{slug}', [HeroController::class, 'getheroDetail']);
+Route::get('/hero/{slug}', [HeroController::class, 'show']);
 
+Route::get('/education', [EducationController::class, 'index']);
+
+Route::get('/education/{slug}', [EducationController::class, 'show']);
+
+Route::get('/education-categories', [EducationCategoryController::class, 'index']);
+Route::get('/education-category/{slug}', [EducationCategoryController::class, 'show']);
 
 //Payments Routes
 Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);

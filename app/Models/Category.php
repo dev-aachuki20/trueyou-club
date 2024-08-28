@@ -73,4 +73,9 @@ class Category extends Model
         return $this->belongsTo(User::class, 'created_by');
     }   
 
+    public function educations()
+    {
+        return $this->hasMany(Education::class, 'category_id');
+    }
+
 }
