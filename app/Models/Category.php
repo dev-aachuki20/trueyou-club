@@ -21,7 +21,8 @@ class Category extends Model
 
     protected $fillable = [
         'name',
-        'slug',       
+        'slug',
+        'description',       
         'status',
         'created_by',
         'created_at',
@@ -41,7 +42,31 @@ class Category extends Model
             $model->slug = Str::slug($model->name) . '-' . bin2hex(random_bytes(10));
         });
        
+        static::deleting(function ($model) {
+            if ($model->featuredImage) {
+                $uploadImageId = $model->featuredImage->id;
+                deleteFile($uploadImageId);
+            }
+        });
     }   
+
+    public function uploads()
+    {
+        return $this->morphMany(Uploads::class, 'uploadsable');
+    }
+
+    public function featuredImage()
+    {
+        return $this->morphOne(Uploads::class, 'uploadsable')->where('type', 'category');
+    }
+
+    public function getFeaturedImageUrlAttribute()
+    {
+        if ($this->featuredImage) {
+            return $this->featuredImage->file_url;
+        }
+        return "";
+    }
 
     public function user()
     {

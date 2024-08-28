@@ -22,7 +22,8 @@ class Index extends Component
 
     public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Name, Created Date";
 
-    public $category_id = null, $name,$created_at, $status = 1;   
+    public $category_id = null, $name,$description,$created_at,$image, $originalImage,$status = 1;   
+    public $removeImage = false; 
     
     protected $listeners = [
         'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm'
@@ -104,13 +105,20 @@ class Index extends Component
         $validatedData = $this->validate([
             'name'        => 'required',           
             'status'       => 'required',
+            'description'      => 'required|strip_tags',
+            'image'        => 'nullable|image|max:' . config('constants.img_max_size'),
+        ], [
+            'description.strip_tags' => 'The description field is required',
         ]);
 
         DB::beginTransaction();
         try {
 
             $validatedData['status'] = $this->status;
-            $category = Category::create($validatedData);           
+            $category = Category::create($validatedData);   
+            if ($this->image) {
+                uploadImage($category, $this->image, 'category/image/', "category", 'original', 'save', null);
+            }        
 
             DB::commit();
 
@@ -135,14 +143,20 @@ class Index extends Component
         $category = Category::findOrFail($id);
         $this->category_id         =  $category->id;
         $this->name           =  $category->name;
-        $this->status          =  $category->status;       
+        $this->description      =  $category->description;
+        $this->status          =  $category->status; 
+        $this->originalImage    =  $category->featured_image_url;      
     }
 
 
     public function update()
     {
         $validatedData = $this->validate([
-            'name'        => 'required',         
+            'name'        => 'required',  
+            'description'      => 'required|strip_tags',  
+            'image'        => 'nullable|image|max:' . config('constants.img_max_size'),     
+        ], [
+            'description.strip_tags' => 'The description field is required',
         ]);
         
         $validatedData['status'] = $this->status;        
@@ -150,7 +164,24 @@ class Index extends Component
         DB::beginTransaction();
         try {
 
-            $category = Category::find($this->category_id);         
+            $category = Category::find($this->category_id);
+            
+            // Check if the image has been changed
+            if ($this->image) {
+                if ($category->featuredImage) {
+                    $uploadImageId = $category->featuredImage->id;
+                    uploadImage($category, $this->image, 'category/image/', "category", 'original', 'update', $uploadImageId);
+                } else {
+                    uploadImage($category, $this->image, 'category/image/', "category", 'original', 'save', null);
+                }
+            }
+
+            if ($this->removeImage) {
+                if ($category->featuredImage) {
+                    $uploadImageId = $category->featuredImage->id;
+                    deleteFile($uploadImageId);
+                }
+            }
 
             $category->update($validatedData);
 
@@ -189,7 +220,7 @@ class Index extends Component
     }
 
     public function resetAllFields(){
-        $this->reset(['formMode','updateMode','viewMode','category_id','name','status']);
+        $this->reset(['formMode','updateMode','viewMode','category_id','name','description','image','originalImage','status','removeImage']);
     }
 
     public function delete($id)
