@@ -23,10 +23,11 @@ class Index extends Component
 
     public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Title, Created Date";
 
-    public $education_id = null, $title, $description, $video_link, $created_at ,$image, $originalImage, $status = 1 ,$allcategory;
+    public $education_id = null, $title, $description, $video_link, $created_at ,$image, $originalImage, $video, $originalVideo,$videoExtenstion, $status = 1 ,$allcategory;
     public $category_id = ''; 
+    public $video_type = ''; 
 
-    public $removeImage = false;    
+    public $removeImage = false,$removeVideo = false;    
     
     protected $listeners = [
         'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm'
@@ -116,13 +117,16 @@ class Index extends Component
 
     public function store()
     {
+        // dd($this->all());
         $validatedData = $this->validate([
-            'title'         => 'required',           
-            'video_link'    => 'required|url',         
+            'title'         => 'required|string|max:150|unique:educations,title,NULL,id,deleted_at,NULL',           
+            'video_link'    => 'nullable|url',         
             'description'   => 'required|strip_tags',
+            'video_type'   => 'required|in:'.implode(',',array_keys(config('constants.education_video_type'))),
             'category_id'   => 'required|numeric|exists:categories,id',
             'status'        => 'required',
             'image'         => 'nullable|image|max:' . config('constants.img_max_size'),
+            'video'         => 'nullable|file|mimes:mp4,avi,mov,wmv,webm,flv',
         ], [
             'description.strip_tags' => 'The description field is required',
             'category_id.required' => 'The Category is required.'
@@ -136,6 +140,12 @@ class Index extends Component
             if ($this->image) {
                 uploadImage($education, $this->image, 'education/image/', "education", 'original', 'save', null);
             }
+
+            if ($this->video) {
+                $dateFolder = date("Y-m-W");
+                $tmpVideoPath = 'upload/video/'.$dateFolder.'/'.$this->video;
+                uploadFile($education, $tmpVideoPath, 'education/video/', "education-video", "original","save",null);
+            }            
 
             DB::commit();
 
@@ -162,9 +172,12 @@ class Index extends Component
         $this->title             =  $education->title;
         $this->description      =  $education->description;
         $this->category_id      =  $education->category_id;
+        $this->video_type      =  $education->video_type;
         $this->video_link      =  $education->video_link;
         $this->status           =  $education->status;
-        $this->originalImage    =  $education->featured_image_url;   
+        $this->originalImage    =  $education->featured_image_url;  
+        $this->originalVideo  =  $education->education_video_url;
+        $this->videoExtenstion = $education->educationVideo->extension; 
         $this->allcategory = Category::where('status',1)->get();      
     }
 
@@ -172,9 +185,10 @@ class Index extends Component
     public function update()
     {  
         $validatedData = $this->validate([
-            'title'        => 'required',           
+            'title'        => 'required|string|max:150|unique:educations,title,'.$this->education_id,           
             'video_link'        => 'required|url',         
             'description'      => 'required|strip_tags',
+            'video_type'   => 'required|in:'.implode(',',array_keys(config('constants.education_video_type'))),
             'category_id'   => 'required|numeric|exists:categories,id',
             'status'       => 'required',
             'image'        => 'nullable|image|max:' . config('constants.img_max_size'),
@@ -239,7 +253,7 @@ class Index extends Component
     }
 
     public function resetAllFields(){
-        $this->reset(['formMode','updateMode','viewMode','education_id','title','video_link','description','image','originalImage','status','removeImage']);
+        $this->reset(['formMode','updateMode','viewMode','education_id','title','video_link','description','image','originalImage','video','originalVideo','status','removeImage','removeVideo']);
     }
 
     public function delete($id)
@@ -268,6 +282,11 @@ class Index extends Component
             // $this->emit('refreshTable'); 
             $this->alert('error', trans('messages.error_message'));   
         }else{
+
+            $uploadImageId = $model->featuredImage->id;
+            $uploadVideoId = $model->educationVideo->id;
+            deleteFile($uploadImageId);
+            deleteFile($uploadVideoId);
             $model->delete();
 
             $this->resetPage();

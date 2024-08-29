@@ -150,6 +150,12 @@
                 @this.set('originalImage', null);
                 @this.set('removeImage', true);
             }
+
+            if (elementName == 'dropify-video') {
+                @this.set('video', null);
+                @this.set('originalVideo', null);
+                @this.set('removeVideo', true);
+            }
         });
 
         $('textarea#summernote').summernote({
@@ -187,5 +193,7 @@
         });
 
     });
+
+    
 </script>
 @endpush

@@ -25,6 +25,7 @@ class Education extends Model
         'slug',
         'description',
         'video_link',
+        'video_type',
         'category_id',
         'status',
         'created_by',
@@ -58,6 +59,7 @@ class Education extends Model
         return $this->morphMany(Uploads::class, 'uploadsable');
     }
 
+    // Featured Image 
     public function featuredImage()
     {
         return $this->morphOne(Uploads::class, 'uploadsable')->where('type', 'education');
@@ -67,6 +69,21 @@ class Education extends Model
     {
         if ($this->featuredImage) {
             return $this->featuredImage->file_url;
+        }
+        return "";
+    }
+
+    // Video 
+
+    public function educationVideo()
+    {
+        return $this->morphOne(Uploads::class, 'uploadsable')->where('type', 'education-video');
+    }
+
+    public function getEducationVideoUrlAttribute()
+    {
+        if ($this->educationVideo) {
+            return $this->educationVideo->file_url;
         }
         return "";
     }

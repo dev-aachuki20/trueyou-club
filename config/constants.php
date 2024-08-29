@@ -103,6 +103,11 @@ return [
         0=>'pending',
         1=>'accepted',
         2=>'declined',
+    ],
+
+    'education_video_type'=>[
+        'video_link'=> 'Video Link',
+        'upload_video'=> 'Upload Video',        
     ]
 
 

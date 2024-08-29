@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('slug')->nullable();
             $table->longText('description')->nullable()->default(null); 
             $table->text('video_link')->nullable()->default(null);  
+            $table->enum('video_type', ['upload_video', 'video_link'])->default(null);
             $table->unsignedBigInteger('category_id');          
             $table->tinyInteger('status')->default(1)->comment('0=> inactive, 1=> active');
             $table->unsignedBigInteger('created_by')->nullable();
