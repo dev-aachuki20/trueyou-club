@@ -58,7 +58,7 @@ return [
     ],
 
     'heroe'   => [
-        'title'          => 'Heroes',
+        'title'          => 'Our Heroes',
         'title_singular' => 'Heroe',
         'list'           => 'Our Heroes',
         'fields'         => [

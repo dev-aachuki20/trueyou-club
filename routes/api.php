@@ -86,9 +86,9 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
 
     Route::get('/reward', [HomeController::class, 'getReward']);    
 
-    Route::get('/get-event-list', [EvenRequestController::class, 'index']);
+    Route::get('/event-requests', [EvenRequestController::class, 'index']);
 
-    Route::post('/update-status', [EvenRequestController::class, 'updateStatus']);
+    Route::post('/update-event-request', [EvenRequestController::class, 'updateStatus']);
 });
 
 
