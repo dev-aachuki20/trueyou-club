@@ -33,9 +33,9 @@ class PageTableSeeder extends Seeder
 
             [
                 'id'             => 2,
-                'page_name'      => 'Health',
+                'page_name'      => 'Our Herores',
                 'title'          => 'Trueyou realize your potential',
-                'slug'           => 'health',
+                'slug'           => 'our-heroes',
                 'type'           => 'header',
                 'subtitle'       => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
                 'button'         =>  null,
@@ -46,6 +46,20 @@ class PageTableSeeder extends Seeder
 
             [
                 'id'             => 3,
+                'page_name'      => 'Our Herores',
+                'title'          => 'Trueyou realize your potential',
+                'slug'           => 'our-heroes',
+                'type'           => 'header',
+                'subtitle'       => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
+                'button'         =>  null,
+                'status'         =>  1,
+                'created_at'     => date('Y-m-d H:i:s'),
+                'updated_at'     => date('Y-m-d H:i:s'),
+            ],
+
+
+            [
+                'id'             => 4,
                 'page_name'       => 'Seminar',
                 'title'          => 'Trueyou realize your potential',
                 'slug'           => 'seminar',
@@ -58,7 +72,7 @@ class PageTableSeeder extends Seeder
             ],
 
             [
-                'id'             => 4,
+                'id'             => 5,
                 'page_name'      => 'News',
                 'title'          => 'Trueyou realize your potential',
                 'slug'           => 'news',
@@ -71,7 +85,7 @@ class PageTableSeeder extends Seeder
             ],
 
             [
-                'id'             => 5,
+                'id'             => 6,
                 'page_name'      => 'Contact Us',
                 'title'          => 'Trueyou realize your potential',
                 'slug'           => 'contact-us',
@@ -83,7 +97,7 @@ class PageTableSeeder extends Seeder
                 'updated_at'     => date('Y-m-d H:i:s'),
             ],
             [
-                'id'             => 6,
+                'id'             => 7,
                 'page_name'      => 'About Us',
                 'title'          => 'About Us',
                 'slug'           => 'about-us',
