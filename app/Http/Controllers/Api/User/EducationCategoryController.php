@@ -84,9 +84,10 @@ class EducationCategoryController extends Controller
 
             $responseData = [
                 'status'  => false,
-                'error'   => 'No Record Found',
+                'data'    => $getAllRecords,
+                'message' => 'No Record Found',
             ];
-            return response()->json($responseData, 500);
+            return response()->json($responseData, 200);
         }
         
     }

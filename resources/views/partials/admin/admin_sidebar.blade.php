@@ -56,14 +56,14 @@
         </li>
         @endcan
 
-        @can('health_access')
+        {{-- @can('health_access')
         <li class="nav-item {{ request()->is('health') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.health') }}">
                 <x-svg-icon icon="health" />
                 <span class="menu-title"> {{ __('cruds.health.title') }} </span>
             </a>
         </li>
-        @endcan
+        @endcan --}}
 
         @can('quote_access')
         <li class="nav-item {{ request()->is('quotes') ? 'active' : '' }}">

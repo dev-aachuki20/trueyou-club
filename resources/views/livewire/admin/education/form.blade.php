@@ -28,7 +28,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                <label class="font-weight-bold justify-content-start">{{ __('cruds.education.fields.category') }}<i class="fas fa-asterisk"></i></label>
+                <label class="font-weight-bold justify-content-start">{{ __('cruds.education.fields.select_category') }}<i class="fas fa-asterisk"></i></label>
                 <select class="form-control" wire:model.defer="category_id">
                     <option value="" disabled {{ is_null($category_id) ? 'selected' : '' }}>{{ __('cruds.education.fields.select_category') }}</option>
                     @foreach($allcategory as $category)

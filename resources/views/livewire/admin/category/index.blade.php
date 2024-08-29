@@ -48,7 +48,7 @@
                                              <div class="webinar-content">
                                                  <h3>
                                                      {{ ucwords($category->name) }}
-                                                 </h3>                                                
+                                                 </h3>                                                      
                                                  <div class="limit-description">
                                                      {!! $category->description !!}
                                                  </div>
