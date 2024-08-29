@@ -103,9 +103,9 @@ class Index extends Component
     public function store()
     {
         $validatedData = $this->validate([
-            'name'        => 'required',           
+            'name'        => 'required|string|max:150|unique:categories,name,NULL,id,deleted_at,NULL',           
             'status'       => 'required',
-            'description'      => 'required|strip_tags',
+            'description'  => 'required|strip_tags',
             'image'        => 'nullable|image|max:' . config('constants.img_max_size'),
         ], [
             'description.strip_tags' => 'The description field is required',
@@ -152,7 +152,7 @@ class Index extends Component
     public function update()
     {
         $validatedData = $this->validate([
-            'name'        => 'required',  
+            'name'        => 'required|string|max:150|unique:categories,name,'.$this->category_id,  
             'description'      => 'required|strip_tags',  
             'image'        => 'nullable|image|max:' . config('constants.img_max_size'),     
         ], [
