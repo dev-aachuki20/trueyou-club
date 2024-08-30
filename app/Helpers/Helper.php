@@ -132,8 +132,11 @@ if (!function_exists('deleteFile')) {
 	function deleteFile($upload_id)
 	{
 		$upload = Uploads::find($upload_id);
-		Storage::disk('public')->delete($upload->file_path);
-		$upload->delete();
+		if($upload){
+			Storage::disk('public')->delete($upload->file_path);
+			$upload->delete();
+		}
+		
 		return true;
 	}
 }
