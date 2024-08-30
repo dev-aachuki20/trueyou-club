@@ -16,7 +16,7 @@ class PageTableSeeder extends Seeder
     public function run()
     {
 
-        DB::table('pages')->truncate();
+        // DB::table('pages')->truncate();
         $pages = [
             [
                 'id'             => 1,
@@ -46,9 +46,9 @@ class PageTableSeeder extends Seeder
 
             [
                 'id'             => 3,
-                'page_name'      => 'Our Herores',
+                'page_name'      => 'Education',
                 'title'          => 'Trueyou realize your potential',
-                'slug'           => 'our-heroes',
+                'slug'           => 'education',
                 'type'           => 'header',
                 'subtitle'       => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
                 'button'         =>  null,

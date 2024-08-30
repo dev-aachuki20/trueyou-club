@@ -15,7 +15,7 @@ class PageSectionTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('sections')->truncate();
+        // DB::table('sections')->truncate();
 
         $sections = [
 
