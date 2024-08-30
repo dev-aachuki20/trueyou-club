@@ -61,9 +61,10 @@ class EducationCategoryController extends Controller
                 foreach ($getAllRecords as $key=>$record)
                 {                   
                     $record->formatted_date  = convertDateTimeFormat($record->created_at, 'fulldate');             
-                    $record->image_url = $record->featured_image_url ? $record->featured_image_url : asset(config('constants.default.no_image'));                   
+                    $record->image_url = $record->featured_image_url ? $record->featured_image_url : asset(config('constants.default.no_image')); 
+                    $record->video_url = $record->educationVideo ?  $record->education_video_url : '';                                 
                     $record->created_by  = $record->user->name ?? null;                    
-                    $record->makeHidden(['user', 'featuredImage']);                               
+                    $record->makeHidden(['user', 'featuredImage','educationVideo']);                               
                 }                    
                     
                 $responseData = [
@@ -73,7 +74,7 @@ class EducationCategoryController extends Controller
                 return response()->json($responseData, 200);  
     
             } catch (\Exception $e) {
-                dd($e->getMessage().'->'.$e->getLine());
+                // dd($e->getMessage().'->'.$e->getLine());
                 $responseData = [
                     'status'  => false,
                     'error'   => trans('messages.error_message'),

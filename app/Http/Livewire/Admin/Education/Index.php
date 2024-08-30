@@ -120,13 +120,13 @@ class Index extends Component
         // dd($this->all());
         $validatedData = $this->validate([
             'title'         => 'required|string|max:150|unique:educations,title,NULL,id,deleted_at,NULL',                           
-            'description'   => 'required|strip_tags',
-            'video_type'   => 'required|in:'.implode(',',array_keys(config('constants.education_video_type'))),
-            'video_link'    => 'nullable|url|required_if:video_type,video_link', 
-            'video'         => 'nullable|file|mimes:mp4,avi,mov,wmv,webm,flv|required_if:video_type,upload_video', 
+            'description'   => 'required|strip_tags',           
             'category_id'   => 'required|numeric|exists:categories,id',
             'status'        => 'required',
-            'image'         => 'nullable|image|max:' . config('constants.img_max_size'),
+            'image'         => 'nullable|image|mimes:jpg,jpeg,png,svg',
+            'video_type'    => 'required|in:'.implode(',',array_keys(config('constants.education_video_type'))),
+            'video_link'    => 'nullable|url|required_if:video_type,video_link', 
+            'video'         => 'nullable|file|mimes:mp4,avi,mov,wmv,webm,flv|required_if:video_type,upload_video', 
         ], [
             'description.strip_tags' => 'The description field is required',
             'category_id.required' => 'The Category is required.',
@@ -147,9 +147,8 @@ class Index extends Component
             }
 
             if ($this->video) {
-                $dateFolder = date("Y-m-W");
-                $tmpVideoPath = 'upload/video/'.$dateFolder.'/'.$this->video;
-                uploadFile($education, $tmpVideoPath, 'education/video/', "education-video", "original","save",null);
+                $dateFolder = date("Y-m-W");                
+                uploadImage($education, $this->video, 'education/video/', "education-video", 'original', 'save', null);
             }            
 
             DB::commit();
@@ -188,18 +187,24 @@ class Index extends Component
 
 
     public function update()
-    {  
+    {      
         $validatedData = $this->validate([
             'title'        => 'required|string|max:150|unique:educations,title,'.$this->education_id,           
-            'video_link'        => 'required|url',         
-            'description'      => 'required|strip_tags',
-            'video_type'   => 'required|in:'.implode(',',array_keys(config('constants.education_video_type'))),
+            'description'   => 'required|strip_tags',  
             'category_id'   => 'required|numeric|exists:categories,id',
-            'status'       => 'required',
-            'image'        => 'nullable|image|max:' . config('constants.img_max_size'),
+            'status'        => 'required',
+            'image'         => 'nullable|image|mimes:jpg,jpeg,png,svg',
+            'video_type'   => 'required|in:'.implode(',',array_keys(config('constants.education_video_type'))),
+            'video_link'    => 'nullable|url|required_if:video_type,video_link', 
+            'video'         => 'nullable|file|mimes:mp4,avi,mov,wmv,webm,flv|required_if:video_type,upload_video',
         ], [
             'description.strip_tags' => 'The description field is required',
-            'category_id.required' => 'The Category is required.'
+            'category_id.required' => 'The Category is required.',
+            'video_link.required_if' => 'The Video Link is required.',
+            'video.required_if' => 'Please upload Video!',
+
+        ],[
+            'video_link' => 'Video Link'
         ]);
 
 
@@ -224,6 +229,24 @@ class Index extends Component
                 if ($education->featuredImage) {
                     $uploadImageId = $education->featuredImage->id;
                     deleteFile($uploadImageId);
+                }
+            }
+
+            // Check if video has been change
+
+            if ($this->video) {
+                if ($education->educationVideo) {
+                    $uploadVideoId = $education->educationVideo->id;
+                    uploadImage($education, $this->video, 'education/video/', "education-video", 'original', 'update', $uploadVideoId);
+                } else {
+                    uploadImage($education, $this->video, 'education/video/', "education-video", 'original', 'save', null);
+                }
+            }
+
+            if ($this->removeVideo) {
+                if ($education->educationVideo) {
+                    $uploadVideoId = $education->educationVideo->id;
+                    deleteFile($uploadVideoId);
                 }
             }
 

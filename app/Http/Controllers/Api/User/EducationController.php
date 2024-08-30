@@ -19,9 +19,10 @@ class EducationController extends Controller
                 foreach ($getAllRecords as $key=>$record)
                 {                   
                     $record->formatted_date  = convertDateTimeFormat($record->created_at, 'fulldate');             
-                    $record->image_url = $record->featured_image_url ? $record->featured_image_url : asset(config('constants.default.no_image'));                   
+                    $record->image_url = $record->featured_image_url ? $record->featured_image_url : asset(config('constants.default.no_image')); 
+                    $record->video_url = $record->educationVideo ?  $record->education_video_url : '';                                                
                     $record->created_by  = $record->user->name ?? null;                    
-                    $record->makeHidden(['user', 'featuredImage']);
+                    $record->makeHidden(['user', 'featuredImage','educationVideo']);
                     
                     $record->category->formatted_date  = convertDateTimeFormat($record->category->created_at, 'fulldate');            
                     $record->category->image_url = $record->featured_image_url ? $record->featured_image_url : asset(config('constants.default.no_image'));                   
@@ -64,12 +65,14 @@ class EducationController extends Controller
                         'id' => $education->id,
                         'title' => $education->title ?? '',
                         'slug' => $education->slug ?? '',
-                        'description' => $education->description ?? '',
-                        'video_link' => $education->video_link ?? '',
+                        'description' => $education->description ?? '',                        
                         'status' => $education->status ?? '',                            
                         'created_at' => $education->created_at->format('d-m-Y'),
                         'created_by' => $education->user->name ?? null,
                         'image_url' => $education->featured_image_url ? $education->featured_image_url : asset(config('constants.default.no_image')),
+                        "video_type" => $education->video_type ?? '',
+                        'video_link' => $education->video_link ?? '',
+                        'video_url' => $education->video_url = $education->educationVideo ?  $education->education_video_url : '',
                         'category' => [
                             'id' => $education->category->id,
                             'name' => $education->category->name ?? '',

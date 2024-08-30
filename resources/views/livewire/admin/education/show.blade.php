@@ -38,7 +38,11 @@
 
                 <div class="dflex row mt-4">
                     <div class="col-auto">
-                        <a href="{{ $detail->video_link ?? 'javascript:void(0)' }}" class="btn btn-primary" target="blank">
+
+                        @php
+                            $link = $detail->educationVideo ? $detail->education_video_url : $detail->video_link;
+                        @endphp
+                        <a href="{{ $link ?? 'javascript:void(0)' }}" class="btn btn-primary" target="blank">
                             @lang('cruds.education.fields.view_video')
                         </a>
                     </div>                    
