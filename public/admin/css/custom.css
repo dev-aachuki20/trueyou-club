@@ -2568,7 +2568,26 @@ button.btn.btn-sm.btn-info.copy-btn.mb-1 {
     display: inline-block;
     float: right;
 }
-
+.modal-dialog.modal-50{
+    max-width: 710px;
+}
+#preview-video-btn{
+    min-width: auto;
+    padding: 0 !important;
+    width: 45px;
+    height: 45px;
+    border-radius: 4px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#preview-video-btn svg{
+    width: 20px;
+    height: auto;
+}
+#preview-video-btn:hover svg path{
+    fill: #fff;
+}
 
 @media(max-width:1440px){
 

@@ -46,8 +46,15 @@
     <div class="row logo-section" id="video_upload_input" style="display: none;">
         <div class="col-md-12 mb-4">
             <div class="form-group mb-0" wire:ignore>
-                <label class="font-weight-bold justify-content-start">{{ __('global.video')}}<i class="fas fa-asterisk"></i></label>
-                <input type="file" id="dropify-video" wire:model.defer="video" class="dropify" data-default-file="{{ $originalVideo }}"  data-show-loader="true" data-errors-position="outside" data-allowed-file-extensions="mp4"  accept="video/mp4,video/x-m4v,video/*">
+                <div class="d-flex align-items-end justify-content-between mb-2">
+                    <label class="font-weight-bold justify-content-start position-relative">{{ __('global.video')}}<i class="fas fa-asterisk"></i></label>   
+                    <!-- Preview Button -->                
+                    <button type="button" id="preview-video-btn" class="btn btn-secondary mt-2" style="{{ $updateMode ? '' : 'display: none;' }}" title="Preview Video">
+                        <x-svg-icon icon="preview" />                            
+                    </button>  
+                </div>            
+                <input type="file" id="dropify-video" wire:model.defer="video" class="dropify" data-default-file="{{ $originalVideo }}"  data-show-loader="true" data-errors-position="outside" data-allowed-file-extensions="mp4"  accept="video/mp4,video/x-m4v,video/*">                              
+                
                 <span wire:loading wire:target="video">
                     <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i> {{__('global.loading')}}
                 </span>

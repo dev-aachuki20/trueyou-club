@@ -123,6 +123,25 @@
             </div>
         </div>
     </div>
+<!-- Video Preview Modal -->
+<div id="video-preview-modal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-50 modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Video Preview</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <video id="video-preview" width="100%" controls>
+                    <source src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </div>
+</div>
 
 </div>
 
@@ -169,11 +188,39 @@
             videoLinkInput.hide();
             videoUploadInput.hide();
         }
-    }
-  
+    }  
 
     function initializeDropify(){
         $('.dropify').dropify();
+        // Show preview button if video is uploaded
+        $('.dropify').on('change', function () {
+            if (this.files && this.files[0]) {
+                $('#preview-video-btn').show();
+            }
+        });
+
+        // Preview Button Click Event      
+        $('#preview-video-btn').on('click', function (e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('dropify-video');
+            const file = fileInput.files[0];
+            const defaultFile = $(fileInput).data('default-file');
+
+            if (file) {
+                const fileURL = URL.createObjectURL(file);
+                $('#video-preview').attr('src', fileURL);
+                $('#video-preview-modal').modal('show');
+            } else if (defaultFile) {
+                // Use the default file URL for preview if in update mode
+                $('#video-preview').attr('src', defaultFile);
+                $('#video-preview-modal').modal('show');
+            }
+        });        
+        // Handle modal close event
+        $('#video-preview-modal').on('hidden.bs.modal', function () {
+            $('#video-preview').attr('src', ''); // Clear video source when modal is closed
+        });
+        
         $('.dropify-errors-container').remove();
         $('.dropify-clear').click(function(e) {
             e.preventDefault();
@@ -188,7 +235,8 @@
                 @this.set('video', null);
                 @this.set('originalVideo', null);
                 @this.set('removeVideo', true); 
-                Livewire.emit('clearVideo');               
+                Livewire.emit('clearVideo');  
+                $('#preview-video-btn').hide();             
             }           
         });
     }
