@@ -125,7 +125,7 @@ class Index extends Component
             'status'        => 'required',
             'image'         => 'nullable|image|mimes:jpg,jpeg,png,svg',
             'video_type'    => 'required|in:'.implode(',',array_keys(config('constants.education_video_type'))),
-            'video_link'    => 'nullable|url|required_if:video_type,video_link', 
+            'video_link'    => 'nullable|string|required_if:video_type,video_link', 
             'video'         => 'nullable|file|mimes:mp4,avi,mov,wmv,webm,flv|required_if:video_type,upload_video', 
         ], [
             'description.strip_tags' => 'The description field is required',
@@ -195,7 +195,7 @@ class Index extends Component
             'status'        => 'required',
             'image'         => 'nullable|image|mimes:jpg,jpeg,png,svg',
             'video_type'   => 'required|in:'.implode(',',array_keys(config('constants.education_video_type'))),
-            'video_link'    => 'nullable|url|required_if:video_type,video_link', 
+            'video_link'    => 'nullable|string|required_if:video_type,video_link', 
             'video'         => 'nullable|file|mimes:mp4,avi,mov,wmv,webm,flv|required_if:video_type,upload_video',
         ], [
             'description.strip_tags' => 'The description field is required',
