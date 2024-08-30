@@ -39,7 +39,7 @@ class Heroe extends Model
             $model->created_by = auth()->user()->id;
         });
 
-        static::updating(function (Education $model) {
+        static::updating(function (Heroe $model) {
             $model->slug = Str::slug($model->name) . '-' . bin2hex(random_bytes(10));
         });
 
