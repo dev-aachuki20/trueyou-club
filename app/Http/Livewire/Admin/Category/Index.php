@@ -249,6 +249,10 @@ class Index extends Component
             // $this->emit('refreshTable'); 
             $this->alert('error', trans('messages.error_message'));   
         }else{
+            if($model->featuredImage){
+                $uploadImageId = $model->featuredImage->id;
+                deleteFile($uploadImageId);
+            }
             $model->delete();
 
             $this->resetPage();

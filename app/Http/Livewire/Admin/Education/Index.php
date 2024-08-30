@@ -311,10 +311,16 @@ class Index extends Component
             $this->alert('error', trans('messages.error_message'));   
         }else{
 
-            $uploadImageId = $model->featuredImage->id;
-            $uploadVideoId = $model->educationVideo->id;
-            deleteFile($uploadImageId);
-            deleteFile($uploadVideoId);
+            if($model->featuredImage){
+                $uploadImageId = $model->featuredImage->id;
+                deleteFile($uploadImageId);
+            }
+
+            if($model->educationVideo){
+                $uploadVideoId = $model->educationVideo->id;
+                deleteFile($uploadVideoId);
+            }               
+            
             $model->delete();
 
             $this->resetPage();
