@@ -138,17 +138,39 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
 <script type="text/javascript">
-    document.addEventListener('livewire:load', function () {
-        initializeDropify();
-        // Re-initialize plugins after Livewire updates the DOM
-        Livewire.hook('message.processed', (message, component) => {
-            // Dispatch custom event to load plugins
-            // const event = new CustomEvent('loadPlugins');
-            // document.dispatchEvent(event);
 
+    $(document).ready(function () {
+        // Initialize Dropify when the page is loaded
+        initializeDropify();
+
+        // Handle the change event for video_type dropdown
+        $('#video_type_select').on('change', function () {
+            toggleVideoInputs($(this).val());
+        });
+
+        // Reinitialize Dropify when Livewire processes an update
+        Livewire.hook('message.processed', function () {
             initializeDropify();
+            toggleVideoInputs($('#video_type_select').val());
         });
     });
+
+    function toggleVideoInputs(videoType) {
+        const videoLinkInput = $('#video_link_input');
+        const videoUploadInput = $('#video_upload_input');
+
+        if (videoType === 'video_link') {
+            videoLinkInput.show();
+            videoUploadInput.hide();
+        } else if (videoType === 'upload_video') {
+            videoLinkInput.hide();
+            videoUploadInput.show();
+        } else {
+            videoLinkInput.hide();
+            videoUploadInput.hide();
+        }
+    }
+  
 
     function initializeDropify(){
         $('.dropify').dropify();
@@ -173,7 +195,7 @@
 
     document.addEventListener('loadPlugins', function(event)
     {
-        
+        initializeDropify();
         $('textarea#summernote').summernote({
             placeholder: 'Type something...',
             tabsize: 2,
