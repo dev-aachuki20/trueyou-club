@@ -46,7 +46,7 @@
     <div class="row logo-section">
         <div class="col-md-12 mb-4">
             <div class="form-group mb-0" wire:ignore>
-                <label class="font-weight-bold justify-content-start">{{ __('global.video')}}</label>
+                <label class="font-weight-bold justify-content-start">{{ __('global.video')}}<i class="fas fa-asterisk"></i></label>
                 <input type="file" id="dropify-video" wire:model.defer="video" class="dropify" data-default-file="{{ $originalVideo }}"  data-show-loader="true" data-errors-position="outside" data-allowed-file-extensions="mp4"  accept="video/mp4,video/x-m4v,video/*">
                 <span wire:loading wire:target="video">
                     <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i> {{__('global.loading')}}
