@@ -73,6 +73,7 @@ class EducationController extends Controller
                         "video_type" => $education->video_type ?? '',
                         'video_link' => $education->video_link ?? '',
                         'video_url' => $education->video_url = $education->educationVideo ?  $education->education_video_url : '',
+                        'videoExtenstion' => $education->videoExtenstion = $education->educationVideo ?  $education->educationVideo->extension : '',                               
                         'category' => [
                             'id' => $education->category->id,
                             'name' => $education->category->name ?? '',

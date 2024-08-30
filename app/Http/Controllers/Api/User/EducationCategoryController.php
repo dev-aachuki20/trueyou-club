@@ -63,8 +63,9 @@ class EducationCategoryController extends Controller
                     $record->formatted_date  = convertDateTimeFormat($record->created_at, 'fulldate');             
                     $record->image_url = $record->featured_image_url ? $record->featured_image_url : asset(config('constants.default.no_image')); 
                     $record->video_url = $record->educationVideo ?  $record->education_video_url : '';                                 
+                    $record->videoExtenstion = $record->educationVideo ?  $record->educationVideo->extension : '';                                 
                     $record->created_by  = $record->user->name ?? null;                    
-                    $record->makeHidden(['user', 'featuredImage','educationVideo']);                               
+                    $record->makeHidden(['user', 'featuredImage','educationVideo']); 
                 }                    
                     
                 $responseData = [
