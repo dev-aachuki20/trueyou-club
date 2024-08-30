@@ -180,8 +180,8 @@ class Index extends Component
         $this->video_link      =  $education->video_link;
         $this->status           =  $education->status;
         $this->originalImage    =  $education->featured_image_url;  
-        $this->originalVideo  =  $education->education_video_url;
-        $this->videoExtenstion = $education->educationVideo->extension; 
+        $this->originalVideo  =  $education->educationVideo ? $education->education_video_url : '';
+        $this->videoExtenstion = $education->educationVideo ? $education->educationVideo->extension : ""; 
         $this->allcategory = Category::where('status',1)->get();      
     }
 
