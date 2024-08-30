@@ -138,8 +138,19 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
 <script type="text/javascript">
-    document.addEventListener('loadPlugins', function(event) {       
+    document.addEventListener('livewire:load', function () {
+        initializeDropify();
+        // Re-initialize plugins after Livewire updates the DOM
+        Livewire.hook('message.processed', (message, component) => {
+            // Dispatch custom event to load plugins
+            // const event = new CustomEvent('loadPlugins');
+            // document.dispatchEvent(event);
 
+            initializeDropify();
+        });
+    });
+
+    function initializeDropify(){
         $('.dropify').dropify();
         $('.dropify-errors-container').remove();
         $('.dropify-clear').click(function(e) {
@@ -154,10 +165,15 @@
             if (elementName == 'dropify-video') {
                 @this.set('video', null);
                 @this.set('originalVideo', null);
-                @this.set('removeVideo', true);
-            }
+                @this.set('removeVideo', true); 
+                Livewire.emit('clearVideo');               
+            }           
         });
+    }
 
+    document.addEventListener('loadPlugins', function(event)
+    {
+        
         $('textarea#summernote').summernote({
             placeholder: 'Type something...',
             tabsize: 2,

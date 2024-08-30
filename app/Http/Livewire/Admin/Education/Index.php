@@ -30,7 +30,7 @@ class Index extends Component
     public $removeImage = false,$removeVideo = false;    
     
     protected $listeners = [
-        'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm'
+        'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm' ,'clearVideo'
     ];
 
     public function mount()
@@ -119,17 +119,22 @@ class Index extends Component
     {
         // dd($this->all());
         $validatedData = $this->validate([
-            'title'         => 'required|string|max:150|unique:educations,title,NULL,id,deleted_at,NULL',           
-            'video_link'    => 'nullable|url',         
+            'title'         => 'required|string|max:150|unique:educations,title,NULL,id,deleted_at,NULL',                           
             'description'   => 'required|strip_tags',
             'video_type'   => 'required|in:'.implode(',',array_keys(config('constants.education_video_type'))),
+            'video_link'    => 'nullable|url|required_if:video_type,video_link', 
+            'video'         => 'nullable|file|mimes:mp4,avi,mov,wmv,webm,flv|required_if:video_type,upload_video', 
             'category_id'   => 'required|numeric|exists:categories,id',
             'status'        => 'required',
             'image'         => 'nullable|image|max:' . config('constants.img_max_size'),
-            'video'         => 'nullable|file|mimes:mp4,avi,mov,wmv,webm,flv',
         ], [
             'description.strip_tags' => 'The description field is required',
-            'category_id.required' => 'The Category is required.'
+            'category_id.required' => 'The Category is required.',
+            'video_link.required_if' => 'The Video Link is required.',
+            'video.required_if' => 'Please upload Video!',
+
+        ],[
+            'video_link' => 'Video Link'
         ]);
 
         DB::beginTransaction();
@@ -327,5 +332,14 @@ class Index extends Component
     public function changeStatus($statusVal)
     {
         $this->status = (!$statusVal) ? 1 : 0;
+    }
+
+
+   
+    public function clearVideo()
+    {
+        $this->video = null;
+        $this->originalVideo = null;
+        $this->removeVideo = true;
     }
 }

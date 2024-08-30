@@ -19,7 +19,7 @@
         <div class="col-md-12">
             <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.education.fields.select_video_type') }}<i class="fas fa-asterisk"></i></label>
-                <select class="form-control" wire:model.defer="video_type">
+                <select class="form-control" wire:model="video_type">
                     <option value="" disabled {{ is_null($category_id) ? 'selected' : '' }}>{{ __('cruds.education.fields.select_video_type') }}</option>
                     @foreach(config('constants.education_video_type') as $key => $value)
                         <option value="{{ $key }}">{{ $value }}</option>
@@ -30,6 +30,7 @@
         </div>
     </div>
     
+    @if($video_type === 'video_link')
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
@@ -39,7 +40,9 @@
             </div>
         </div>
     </div>
+    @endif
 
+    @if($video_type === 'upload_video')
     <div class="row logo-section">
         <div class="col-md-12 mb-4">
             <div class="form-group mb-0" wire:ignore>
@@ -56,6 +59,7 @@
             @endif
         </div>
     </div>  
+    @endif
 
     <div class="row">
         <div class="col-md-12">
