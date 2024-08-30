@@ -69,7 +69,7 @@ class EducationController extends Controller
                         'status' => $education->status ?? '',                            
                         'created_at' => $education->created_at->format('d-m-Y'),
                         'created_by' => $education->user->name ?? null,
-                        'image_url' => $education->featured_image_url ? $education->featured_image_url : asset(config('constants.default.no_image')),
+                        'image_url' => $education->featured_image_url ? $education->featured_image_url : "",
                         "video_type" => $education->video_type ?? '',
                         'video_link' => $education->video_link ?? '',
                         'video_url' => $education->video_url = $education->educationVideo ?  $education->education_video_url : '',
