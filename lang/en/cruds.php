@@ -29,7 +29,7 @@ return [
             'updated_at'               => 'Updated',
             'deleted_at'               => 'Deleted',
             'rating'                   => 'Rating',
-
+            'want_a_break'             => ' Want A Break ?',
         ],
     ],
     'volunteer'   => [
@@ -120,7 +120,13 @@ return [
             'created_at'               => 'Created',
             'updated_at'               => 'Updated',
             'deleted_at'               => 'Deleted',            
-            'select_event'             => 'Select Event',            
+            'select_event'             => 'Select Event',  
+            'event_date'               => 'Event Date',
+            'start_time'               => 'Start Time',
+            'end_time'                 => 'End Time',
+            'end_date'                 => 'End Date',
+            'start_date_time'          => 'Start Datetime',
+            'end_date_time'            => 'End Datetime',          
         ],
     ],
 

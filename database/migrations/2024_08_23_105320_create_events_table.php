@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->text('slug')->nullable();
             $table->longText('description')->nullable()->default(null); 
+            $table->date('event_date')->nullable()->default(null);
+            $table->time('start_time')->nullable()->default(null);
+            $table->time('end_time')->nullable()->default(null);
             $table->tinyInteger('status')->default(1)->comment('0=> inactive, 1=> active');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamps();

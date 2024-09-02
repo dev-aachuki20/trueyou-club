@@ -22,7 +22,7 @@ class Index extends Component
 
     public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Title, Created Date";
 
-    public $event_id = null, $title, $description, $created_at ,$image, $originalImage, $status = 1;
+    public $event_id = null, $title, $description, $created_at ,$image, $originalImage,$event_date = null, $start_time=null,  $end_time = null,$full_start_time=null,  $full_end_time = null, $status = 1;
 
     public $removeImage = false;    
     
@@ -98,10 +98,22 @@ class Index extends Component
         return view('livewire.admin.event.index',compact('allEvent'));
     }
 
-    public function updatedPublishDate()
-    {
-        $this->created_at = Carbon::parse($this->created_at)->format('d-m-Y');
+    public function updatedEventDate(){
+        $this->event_date = Carbon::parse($this->event_date)->format('d-m-Y');
     }
+
+    public function updatedStartTime(){
+        if($this->start_time){
+            $this->start_time = Carbon::parse($this->start_time)->format('h:i A');
+        }
+    }
+
+
+    public function updatedEndTime(){
+        if($this->end_time){
+            $this->end_time = Carbon::parse($this->end_time)->format('h:i A');
+        }
+    }   
 
     public function create()
     {
@@ -111,17 +123,40 @@ class Index extends Component
 
     public function store()
     {
-        $validatedData = $this->validate([
+        $rules = [
             'title'         => 'required',           
             'description'   => 'required|strip_tags',
+            'event_date'   => 'required|date',
+            'start_time'   => 'required|date_format:h:i A',
+            'end_time'     => 'required|date_format:h:i A',
             'status'        => 'required',
             'image'         => 'nullable|image|max:' . config('constants.img_max_size'),
-        ], [
+        ];
+
+        $starDateTime = Carbon::parse($this->event_date.' '.$this->start_time);
+        $endDateTime = Carbon::parse($this->event_date.' '.$this->end_time);
+        $currentDateTime = Carbon::now();
+
+        // Check if start time is greater than current time
+        if ($starDateTime->lt($currentDateTime)) {
+            $rules['start_time'] = '|after:now';
+        }
+
+        // Check if end time is greater than start time
+        if ($endDateTime->lt($starDateTime)) {
+            $rules['end_time'] = '|after:start_time';
+        }
+
+        $validatedData = $this->validate($rules, [
             'description.strip_tags' => 'The description field is required',
+            'end_time.after' => 'The end time must be a time after the start time.',
         ]);
 
         DB::beginTransaction();
         try {
+            $validatedData['event_date']   = Carbon::parse($this->event_date)->format('Y-m-d');
+            $validatedData['start_time']   = Carbon::parse($this->start_time)->format('H:i');
+            $validatedData['end_time']   = Carbon::parse($this->end_time)->format('H:i');
             $validatedData['status'] = $this->status;            
             $event = Event::create($validatedData);
 
@@ -153,22 +188,47 @@ class Index extends Component
         $this->event_id         =  $event->id;
         $this->title             =  $event->title;
         $this->description      =  $event->description;
+        $this->event_date      =  $event->event_date->format('d-m-Y');
+        $this->start_time      =  Carbon::parse($event->start_time)->format('h:i A');
+        $this->end_time        =  Carbon::parse($event->end_time)->format('h:i A');
         $this->status           =  $event->status;
         $this->originalImage    =  $event->featured_image_url;   
+
+        $this->full_start_time =  $event->event_date->format('Y-m-d').' '. Carbon::parse($event->start_time)->format('H:i:s');
+        $this->full_end_time =  $event->event_date->format('Y-m-d').' '. Carbon::parse($event->end_time)->format('H:i:s');
     }
 
 
     public function update()
     {  
-        $validatedData = $this->validate([
-            'title'        => 'required',           
-            'description'      => 'required|strip_tags',
-            'status'       => 'required',
-            'image'        => 'nullable|image|max:' . config('constants.img_max_size'),
-        ], [
-            'description.strip_tags' => 'The description field is required',
-        ]);
+        $rules = [
+            'title'         => 'required',           
+            'description'   => 'required|strip_tags',
+            'event_date'   => 'required|date',
+            'start_time'   => 'required|date_format:h:i A',
+            'end_time'     => 'required|date_format:h:i A',
+            'status'        => 'required',
+            'image'         => 'nullable|image|max:' . config('constants.img_max_size'),
+        ];
+        
+        $starDateTime = Carbon::parse($this->event_date.' '.$this->start_time);
+        $endDateTime = Carbon::parse($this->event_date.' '.$this->end_time);
+        $currentDateTime = Carbon::now();
 
+        // Check if start time is greater than current time
+        if ($starDateTime->lt($currentDateTime)) {
+            $rules['start_time'] = '|after:now';
+        }
+
+        // Check if end time is greater than start time
+        if ($endDateTime->lt($starDateTime)) {
+            $rules['end_time'] = '|after:start_time';
+        }
+
+        $validatedData = $this->validate($rules, [
+            'description.strip_tags' => 'The description field is required',
+            'end_time.after' => 'The end time must be a time after the start time.',
+        ]);
 
         $validatedData['status'] = $this->status;        
 
@@ -225,7 +285,7 @@ class Index extends Component
     }
 
     public function resetAllFields(){
-        $this->reset(['formMode','updateMode','viewMode','event_id','title','description','image','originalImage','status','removeImage']);
+        $this->reset(['formMode','updateMode','viewMode','event_id','title','description','image','originalImage','status','removeImage','event_date','start_time','end_time','full_start_time','full_end_time']);
     }
 
     public function delete($id)

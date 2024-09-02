@@ -85,7 +85,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <label class="font-weight-bold">{{__('global.status')}}</label>
+                <label class="font-weight-bold">@lang('cruds.user.fields.want_a_break')</label>
                 <div class="form-group">
                     <label class="toggle-switch">
                         <input type="checkbox" class="toggleSwitch" wire:change.prevent="changeStatus({{$is_active}})" value="{{ $is_active }}" {{ $is_active ==1 ? 'checked' : '' }}>

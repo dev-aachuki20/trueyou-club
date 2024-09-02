@@ -92,7 +92,7 @@
         </li>
         @endcan
 
-        {{-- @can('volunteer_access')    
+        @can('volunteer_access')    
         <li class="nav-item {{ request()->is('volunteers') ? 'active' : '' }}">
             <a class="nav-link fillIcon" href="{{ route('admin.volunteers') }}">
                 <x-svg-icon icon="volunteer_list" />
@@ -108,7 +108,7 @@
                 <span class="menu-title"> {{ __('cruds.event.list') }} </span>
             </a>
         </li>
-        @endcan --}}
+        @endcan
 
         @can('category_access')    
         <li class="nav-item {{ request()->is('categories') ? 'active' : '' }}">
