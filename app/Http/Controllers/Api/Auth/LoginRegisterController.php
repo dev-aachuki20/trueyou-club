@@ -18,6 +18,7 @@ use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\Notification;
 use App\Rules\ValidEmail;
 use App\Models\Booking;
+use Illuminate\Validation\Rule;
 
 
 class LoginRegisterController extends Controller
@@ -27,7 +28,14 @@ class LoginRegisterController extends Controller
             'name'                      => 'required',
             'email'                     => ['required','email:dns','unique:users,email,NULL,id,deleted_at,NULL',new ValidEmail],
             'phone'                     => 'required|numeric|regex:/^[0-9]{7,15}$/|not_in:-|unique:users,phone,NULL,id',
-            // 'password'                  => 'required|min:8|regex:/^(?!.*\s)(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
+            // 'password'               => 'required|min:8|regex:/^(?!.*\s)(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
+            'role'                      => [
+                                            'required','numeric',
+                                            Rule::exists('roles', 'id')->where(function ($query) {
+                                                $query->whereNull('deleted_at')
+                                                      ->where('id', '!=', config('constants.role.super_admin'));
+                                            }),
+                                        ],
             'password'                  => 'required|min:8',
             'password_confirmation'     => 'required|same:password',
             // 'passcode'                  => ['required'],
@@ -75,13 +83,20 @@ class LoginRegisterController extends Controller
            
             $nameParts = explode(' ', $input['name']);
             $input['first_name'] = $nameParts[0]; 
-            $input['last_name'] = isset($nameParts[1]) ? $nameParts[1] : null;
+            $input['last_name'] = isset($nameParts[1]) && (!is_null($nameParts[1])) ? $nameParts[1] : null;
         
             $input['email'] = strtolower($input['email']); 
             $input['password'] = bcrypt($input['password']);
             $input['is_active'] = 0;
-            $user = User::create($input);
 
+         
+            unset($input['role']);
+
+            $user = User::create($input);
+            if($request->role){
+                $user->roles()->sync($request->role);
+            }
+            
             //Send welcome mail for user
             $subject = 'Welcome to ' . config('app.name');
             Mail::to($user->email)->queue(new WelcomeMail($subject, $user->name, $user->email));
@@ -89,10 +104,9 @@ class LoginRegisterController extends Controller
             $notification_message = config('constants.user_register_notification_message');
             Notification::send($user, new UserNotification($user, $notification_message));
             
-            //Verification mail sent
+           // Verification mail sent
             $user->NotificationSendToVerifyEmail();
 
-            $user->roles()->sync(2);
             
             DB::commit();
 
@@ -105,13 +119,13 @@ class LoginRegisterController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            // dd($e->getMessage().'->'.$e->getLine());
+            dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
-                // 'error_details' => $e->getMessage().'->'.$e->getLine(),
+                'error_details' => $e->getMessage().'->'.$e->getLine(),
             ];
             return response()->json($responseData, 500);
         }

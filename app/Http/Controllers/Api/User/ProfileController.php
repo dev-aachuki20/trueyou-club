@@ -49,6 +49,7 @@ class ProfileController extends Controller
             'phone'      => $user->phone ?? null,
             'profile_image' => $user->profile_image_url ?? null,
             'is_active'  => $user->is_active ? true : false,
+            'role'       => $user->roles()->select('id','title')->first()->makeHidden('pivot'),
             'closest_webinar_detail' => $getWebinar,
             'is_notification' => $user->notifications()->whereNull('read_at')->count() > 0 ? true : false,
         ];
