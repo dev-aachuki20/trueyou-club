@@ -15,25 +15,30 @@ class EventRequestController extends Controller
 
         try
         {
-            $getAllRecords = EventRequest::select('id', 'event_id', 'volunteer_id', 'custom_message','status', 'created_at', 'created_by')
+            $getAllRecords = EventRequest::with(['event'=>function($query){
+                $query->select(['id','title','slug','event_date','start_time']);
+            }])->select('id', 'event_id', 'volunteer_id', 'custom_message','status', 'created_at', 'created_by')
                 ->where('volunteer_id',$user->id)                
                 ->orderBy('created_at', 'desc')
                 ->paginate(12);
             
-            if ($getAllRecords->count() > 0)
-            {  
+            if ($getAllRecords->count() > 0){  
                 foreach ($getAllRecords as $key=>$record)
                 {        
                     $record->formatted_date  = convertDateTimeFormat($record->created_at, 'fulldate');                            
-                    $record->time = $record->created_at->format('H:i A');             
-                    $record->image_url = $record->featured_image_url ? $record->featured_image_url : asset(config('constants.default.no_image'));                   
-                    $record->created_by  = $record->user->name ?? null;                    
-                    $record->makeHidden(['user', 'featuredImage']);
-                    
-                    $record->event->formatted_date = convertDateTimeFormat($record->event->created_at, 'fulldate');             
-                    $record->event->image_url = $record->featured_image_url ? $record->featured_image_url : asset(config('constants.default.no_image'));                   
-                    $record->event->created_by  = $record->user->name ?? null;                    
-                    $record->event->makeHidden(['user', 'featuredImage']);       
+                    $record->time            = $record->created_at->format('H:i A');                               
+                    $record->created_by      = $record->user->name ?? null;                    
+                    $record->makeHidden(['user']);
+
+                    if ($record->event) {
+                        $formattedEventDate = convertDateTimeFormat($record->event->event_date, 'fulldate');
+                        $record->event->formatted_event_date = $formattedEventDate;
+                        $record->event->start_time  = convertDateTimeFormat($record->event->start_time, 'fulltime');  
+                        $record->event->image_url   = $record->event->featured_image_url ? $record->event->featured_image_url : asset(config('constants.default.no_image')); 
+                        $record->event->created_by  = $record->user->name ?? null;    
+
+                        $record->event->makeHidden(['user', 'featuredImage']);       
+                    }
                 }                    
                  
                 $responseData = [
@@ -54,6 +59,7 @@ class EventRequestController extends Controller
             $responseData = [
                 'status'  => false,
                 'error'   => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine(),
             ];
             return response()->json($responseData, 500);
         }
@@ -78,10 +84,11 @@ class EventRequestController extends Controller
             return response()->json($responseData, 200);
 
         }catch(\Exception $e){
-            dd($e->getMessage().'->'.$e->getLine());
+            // dd($e->getMessage().'->'.$e->getLine());
             $responseData = [
                 'status'  => false,
                 'error'   => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine()
             ];
             return response()->json($responseData, 500);
         }
