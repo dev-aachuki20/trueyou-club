@@ -21,17 +21,13 @@
                             <div class="card-top-box-item">
                                 @can('volunteer_create')
                                 <button wire:click="create()" type="button" class="btn joinBtn btn-sm btn-icon-text btn-header">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8.73956 14.3355C8.55177 14.5232 8.2948 14.6418 7.99829 14.6418C7.42503 14.6418 6.95062 14.1674 6.95062 13.5942L6.95062 2.40586C6.95062 1.8326 7.42503 1.35819 7.99828 1.35819C8.57154 1.35819 9.04595 1.8326 9.04595 2.40586L9.04595 13.5942C9.05584 13.8808 8.92735 14.1477 8.73956 14.3355Z" fill="#0A2540" />
-                                        <path d="M14.3337 8.74129C14.1459 8.92908 13.889 9.04769 13.5924 9.04769L2.40412 9.04769C1.83087 9.04769 1.35645 8.57327 1.35645 8.00002C1.35645 7.42676 1.83087 6.95235 2.40412 6.95235L13.5924 6.95235C14.1657 6.95235 14.6401 7.42676 14.6401 8.00002C14.6401 8.29653 14.5215 8.5535 14.3337 8.74129Z" fill="#0A2540" />
-                                    </svg>
+                                    <x-svg-icon icon="add" />
                                     {{__('global.add')}}
                                 </button>
                                 @endcan
 
                                 @can('event_invite_volunteer_access')                                
-                                    {{-- <button class="InviteBtn" wire:click="triggerMassInviteModal(volunteer_selectedIds)" data-toggle="modal" data-target="#InviteModal">Invite</button>                                                               --}}
-                                    <button type="button" class="InviteBtn" wire:click="triggerMassInviteModal(volunteer_selectedIds)">Invite</button>                                                              
+                                    <button type="button" class="InviteBtn btn" wire:click="triggerMassInviteModal(volunteer_selectedIds)">Invite</button>                                                              
                                 @endcan
                             </div>
                         </div>                  
@@ -41,7 +37,6 @@
                         <div class="card">
                             <div class="card-body filter-section">
                                 <form wire:submit.prevent="submitFilterForm" class="forms-sample">
-
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group mb-0">
@@ -64,10 +59,9 @@
                                                     <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
                                                 </span>
                                             </button>                                          
-                                     
+                                    
                                         </div>
                                     </div>
-
                                 </form>
                             </div>
                         </div>
