@@ -89,6 +89,8 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
     Route::get('/event-requests', [EventRequestController::class, 'index']);
 
     Route::post('/update-event-request', [EventRequestController::class, 'updateStatus']);
+
+    Route::get('/event-history', [EventRequestController::class, 'eventHistory']);
 });
 
 
