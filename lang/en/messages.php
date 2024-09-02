@@ -11,6 +11,7 @@ return [
     'wrong_video_extension' => 'Please use the video format mp4 only!',
     'message_in_draft' => 'Massage draft',
     'mail_sent' => 'Mail sent',
+    'invitation_sent_successfully' => 'Invitation Sent Successfully !',
 
     'email_messages' => [
        

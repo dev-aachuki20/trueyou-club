@@ -350,6 +350,13 @@ class Index extends Component
         }           
     }
 
+    public function triggerInviteModal(User $user)
+    {
+        array_push($this->volunteer_ids, $user->id);        
+        $this->events = Event::where('status',1)->get();      
+        $this->dispatchBrowserEvent('openInviteModal');                 
+    }
+
     public function closeModal()
     {
         $this->reset(['event_id', 'volunteer_ids', 'custom_message']);
@@ -370,9 +377,9 @@ class Index extends Component
             DB::beginTransaction();
 
             foreach($this->volunteer_ids as $volunteer_id){
-                $validatedData['volunteer_id'] = $volunteer_id;          
-    
-                $eventrequest = EventRequest::create($validatedData);   
+                $validatedData['volunteer_id'] = $volunteer_id;     
+                $checkAlreadyInvited = EventRequest::where('volunteer_id', $volunteer_id)->where('event_id', $this->event_id)->first();
+                $eventrequest = is_null($checkAlreadyInvited) ? EventRequest::create($validatedData) : $checkAlreadyInvited;                
                 $event= Event::where('id',$eventrequest->event_id)->first();
                 $volunteer= User::where('id',$volunteer_id)->first();
                 $eventDetail= $event->toArray();
@@ -384,12 +391,16 @@ class Index extends Component
             }
 
             DB::commit();
+            $this->closeModal();
+            $this->flash('success',trans('messages.invitation_sent_successfully'));
+            return redirect()->route('admin.volunteers');  
+
         }catch(\Exception $e){
             DB::rollBack();
+            $this->flash('error',trans('messages.error_message'));
+            return redirect()->route('admin.volunteers');  
         }        
 
-        $this->closeModal();
-        $this->flash('success',trans('messages.add_success_message'));
-        return redirect()->route('admin.volunteers');        
+              
     }
 }

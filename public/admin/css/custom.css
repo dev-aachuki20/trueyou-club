@@ -1239,6 +1239,9 @@ input::-webkit-inner-spin-button {
         gap: 5px;
         flex-direction: column-reverse;
     }
+    .card-top-box-item.flex-direction-none{
+        flex-direction: inherit;
+    }
     .card-title .btn-header{
         text-align: center;
         justify-content: center;

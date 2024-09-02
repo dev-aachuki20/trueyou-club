@@ -16,9 +16,9 @@
 
                     @else                        
                         <div wire:loading wire:target="create" class="loader"></div>
-                        <div class="card-title top-box-set">
+                        <div class="card-title top-box-set flex-wrap">
                             <h4 class="card-title-heading">@lang('cruds.volunteer.list') </h4>
-                            <div class="card-top-box-item">
+                            <div class="card-top-box-item flex-direction-none">
                                 @can('volunteer_create')
                                 <button wire:click="create()" type="button" class="btn joinBtn btn-sm btn-icon-text btn-header">
                                     <x-svg-icon icon="add" />
@@ -27,12 +27,11 @@
                                 @endcan
 
                                 @can('event_invite_volunteer_access')                                
-                                    <button type="button" class="InviteBtn btn" wire:click="triggerMassInviteModal(volunteer_selectedIds)">Invite</button>                                                              
+                                    <button type="button" class="InviteBtn btn joinBtn btn-header" wire:click="triggerMassInviteModal(volunteer_selectedIds)"><x-svg-icon icon="invite-icon" /> Invite</button>                                                              
                                 @endcan
                             </div>
-                        </div>                  
+                        </div>                 
                                              
-
                         {{-- Start Filter Form --}}
                         <div class="card">
                             <div class="card-body filter-section">
@@ -174,11 +173,11 @@
                                                             </li>
                                                             @endcan   
                                                             
-                                                            {{-- @can('event_invite_volunteer_access')
+                                                            @can('event_invite_volunteer_access')
                                                             <li>
-                                                                <a role="button" class="InviteBtn" wire:click="triggerInviteModal({{ $user->id }})" data-toggle="modal" data-target="#InviteModal">Invite</a>                                                                
+                                                                <a role="button" class="" wire:click="triggerInviteModal({{ $user->id }})" data-toggle="modal" data-target="#InviteModal" title="Invite"><x-svg-icon icon="invite-icon" /></a>                                                                
                                                             </li>
-                                                            @endcan --}}
+                                                            @endcan
                                                             
                                                         </ul>
                                                     </div>                                                   
