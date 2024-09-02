@@ -28,6 +28,11 @@
                                     {{__('global.add')}}
                                 </button>
                                 @endcan
+
+                                @can('event_invite_volunteer_access')                                
+                                    {{-- <button class="InviteBtn" wire:click="triggerMassInviteModal(volunteer_selectedIds)" data-toggle="modal" data-target="#InviteModal">Invite</button>                                                               --}}
+                                    <button type="button" class="InviteBtn" wire:click="triggerMassInviteModal(volunteer_selectedIds)">Invite</button>                                                              
+                                @endcan
                             </div>
                         </div>                  
                                              
@@ -80,6 +85,7 @@
                                     <table class="table table-striped table-hover">
                                         <thead>
                                             <tr>
+                                                <th><label class="custom-checkbox"><input type="checkbox" id="dt_cb_all" ><span></span></label></th>
                                                 <th class="text-gray-500 text-xs font-medium">{{ trans('global.sno') }}</th>
                                                 <th class="text-gray-500 text-xs">
                                                     {{ __('cruds.volunteer.fields.name')}}
@@ -112,8 +118,6 @@
                                                     @lang('cruds.user.fields.want_a_break')
                                                 </th>
 
-
-
                                                 <th class="text-gray-500 text-xs">@lang('global.action')</th>
                                             </tr>
                                         </thead>
@@ -121,6 +125,7 @@
                                             @if($allUsers->count() > 0)
                                             @foreach($allUsers as $serialNo => $user)
                                             <tr>
+                                                <td><input type="checkbox" class="dt_checkbox" name="volunteer_ids[]" value="{{ $user->id }}"></td>
                                                 <td>{{ $serialNo+1 }}</td>
                                                 <td>{{ ucwords($user->name) }}</td>
                                                 <td>
@@ -175,11 +180,11 @@
                                                             </li>
                                                             @endcan   
                                                             
-                                                            @can('event_invite_volunteer_access')
+                                                            {{-- @can('event_invite_volunteer_access')
                                                             <li>
                                                                 <a role="button" class="InviteBtn" wire:click="triggerInviteModal({{ $user->id }})" data-toggle="modal" data-target="#InviteModal">Invite</a>                                                                
                                                             </li>
-                                                            @endcan
+                                                            @endcan --}}
                                                             
                                                         </ul>
                                                     </div>                                                   
@@ -219,7 +224,7 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 <script type="text/javascript">
-    
+    var volunteer_selectedIds = [];
     filterDateRangePicker();
 
     document.addEventListener('loadPlugins', function(event) {
@@ -236,7 +241,7 @@
             @this.set('filter_date_range',moment().format('DD MMMM YYYY') + ' - ' + moment().format('DD MMMM YYYY'))
         }
         
-    });
+    });    
 
     function filterDateRangePicker(){
 
@@ -284,7 +289,41 @@
 
     });
 
+    // Invite Mass Volunteer Functionality
 
+    $(document).on('change', '#dt_cb_all', function(e)
+    {
+        e.preventDefault();
+        var isChecked = $(this).prop('checked');
+        $('.dt_checkbox').prop('checked', isChecked).trigger('change');
+    });
+
+    document.addEventListener('openInviteModal', function(event) {        
+        $('#InviteModal').modal('show');
+    });
+
+    document.addEventListener('closeInviteModal', function(event) {        
+        $('#InviteModal').modal('hide');
+    });
+
+    $(document).on('change', '.dt_checkbox', function(e)
+    {
+        e.preventDefault();       
+        $('.dt_checkbox:checked').each(function() {
+            volunteer_selectedIds.push($(this).val());
+        });
+
+        // When uncheck customer remove id from the selected_ids array
+        if (!$(this).is(':checked')) {
+            var valueToRemove = $(this).val();
+            var indexToRemove = volunteer_selectedIds.indexOf(valueToRemove);
+            if (indexToRemove !== -1) {
+                volunteer_selectedIds.splice(indexToRemove, 1);
+            }
+        }
+
+        volunteer_selectedIds = Array.from(new Set(volunteer_selectedIds));  
+    });
  
     
     

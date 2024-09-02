@@ -19,7 +19,7 @@ use App\Http\Controllers\Api\User\PageController;
 use App\Http\Controllers\Api\User\ContactController;
 use App\Http\Controllers\Api\User\EducationCategoryController;
 use App\Http\Controllers\Api\User\HeroController;
-use App\Http\Controllers\Api\User\EvenRequestController;
+use App\Http\Controllers\Api\User\EventRequestController;
 use App\Http\Controllers\Api\User\EducationController;
 
 /*
@@ -86,9 +86,9 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
 
     Route::get('/reward', [HomeController::class, 'getReward']);    
 
-    Route::get('/event-requests', [EvenRequestController::class, 'index']);
+    Route::get('/event-requests', [EventRequestController::class, 'index']);
 
-    Route::post('/update-event-request', [EvenRequestController::class, 'updateStatus']);
+    Route::post('/update-event-request', [EventRequestController::class, 'updateStatus']);
 });
 
 

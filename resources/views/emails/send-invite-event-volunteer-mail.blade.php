@@ -158,8 +158,17 @@
                                 </div>
                                 <div class="webinar-content">
                                 <h3>
-                                     {{ $eventDetail['title'] }}
-                                </h3>                                
+                                     {{ $eventDetail['title'] ?? '' }}
+                                </h3> 
+                                
+                                <div class="date-time seminar-date d-flex">
+                                    <div class="date_icon">
+                                        <img class="img-fluid" src="{{ asset('images/icons/date.png') }}" alt="Date">
+                                    </div>
+                                    <span>
+                                        {{ $eventDetail['formatted_date_time'] ?? ''}}
+                                    </span>
+                                </div>
                                 </div>
                             </div>
                         </div>

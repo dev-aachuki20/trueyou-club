@@ -36,6 +36,7 @@ class Index extends Component
 
     public $user_id = null, $first_name,  $last_name, $phone, $email,$password,$password_confirmation, $is_active = 1;
     public $events = [];
+    public $volunteer_ids = [];
     public $event_id = null;
     public $volunteer_id = null , $user = null;
     public $custom_message = '';
@@ -335,18 +336,24 @@ class Index extends Component
 
     public function resetAllFields(){
         $this->reset(['formMode','updateMode','viewMode','viewQuoteHistoryMode','user_id','first_name','last_name','phone','email','is_active']);
-    }
+    }   
 
-    public function triggerInviteModal(User $user)
-    {
-        $this->volunteer_id = $user->id;
-        $this->user = $user;
-        $this->events = Event::where('status',1)->get();       
+    public function triggerMassInviteModal($volunteer_ids = [])
+    {    
+        if (count($volunteer_ids) == 0) {
+            $this->alert('warning','Please select a volunteer');
+        }
+        else{
+            $this->volunteer_ids =  $volunteer_ids;         
+            $this->events = Event::where('status',1)->get();
+            $this->dispatchBrowserEvent('openInviteModal');  
+        }           
     }
 
     public function closeModal()
     {
-        $this->reset(['event_id', 'volunteer_id', 'custom_message']);
+        $this->reset(['event_id', 'volunteer_ids', 'custom_message']);
+        $this->dispatchBrowserEvent('closeInviteModal'); 
     }
 
     public function submitSendInvite()
@@ -358,20 +365,31 @@ class Index extends Component
             'event_id.required' => 'The Event field is required',            
             'custom_message.required' => 'The Message field is required',
         ]);
+        
+        try{
+            DB::beginTransaction();
 
-        $validatedData['volunteer_id'] = $this->volunteer_id;
+            foreach($this->volunteer_ids as $volunteer_id){
+                $validatedData['volunteer_id'] = $volunteer_id;          
+    
+                $eventrequest = EventRequest::create($validatedData);   
+                $event= Event::where('id',$eventrequest->event_id)->first();
+                $volunteer= User::where('id',$volunteer_id)->first();
+                $eventDetail= $event->toArray();
+                $eventDetail['featured_image_url'] = $event->featured_image_url ? $event->featured_image_url : asset(config('constants.default.no_image')); 
+                $eventDetail['formatted_date_time'] = $event->event_date->format('d-M-Y') . ' ' .
+                \Carbon\Carbon::parse($event->start_time)->format('h:i A') . ' - ' .
+                \Carbon\Carbon::parse($event->end_time)->format('h:i A');                $subject = 'Event Invitation !';    
+                Mail::to($volunteer->email)->queue(new SendInviteEventMail($volunteer->name, $subject, $volunteer->email, $this->custom_message,$eventDetail));
+            }
 
-        $eventrequest = EventRequest::create($validatedData);   
-        $event= Event::where('id',$eventrequest->event_id)->first();
-        $eventDetail= $event->toArray();
-        $eventDetail['featured_image_url'] = $event->featured_image_url ? $event->featured_image_url : asset(config('constants.default.no_image'));        
-        $subject = 'Event Invitation !';    
-        Mail::to($this->user->email)->queue(new SendInviteEventMail($this->user->name, $subject, $this->user->email, $this->custom_message,$eventDetail));
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollBack();
+        }        
 
         $this->closeModal();
-        $this->dispatchBrowserEvent('close-modal');
         $this->flash('success',trans('messages.add_success_message'));
-        return redirect()->route('admin.volunteers');
-        
+        return redirect()->route('admin.volunteers');        
     }
 }

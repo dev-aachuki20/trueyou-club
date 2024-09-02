@@ -7,7 +7,7 @@ use App\Models\EventRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class EvenRequestController extends Controller
+class EventRequestController extends Controller
 {
     public function index()
     {
