@@ -379,14 +379,23 @@ class Index extends Component
             foreach($this->volunteer_ids as $volunteer_id){
                 $validatedData['volunteer_id'] = $volunteer_id;     
                 $checkAlreadyInvited = EventRequest::where('volunteer_id', $volunteer_id)->where('event_id', $this->event_id)->first();
-                $eventrequest = is_null($checkAlreadyInvited) ? EventRequest::create($validatedData) : $checkAlreadyInvited;                
+
+                if(is_null($checkAlreadyInvited)){
+                    $validatedData['attempts'] = 1;  
+                    $eventrequest =  EventRequest::create($validatedData);
+                }else{
+                    $checkAlreadyInvited->increment('attempts');
+                    $eventrequest =  $checkAlreadyInvited;
+                }
+
                 $event= Event::where('id',$eventrequest->event_id)->first();
                 $volunteer= User::where('id',$volunteer_id)->first();
                 $eventDetail= $event->toArray();
                 $eventDetail['featured_image_url'] = $event->featured_image_url ? $event->featured_image_url : asset(config('constants.default.no_image')); 
                 $eventDetail['formatted_date_time'] = $event->event_date->format('d-M-Y') . ' ' .
                 \Carbon\Carbon::parse($event->start_time)->format('h:i A') . ' - ' .
-                \Carbon\Carbon::parse($event->end_time)->format('h:i A');                $subject = 'Event Invitation !';    
+                \Carbon\Carbon::parse($event->end_time)->format('h:i A'); 
+                $subject = 'Event Invitation !';    
                 Mail::to($volunteer->email)->queue(new SendInviteEventMail($volunteer->name, $subject, $volunteer->email, $this->custom_message,$eventDetail));
             }
 

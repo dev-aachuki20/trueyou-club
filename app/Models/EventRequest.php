@@ -23,6 +23,7 @@ class EventRequest extends Model
         'event_id',
         'volunteer_id',
         'custom_message',
+        'attempts',
         'status',
         'created_by',
         'created_at',
