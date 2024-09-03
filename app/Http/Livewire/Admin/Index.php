@@ -50,11 +50,11 @@ class Index extends Component
         $leadUsersList = cacheVipUsers();
 
         $totalRegisteredUser = User::whereHas('roles',function($query){
-          $query->where('id',config('constants.role.user'));
+          $query->whereIn('id',[config('constants.role.user'),config('constants.role.volunteer')]);
         })->count();
       
         $totalActiveUser = User::whereHas('roles',function($query){
-          $query->where('id',config('constants.role.user'));
+          $query->whereIn('id',[config('constants.role.user'),config('constants.role.volunteer')]);
         })->where('is_active',0)->count();
       
         $totalVIPUser = User::whereHas('roles',function($query){

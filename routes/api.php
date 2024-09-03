@@ -21,6 +21,8 @@ use App\Http\Controllers\Api\User\EducationCategoryController;
 use App\Http\Controllers\Api\User\HeroController;
 use App\Http\Controllers\Api\User\EventRequestController;
 use App\Http\Controllers\Api\User\EducationController;
+use App\Http\Controllers\Api\User\VolunteerController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -91,6 +93,12 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
     Route::post('/update-event-request', [EventRequestController::class, 'updateStatus']);
 
     Route::get('/event-history', [EventRequestController::class, 'eventHistory']);
+
+    Route::post('/volunteer-availablity', [VolunteerController::class, 'volunteerAvailablity']);
+
+    Route::post('/add-availablity', [VolunteerController::class, 'storeVolunteerAvailablity']);
+
+
 });
 
 

@@ -20,7 +20,6 @@ class VolunteerAvailability extends Model
     ];
 
     protected $fillable = [
-        'event_id',
         'volunteer_id',
         'date',
         'start_time',
@@ -33,21 +32,15 @@ class VolunteerAvailability extends Model
     protected static function boot()
     {
         parent::boot();
-        static::creating(function (Event $model) {
-            $model->user_id = auth()->user()->id;
+        static::creating(function (VolunteerAvailability $model) {
+            $model->volunteer_id = auth()->user()->id;
         });
 
     }
 
-    public function event()
-    {
-        return $this->belongsTo(Event::class, 'event_id');
-    }
-
-
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'volunteer_id');
     }
 
 }

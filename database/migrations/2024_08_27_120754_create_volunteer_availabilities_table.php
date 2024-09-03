@@ -15,11 +15,9 @@ return new class extends Migration
     {
         Schema::create('volunteer_availabilities', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('event_id'); 
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
 
             $table->unsignedBigInteger('volunteer_id'); 
-            $table->foreign('volunteer_id')->references('id')->on('events')->onDelete('cascade');
+            $table->foreign('volunteer_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->date('date')->nullable()->default(null);
             $table->time('start_time')->nullable()->default(null);
