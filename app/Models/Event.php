@@ -35,6 +35,10 @@ class Event extends Model
         'deleted_at',
     ];
 
+    protected $appends = [
+        'total_invitation'
+    ];
+
     protected static function boot()
     {
         parent::boot();
@@ -77,4 +81,11 @@ class Event extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+
+    public function getTotalInvitationAttribute()
+    {
+        return EventRequest::where('event_id', $this->id)->count();
+    }
+
 }

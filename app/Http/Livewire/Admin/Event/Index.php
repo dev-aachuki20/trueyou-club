@@ -22,7 +22,7 @@ class Index extends Component
 
     public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Title, Created Date";
 
-    public $event_id = null, $title, $description, $created_at ,$image, $originalImage,$event_date = null, $start_time=null,  $end_time = null,$full_start_time=null,  $full_end_time = null, $status = 1;
+    public $event_id = null, $title, $description, $totalInvitations, $created_at ,$image, $originalImage,$event_date = null, $start_time=null,  $end_time = null,$full_start_time=null,  $full_end_time = null, $status = 1;
 
     public $removeImage = false;    
     
