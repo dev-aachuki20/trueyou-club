@@ -140,4 +140,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Quote::class,'quote_user')->withPivot(['status','created_at']);
     }
 
+    public function availabilities(){
+        return $this->hasMany(VolunteerAvailability::class,'volunteer_id');
+    }
+
+
 }
