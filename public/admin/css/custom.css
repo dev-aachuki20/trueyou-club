@@ -1190,13 +1190,37 @@ input::-webkit-inner-spin-button {
     width: auto !important;
     height: 32px;
     padding: 8px 15px;
-    border-radius: 4px !important;
-    transition: all .3s ease-in-out;
-    box-shadow: 8px 10px 23px 0px rgba(199, 212, 220, 0.32);
+    border-radius: 20px !important;
+    box-shadow: none;
     font-size: 0.875rem !important;
     min-width: 95px;
     font-weight: 400;
+    cursor: default !important;
+    color: #000;
 }
+.eventAttendanceStatus button.btn-success,
+.eventAttendanceStatus button.btn-success:hover,
+.eventAttendanceStatus button.btn-success:focus,
+.eventAttendanceStatus button.btn-success:active{
+    background-color: #d1ffd1 !important;
+    color: #000 !important;
+}
+.eventAttendanceStatus button.btn-danger,
+.eventAttendanceStatus button.btn-danger:hover,
+.eventAttendanceStatus button.btn-danger:focus,
+.eventAttendanceStatus button.btn-danger:active{
+    background-color: #ffdbdb !important;
+    color: #000 !important;
+}
+.eventAttendanceStatus button.btn-warning,
+.eventAttendanceStatus button.btn-warning:hover,
+.eventAttendanceStatus button.btn-warning:focus,
+.eventAttendanceStatus button.btn-warning:active{
+    background-color: #fff4d0 !important;
+    color: #000 !important;
+}
+
+
 
 @media (min-width: 576px){
     .modal-dialog-centered {

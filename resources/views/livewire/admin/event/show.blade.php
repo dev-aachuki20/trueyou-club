@@ -16,7 +16,7 @@
                                 @include('admin.partials.table-show-entries-search-box',['searchBoxPlaceholder'=>$searchBoxPlaceholder])
 
                                 <div class="table-responsive mt-3 my-team-details table-record">
-                                    <table class="table table-striped table-hover">
+                                    <table class="table table-striped">
                                         <thead>
                                             <tr>
                                                 <th class="text-gray-500 text-xs font-medium">{{ trans('global.sno') }}</th>
@@ -26,21 +26,13 @@
                                                         <i class="fa fa-arrow-up {{ $sortColumnName === 'name' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
                                                         <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                                                     </span>
-                                                </th>
-
-                                                <th class="text-gray-500 text-xs">
-                                                    {{ __('cruds.volunteer.fields.rating')}}
-                                                    <span wire:click.prevent="sortBy('star_no')" class="float-right text-sm" style="cursor: pointer;">
-                                                        <i class="fa fa-arrow-up {{ $sortColumnName === 'star_no' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                                                        <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'star_no' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
-                                                    </span>
-                                                </th>
+                                                </th>                                               
 
                                                 <th class="text-gray-500 text-xs">
                                                     {{ __('cruds.volunteer.fields.phone')}}
                                                 </th>
                                                
-                                                <th class="text-gray-500 text-xs">@lang('global.action')</th>
+                                                <th class="text-gray-500 text-xs">@lang('cruds.event.fields.status')</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -48,18 +40,7 @@
                                             @foreach($allEventRequest as $serialNo => $eventrequest)
                                             <tr>
                                                 <td>{{ $serialNo+1 }}</td>
-                                                <td>{{ ucwords($eventrequest->volunteer->name) }}</td>
-                                                <td>
-                                                    <div class="rewardscrad card">
-                                                        <div class="star-rating">
-                                                            <button type="button" class="{{ $eventrequest->volunteer->star_no >=1 ? 'on': 'off'}}"><span class="star">★</span></button>
-                                                            <button type="button" class="{{ $eventrequest->volunteer->star_no >=2 ? 'on': 'off'}}"><span class="star">★</span></button>
-                                                            <button type="button" class="{{ $eventrequest->volunteer->star_no >=3 ? 'on': 'off'}}"><span class="star">★</span></button>
-                                                            <button type="button" class="{{ $eventrequest->volunteer->star_no >=4 ? 'on': 'off'}}"><span class="star">★</span></button>
-                                                            <button type="button" class="{{ $eventrequest->volunteer->star_no ==5 ? 'on': 'off'}}"><span class="star">★</span></button>
-                                                        </div>
-                                                    </div>
-                                                </td>
+                                                <td>{{ ucwords($eventrequest->volunteer->name) }}</td>                                                
                                                 <td>{{ ucwords($eventrequest->volunteer->phone) }}</td>
                                                 
                                                 <td>
@@ -101,9 +82,12 @@
 
                         </div>
                         {{-- End Datatables --}}
-
-                    
-
+                        <button wire:click.prevent="cancel" class="btn btn-secondary mt-4">
+                            {{ __('global.back')}}
+                            <span wire:loading wire:target="cancel">
+                                <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                            </span>
+                        </button>                   
                 </div>
             </div>
         </div>

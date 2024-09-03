@@ -86,15 +86,7 @@
                                                         <i class="fa fa-arrow-up {{ $sortColumnName === 'name' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
                                                         <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                                                     </span>
-                                                </th>
-
-                                                <th class="text-gray-500 text-xs">
-                                                    {{ __('cruds.volunteer.fields.rating')}}
-                                                    <span wire:click.prevent="sortBy('star_no')" class="float-right text-sm" style="cursor: pointer;">
-                                                        <i class="fa fa-arrow-up {{ $sortColumnName === 'star_no' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                                                        <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'star_no' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
-                                                    </span>
-                                                </th>
+                                                </th>                                               
 
                                                 <th class="text-gray-500 text-xs">
                                                     {{ __('cruds.volunteer.fields.phone')}}
@@ -121,17 +113,7 @@
                                                 <td><input type="checkbox" class="dt_checkbox" name="volunteer_ids[]" value="{{ $user->id }}"></td>
                                                 <td>{{ $serialNo+1 }}</td>
                                                 <td>{{ ucwords($user->name) }}</td>
-                                                <td>
-                                                    <div class="rewardscrad card">
-                                                        <div class="star-rating">
-                                                            <button type="button" class="{{ $user->star_no >=1 ? 'on': 'off'}}"><span class="star">★</span></button>
-                                                            <button type="button" class="{{ $user->star_no >=2 ? 'on': 'off'}}"><span class="star">★</span></button>
-                                                            <button type="button" class="{{ $user->star_no >=3 ? 'on': 'off'}}"><span class="star">★</span></button>
-                                                            <button type="button" class="{{ $user->star_no >=4 ? 'on': 'off'}}"><span class="star">★</span></button>
-                                                            <button type="button" class="{{ $user->star_no ==5 ? 'on': 'off'}}"><span class="star">★</span></button>
-                                                        </div>
-                                                    </div>
-                                                </td>
+                                               
                                                 <td>{{ ucwords($user->phone) }}</td>
 
                                                 <td>{{ convertDateTimeFormat($user->created_at,'fulldate') }}</td>
