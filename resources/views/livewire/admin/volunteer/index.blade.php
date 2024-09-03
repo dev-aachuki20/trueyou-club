@@ -190,51 +190,60 @@
     filterDateRangePicker();
 
     document.addEventListener('loadPlugins', function(event) {
-        filterDateRangePicker();
+        filterDateRangePicker();       
     });
 
-    $(document).on('click','.ranges ul>li',function(event){
+    // $(document).on('click','.ranges ul>li',function(event){
 
-        if($(this).attr('data-range-key') == 'Today'){
-            // console.log(moment().format('DD MMMM YYYY') + ' - ' + moment().format('DD MMMM YYYY'));
+    //     if($(this).attr('data-range-key') == 'Today'){
+    //         // console.log(moment().format('DD MMMM YYYY') + ' - ' + moment().format('DD MMMM YYYY'));
 
-            $('#filter_date_range').val(moment().format('DD MMMM YYYY') + ' - ' + moment().format('DD MMMM YYYY'));
+    //         $('#filter_date_range').val(moment().format('DD MMMM YYYY') + ' - ' + moment().format('DD MMMM YYYY'));
 
-            @this.set('filter_date_range',moment().format('DD MMMM YYYY') + ' - ' + moment().format('DD MMMM YYYY'))
-        }
+    //         @this.set('filter_date_range',moment().format('DD MMMM YYYY') + ' - ' + moment().format('DD MMMM YYYY'))
+    //     }
         
-    });    
+    // });    
 
     function filterDateRangePicker(){
 
         // var start = moment().subtract(29, 'days');
-        var start = moment();
-        var end = moment();
+        // var start = moment();
+        // var end = moment();
 
-        function cb(start, end) {
-            // console.log(start.format('DD MMMM YYYY') + ' - ' + end.format('DD MMMM YYYY'));
-            $('#filter_date_range').val(start.format('DD MMMM YYYY') + ' - ' + end.format('DD MMMM YYYY'));
+        // function cb(start, end) {
+        //     // console.log(start.format('DD MMMM YYYY') + ' - ' + end.format('DD MMMM YYYY'));
+        //     $('#filter_date_range').val(start.format('DD MMMM YYYY') + ' - ' + end.format('DD MMMM YYYY'));
 
-            @this.set('filter_date_range',start.format('DD MMMM YYYY') + ' - ' + end.format('DD MMMM YYYY'))
-        }
+        //     @this.set('filter_date_range',start.format('DD MMMM YYYY') + ' - ' + end.format('DD MMMM YYYY'))
+        // }
+
+        // $('#filter_date_range').daterangepicker({
+        //     autoUpdateInput: false,
+        //     startDate: start,
+        //     endDate: end,
+        //     locale: {
+        //         format: 'DD MMMM YYYY',
+        //     },
+        //     ranges: {
+        //     'Today': [moment(), moment()],
+        //     'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        //     'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+        //     'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+        //     'This Month': [moment().startOf('month'), moment().endOf('month')],
+        //     'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        //     }
+        // }, cb);
 
         $('#filter_date_range').daterangepicker({
-            autoUpdateInput: false,
-            startDate: start,
-            endDate: end,
-            locale: {
-                format: 'DD MMMM YYYY',
-            },
-            ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            }
-        }, cb);
-
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 1901,
+            maxYear: parseInt(moment().format('YYYY'),10)
+        }, function(start, end, label) {
+            console.log(start.format('DD MMMM YYYY'));            
+            @this.set('filter_date_range',start.format('DD MMMM YYYY'));
+        });
     }
 
     

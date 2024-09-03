@@ -93,7 +93,7 @@ class Index extends Component
         }
 
         $startDate = $this->filterStartDate ? $this->filterStartDate->startOfDay() : null;
-        $endDate = $this->filterEndDate ? $this->filterEndDate->endOfDay() : null;
+        // $endDate = $this->filterEndDate ? $this->filterEndDate->endOfDay() : null;
 
         $allUsers = User::query()->where(function ($query) use ($searchValue, $statusSearch, $starNumber) {
             $query->where('name', 'like', '%' . $searchValue . '%')
@@ -106,9 +106,15 @@ class Index extends Component
                 $query->where('id', config('constants.role.volunteer'));
             });
         
-        if(!is_null($startDate) && !is_null($endDate)){
-            $allUsers = $allUsers->whereBetween('created_at', [$startDate, $endDate]);
+        if(!is_null($startDate)){            
+            $allUsers = $allUsers->whereHas('availabilities', function($query) use ($startDate) {
+                $query->where('date', '=', $startDate);
+            });
         }
+
+        // if(!is_null($startDate) && !is_null($endDate)){
+        //     $allUsers = $allUsers->whereBetween('created_at', [$startDate, $endDate]);
+        // }
 
         $allUsers =  $allUsers->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);
@@ -119,6 +125,7 @@ class Index extends Component
     public function submitFilterForm(){
         $this->resetPage();
 
+        
         $rules = [
             'filter_date_range' => 'required',
         ];
@@ -126,9 +133,12 @@ class Index extends Component
             'filter_date_range'=>'Please select date'
         ]);
 
-        $date_range = explode(' - ', $this->filter_date_range);
+        $this->filterStartDate = Carbon::parse(date('Y-m-d',strtotime(str_replace(' ','-',$this->filter_date_range))));        
+
+       /* $date_range = explode(' - ', $this->filter_date_range);
         $this->filterStartDate = Carbon::parse(date('Y-m-d',strtotime(str_replace(' ','-',$date_range[0]))));
         $this->filterEndDate   = Carbon::parse(date('Y-m-d',strtotime(str_replace(' ','-',$date_range[1]))));
+       */
     }
 
     public function restFilterForm(){
