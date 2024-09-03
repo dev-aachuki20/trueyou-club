@@ -157,7 +157,7 @@ class Index extends Component
             'last_name'  => 'required',
             'phone'      => 'required|digits:10',
             'email'      => 'required|email',
-            'is_active'  => 'required',
+            // 'is_active'  => 'required',
             'password' => 'required|string|min:8|confirmed',
             'password_confirmation' => 'required|string|min:8|same:password',
         ],[
@@ -217,7 +217,7 @@ class Index extends Component
             'last_name'  => 'required',
             'phone'      => 'required|digits:10',
             'email'      => 'required|email',
-            'is_active'  => 'required',
+            // 'is_active'  => 'required',
         ], [
             'first_name.required' => 'The first name is required',
             'last_name.required' => 'The last name is required',

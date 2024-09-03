@@ -97,11 +97,7 @@
                                                         <i class="fa fa-arrow-up {{ $sortColumnName === 'created_at' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
                                                         <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'created_at' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                                                     </span>
-                                                </th>
-
-                                                <th class="text-gray-500 text-xs">
-                                                    @lang('cruds.user.fields.want_a_break')
-                                                </th>
+                                                </th>                                                
 
                                                 <th class="text-gray-500 text-xs">@lang('global.action')</th>
                                             </tr>
@@ -116,16 +112,7 @@
                                                
                                                 <td>{{ ucwords($user->phone) }}</td>
 
-                                                <td>{{ convertDateTimeFormat($user->created_at,'fulldate') }}</td>
-
-                                                <td>
-                                                    <div class="toggleSwitch-wrap">
-                                                        <div class="custom-control custom-switch">
-                                                            <input type="checkbox" class="custom-control-input" id="customSwitch{{$user->id}}" wire:click.prevent="$emitUp('toggle',{{$user->id}})" {{ $user->is_active == 1 ? 'checked' : '' }}>
-                                                            <label class="custom-control-label" for="customSwitch{{$user->id}}">Break</label>
-                                                        </div>
-                                                    </div>                                                    
-                                                </td>
+                                                <td>{{ convertDateTimeFormat($user->created_at,'fulldate') }}</td>                                                
 
                                                 <td>
                                                     <div class="update-webinar table-btns">

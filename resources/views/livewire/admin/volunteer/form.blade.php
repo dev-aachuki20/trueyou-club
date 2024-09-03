@@ -82,7 +82,7 @@
     </div>
     </div> --}}
 
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-md-6">
             <div class="form-group">
                 <label class="font-weight-bold">@lang('cruds.user.fields.want_a_break')</label>
@@ -95,7 +95,7 @@
                 @error('state.is_active') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <button type="submit" wire:loading.attr="disabled" class="btn btn-primary mr-2">
         {{ $updateMode ? __('global.update') : __('global.submit') }}
