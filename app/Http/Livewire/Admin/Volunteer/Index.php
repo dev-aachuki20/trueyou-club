@@ -123,9 +123,7 @@ class Index extends Component
     }
 
     public function submitFilterForm(){
-        $this->resetPage();
-
-        
+        $this->resetPage();        
         $rules = [
             'filter_date_range' => 'required',
         ];
@@ -143,10 +141,10 @@ class Index extends Component
 
     public function restFilterForm(){
         $this->resetPage();
-
         $this->reset(['filter_date_range','filterStartDate','filterEndDate']);
         $this->resetValidation();
         $this->initializePlugins();
+        $this->dispatchBrowserEvent('resetDatePicker'); 
     }
 
     public function exportToExcel()
@@ -297,9 +295,9 @@ class Index extends Component
         ]);
     }
 
-    public function deleteConfirm($event)
+    public function deleteConfirm($volunteer)
     {
-        $deleteId = $event['data']['inputAttributes']['deleteId'];
+        $deleteId = $volunteer['data']['inputAttributes']['deleteId'];
         $model    = User::find($deleteId);
         if(!$model){
             // $this->emit('refreshTable'); 
@@ -327,9 +325,9 @@ class Index extends Component
         ]);
     }
 
-    public function confirmedToggleAction($event)
+    public function confirmedToggleAction($volunteer)
     {
-        $userId = $event['data']['inputAttributes']['userId'];
+        $userId = $volunteer['data']['inputAttributes']['userId'];
         $model = User::find($userId);
        
         $model->update(['is_active' => !$model->is_active]);
@@ -355,7 +353,7 @@ class Index extends Component
         }
         else{
             $this->volunteer_ids =  $volunteer_ids;         
-            $this->events = Event::where('status',1)->get();
+            $this->events = Event::where('status',1)->where('event_date', '>=', now()->toDateString())->get();
             $this->dispatchBrowserEvent('openInviteModal');  
         }           
     }
@@ -363,7 +361,7 @@ class Index extends Component
     public function triggerInviteModal(User $user)
     {
         array_push($this->volunteer_ids, $user->id);        
-        $this->events = Event::where('status',1)->get();      
+        $this->events = Event::where('status',1)->where('event_date', '>=', now()->toDateString())->get();      
         $this->dispatchBrowserEvent('openInviteModal');                 
     }
 

@@ -37,7 +37,7 @@
                             <div class="card-body filter-section">
                                 <form wire:submit.prevent="submitFilterForm" class="forms-sample">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-3">
                                             <div class="form-group mb-0">
                                                 <label for="filter_date_range">Select Date</label>
                                                 <input type="text" id="filter_date_range" class="form-control" wire:model.defer="filter_date_range" placeholder="Select Date" autocomplete="off" readonly="true">
@@ -57,7 +57,7 @@
                                                 <span wire:loading wire:target="restFilterForm">
                                                     <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
                                                 </span>
-                                            </button>                                          
+                                            </button>                                        
                                     
                                         </div>
                                     </div>
@@ -190,74 +190,37 @@
     filterDateRangePicker();
 
     document.addEventListener('loadPlugins', function(event) {
-        filterDateRangePicker();       
-    });
-
-    // $(document).on('click','.ranges ul>li',function(event){
-
-    //     if($(this).attr('data-range-key') == 'Today'){
-    //         // console.log(moment().format('DD MMMM YYYY') + ' - ' + moment().format('DD MMMM YYYY'));
-
-    //         $('#filter_date_range').val(moment().format('DD MMMM YYYY') + ' - ' + moment().format('DD MMMM YYYY'));
-
-    //         @this.set('filter_date_range',moment().format('DD MMMM YYYY') + ' - ' + moment().format('DD MMMM YYYY'))
-    //     }
-        
-    // });    
+        filterDateRangePicker();          
+    });    
 
     function filterDateRangePicker(){
-
-        // var start = moment().subtract(29, 'days');
-        // var start = moment();
-        // var end = moment();
-
-        // function cb(start, end) {
-        //     // console.log(start.format('DD MMMM YYYY') + ' - ' + end.format('DD MMMM YYYY'));
-        //     $('#filter_date_range').val(start.format('DD MMMM YYYY') + ' - ' + end.format('DD MMMM YYYY'));
-
-        //     @this.set('filter_date_range',start.format('DD MMMM YYYY') + ' - ' + end.format('DD MMMM YYYY'))
-        // }
-
-        // $('#filter_date_range').daterangepicker({
-        //     autoUpdateInput: false,
-        //     startDate: start,
-        //     endDate: end,
-        //     locale: {
-        //         format: 'DD MMMM YYYY',
-        //     },
-        //     ranges: {
-        //     'Today': [moment(), moment()],
-        //     'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-        //     'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-        //     'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-        //     'This Month': [moment().startOf('month'), moment().endOf('month')],
-        //     'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        //     }
-        // }, cb);
-
+       
         $('#filter_date_range').daterangepicker({
             singleDatePicker: true,
             showDropdowns: true,
+            autoApply: true, 
             minYear: 1901,
-            maxYear: parseInt(moment().format('YYYY'),10)
+            maxYear: parseInt(moment().format('YYYY'),10),
+            locale: {
+            format: 'DD MMMM YYYY' // Format the date to match what you want to store
+        }
         }, function(start, end, label) {
-            console.log(start.format('DD MMMM YYYY'));            
             @this.set('filter_date_range',start.format('DD MMMM YYYY'));
         });
     }
 
-    
+    document.addEventListener('resetDatePicker', function(event) {        
+        @this.set('filter_date_range', null);
+    });
+ 
 
     $(document).on('click', '.toggle-password', function() {
         // Toggle the "eye-open" class
         $(this).toggleClass("eye-open");
-
         // Find the associated input field
         var input = $(this).siblings('input');
-
         // Toggle the input type between 'password' and 'text'
         input.attr('type') === 'password' ? input.attr('type', 'text') : input.attr('type', 'password');
-
     });
 
     // Invite Mass Volunteer Functionality

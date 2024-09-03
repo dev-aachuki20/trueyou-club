@@ -25,7 +25,7 @@
     </div>
 
 
-    <div class="form-group row">
+    {{-- <div class="form-group row">
         <label class="col-sm-2 col-form-label font-weight-bold">Want A Break ?</label>
         <div class="col-sm-9 col-form-label">
 
@@ -36,9 +36,9 @@
             @endif
 
         </div>
-    </div>
+    </div> --}}
 
-    <div class="form-group row">
+    {{-- <div class="form-group row">
         <label class="col-sm-2 col-form-label font-weight-bold">Rating</label>
         <div class="col-sm-9 col-form-label">
 
@@ -53,7 +53,7 @@
             </div>
 
         </div>
-    </div>
+    </div> --}}
 
    
 

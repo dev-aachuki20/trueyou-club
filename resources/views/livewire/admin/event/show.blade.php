@@ -7,7 +7,13 @@
                     
                     <div wire:loading wire:target="create" class="loader"></div>
                     <div class="card-title top-box-set">
-                        <h4 class="card-title-heading">@lang('cruds.event.event_attendance') </h4>                        
+                        <h4 class="card-title-heading">@lang('cruds.event.event_attendance') </h4>    
+                        <button wire:click.prevent="cancel" class="btn btn-secondary mt-4">
+                            {{ __('global.back')}}
+                            <span wire:loading wire:target="cancel">
+                                <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                            </span>
+                        </button>                        
                     </div>                 
                       
                         {{-- Start Datatables --}}
@@ -82,12 +88,7 @@
 
                         </div>
                         {{-- End Datatables --}}
-                        <button wire:click.prevent="cancel" class="btn btn-secondary mt-4">
-                            {{ __('global.back')}}
-                            <span wire:loading wire:target="cancel">
-                                <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
-                            </span>
-                        </button>                   
+                                       
                 </div>
             </div>
         </div>
