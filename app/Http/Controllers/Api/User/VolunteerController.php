@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class VolunteerController extends Controller
 {
-    public function volunteerAvailablity(Request $request)
+    public function volunteerAvailability(Request $request)
     {
         $request->validate([
             'month' => 'required',
@@ -55,14 +55,13 @@ class VolunteerController extends Controller
         }
     }
 
-    public function storeVolunteerAvailablity(Request $request)
+    public function storeVolunteerAvailability(Request $request)
     {
         $request->validate([
-            'date' => ['required', 'date_format:Y-m-d'], 
-            'time_slots' => ['required', 'array', 'min:1'], 
-            'time_slots.*.start_time' => ['required', 'regex:/^(0?[1-9]|1[0-2]):?[0-5]?[0-9]?(AM|PM)$/i'],
-            'time_slots.*.end_time'   => ['required', 'regex:/^(0?[1-9]|1[0-2]):?[0-5]?[0-9]?(AM|PM)$/i', function ($attribute, $value, $fail) use ($request) {
-                // Extract the index from the attribute (e.g., 'time_slots.0.end_time' -> 0)
+            'date' => ['required', 'date_format:Y-m-d'],
+            'time_slots' => ['required', 'array', 'min:1'],
+            'time_slots.*.start_time' => ['required', 'regex:/^(0?[1-9]|1[0-2]):[0-5][0-9] ?(AM|PM)$/i'],
+            'time_slots.*.end_time' => ['required', 'regex:/^(0?[1-9]|1[0-2]):[0-5][0-9] ?(AM|PM)$/i', function ($attribute, $value, $fail) use ($request) {
                 $index = explode('.', $attribute)[1];
                 $start_time = $request->input("time_slots.$index.start_time");
         
@@ -90,6 +89,15 @@ class VolunteerController extends Controller
                 $startTime24 = Carbon::parse($slot['start_time'])->format('H:i');
                 $endTime24 = Carbon::parse($slot['end_time'])->format('H:i');
 
+                $existingSlot = VolunteerAvailability::where('date', $date)
+                ->where('start_time', $startTime24)
+                ->where('end_time', $endTime24)
+                ->first();
+        
+                if ($existingSlot) {
+                    continue;
+                }
+                
                 $availablityData = [
                     'date'       => $date,
                     'start_time' => $startTime24,

@@ -94,9 +94,9 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
 
     Route::get('/event-history', [EventRequestController::class, 'eventHistory']);
 
-    Route::post('/volunteer-availablity', [VolunteerController::class, 'volunteerAvailablity']);
+    Route::post('/volunteer-availability', [VolunteerController::class, 'volunteerAvailability']);
 
-    Route::post('/add-availablity', [VolunteerController::class, 'storeVolunteerAvailablity']);
+    Route::post('/add-availability', [VolunteerController::class, 'storeVolunteerAvailability']);
 
 
 });
