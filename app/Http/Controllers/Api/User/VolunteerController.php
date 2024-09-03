@@ -22,12 +22,20 @@ class VolunteerController extends Controller
             $month = $request->month;
             $year  = $request->year;
 
-            $records = VolunteerAvailability::select('*')
+            $records = VolunteerAvailability::select('id','date','start_time','end_time')
             ->whereYear('date', $year)
             ->whereMonth('date', $month)
             ->orderBy('date')
             ->get()
-            ->groupBy('date');
+            ->groupBy(function($record) {
+                return Carbon::parse($record->date)->format('Y-m-d');
+            });
+
+            foreach($records as $dateRecords){
+                foreach($dateRecords as $record){
+                    $record->formatted_date = $record->date->format('Y-m-d');
+                }
+            }
 
             $responseData = [
                 'status'  => true,
