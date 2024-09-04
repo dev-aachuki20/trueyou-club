@@ -420,8 +420,8 @@ class Index extends Component
                 $eventDetail['formatted_date_time'] = $eventDate . ' ' .$eventStartTime. ' - ' .$eventEndTime; 
 
                 //Send Notification
-                $notification_message = trans('messages.invitation_notification',['name'=>$volunteer->name, 'event_name'=>strtolower($event->title), 'event_date'=>$eventDate, 'event_start_time' => $eventStartTime]);
-                $notification_message .= '<br><br>'.$this->custom_message;
+                $notification_message = trans('messages.invitation_notification',['name'=>strtolower($volunteer->first_name), 'event_name'=>ucwords($event->title), 'event_date'=>$eventDate, 'event_start_time' => $eventStartTime]);
+                $notification_message .= '<br>'.$this->custom_message;
                 Notification::send($volunteer, new UserNotification($volunteer, $notification_message));
               
                 //Send Mail
