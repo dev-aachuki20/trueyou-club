@@ -108,7 +108,7 @@ return [
     'education_video_type'=>[
         'video_link'=> 'Video Link',
         'upload_video'=> 'Upload Video',        
-    ]
+    ],
 
-
+    'event_confirmation_days' => 1,
 ];

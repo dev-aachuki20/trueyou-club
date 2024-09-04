@@ -18,4 +18,6 @@ return [
 
     ],
 
+    'invitation_notification' => "Hi :name, you're invited to :event_name on :event_date :event_start_time. Please confirm your availability at your earliest convenience. Looking forward to seeing you there!"
+
 ];

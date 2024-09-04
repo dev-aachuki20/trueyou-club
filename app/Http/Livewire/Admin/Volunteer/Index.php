@@ -208,7 +208,7 @@ class Index extends Component
 
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage().'->'.$e->getLine());
+            // dd($e->getMessage().'->'.$e->getLine());
             $this->alert('error', trans('messages.error_message'));
         }
     }
@@ -411,11 +411,21 @@ class Index extends Component
                 $event= Event::where('id',$eventrequest->event_id)->first();
                 $volunteer= User::where('id',$volunteer_id)->first();
                 $eventDetail= $event->toArray();
+                
+                $eventDate = $event->event_date->format('d-M-Y');
+                $eventStartTime = \Carbon\Carbon::parse($event->start_time)->format('h:i A');
+                $eventEndTime   = \Carbon\Carbon::parse($event->end_time)->format('h:i A');
+
                 $eventDetail['featured_image_url'] = $event->featured_image_url ? $event->featured_image_url : asset(config('constants.default.no_image')); 
-                $eventDetail['formatted_date_time'] = $event->event_date->format('d-M-Y') . ' ' .
-                \Carbon\Carbon::parse($event->start_time)->format('h:i A') . ' - ' .
-                \Carbon\Carbon::parse($event->end_time)->format('h:i A'); 
-                $subject = 'Event Invitation !';    
+                $eventDetail['formatted_date_time'] = $eventDate . ' ' .$eventStartTime. ' - ' .$eventEndTime; 
+
+                //Send Notification
+                $notification_message = trans('messages.invitation_notification',['name'=>$volunteer->name, 'event_name'=>strtolower($event->title), 'event_date'=>$eventDate, 'event_start_time' => $eventStartTime]);
+                $notification_message .= '<br><br>'.$this->custom_message;
+                Notification::send($volunteer, new UserNotification($volunteer, $notification_message));
+              
+                //Send Mail
+                $subject = 'Invitation : '.$event->title;   
                 Mail::to($volunteer->email)->queue(new SendInviteEventMail($volunteer->name, $subject, $volunteer->email, $this->custom_message,$eventDetail));
             }
 
