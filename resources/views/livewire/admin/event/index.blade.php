@@ -71,11 +71,19 @@
                                         <div class="update-webinar">
                                             <ul class="d-flex">
                                                 @can('event_edit')
-                                                <li>
-                                                    <a href="javascript:void()" wire:click.prevent="$emitUp('edit', {{$event->id}})" title="Edit">
-                                                        <x-svg-icon icon="edit" />
-                                                    </a>
-                                                </li>
+                                                
+                                                    @php
+                                                        $eventDateTime = \Carbon\Carbon::parse($event->event_date->format('Y-m-d') . ' ' . $event->start_time);
+                                                    @endphp
+
+                                                    @if(!($eventDateTime < now())) 
+                                                    <li>
+                                                        <a href="javascript:void()" wire:click.prevent="$emitUp('edit', {{$event->id}})" title="Edit">
+                                                            <x-svg-icon icon="edit" />
+                                                        </a>
+                                                    </li>
+                                                    @endif
+
                                                 @endcan
 
                                                 @can('event_delete')

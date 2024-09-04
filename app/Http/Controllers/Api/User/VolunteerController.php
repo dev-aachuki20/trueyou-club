@@ -19,6 +19,7 @@ class VolunteerController extends Controller
         ]);
 
         try {
+            
             $month = $request->month;
             $year  = $request->year;
 
