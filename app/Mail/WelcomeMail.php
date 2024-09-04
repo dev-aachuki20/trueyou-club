@@ -12,18 +12,19 @@ class WelcomeMail extends Mailable
     use Queueable, SerializesModels;
 
     
-    public $name, $subject, $email;
+    public $name, $subject, $email, $password;
   
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($subject,$name,$email)
+    public function __construct($subject,$name,$email,$password = null)
     {
         $this->subject = $subject;
         $this->name    = $name;
         $this->email   = $email;
+        $this->password   = $password;
     }
 
 
@@ -36,7 +37,8 @@ class WelcomeMail extends Mailable
     {
         return $this->markdown('emails.welcome-mail', [
                 'name'  => $this->name,
-                'email' => $this->email
+                'email' => $this->email,
+                'password' => $this->password,
             ])->subject($this->subject);
     }
 }

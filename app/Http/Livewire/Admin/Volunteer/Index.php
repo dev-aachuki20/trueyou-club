@@ -2,17 +2,16 @@
 
 namespace App\Http\Livewire\Admin\Volunteer;
 
-use App\Models\User;
-use Carbon\Carbon;
 use Gate;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use App\Models\User;
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\WithFileUploads;
+use Illuminate\Support\Str;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\DB;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Symfony\Component\HttpFoundation\Response;
-
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\UserDatatableExport;
 use App\Mail\SendInviteEventMail;
@@ -20,6 +19,9 @@ use App\Models\Event;
 use App\Models\EventRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
+use App\Notifications\UserNotification;
+use Illuminate\Support\Facades\Notification;
 
 class Index extends Component
 {
@@ -187,9 +189,18 @@ class Index extends Component
             $validatedData['password'] =  Hash::make($this->password);
             unset($validatedData['password_confirmation']);
             $user = User::create($validatedData);
-            $user->roles()->sync([config('constants.role.volunteer')]);                 // Assign user Role        
-            //Verification mail sent
+            $user->roles()->sync([config('constants.role.volunteer')]);                 // Assign user Role      
+            
+            //Send welcome mail for user
+            $subject = 'Welcome to ' . config('app.name');
+            Mail::to($user->email)->queue(new WelcomeMail($subject, $user->name, $user->email,$this->password));
+
+            $notification_message = config('constants.user_register_notification_message');
+            Notification::send($user, new UserNotification($user, $notification_message));
+            
+            // Verification mail sent
             $user->NotificationSendToVerifyEmail();
+
             DB::commit();
             $this->resetAllFields();
             $this->flash('success',trans('messages.add_success_message'));
@@ -197,6 +208,7 @@ class Index extends Component
 
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e->getMessage().'->'.$e->getLine());
             $this->alert('error', trans('messages.error_message'));
         }
     }

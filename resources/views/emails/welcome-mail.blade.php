@@ -26,6 +26,9 @@
                     <div class="mail-desc">
                         <ul>
                             <li style="font-size:14px;">Email : {{ $email }}</li>
+                            @if(!is_null($password))
+                            <li style="font-size:14px;">Password : {{ $password }}</li>
+                            @endif
                         </ul>
                     </div>
                 </div>
