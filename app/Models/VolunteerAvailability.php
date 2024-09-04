@@ -43,4 +43,9 @@ class VolunteerAvailability extends Model
         return $this->belongsTo(User::class, 'volunteer_id');
     }
 
+
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d');
+    }
 }

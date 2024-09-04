@@ -82,6 +82,10 @@ class Event extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function eventRequests(){
+        return $this->hasMany(EventRequest::class,'event_id');
+    }
+
 
     public function getTotalInvitationAttribute()
     {

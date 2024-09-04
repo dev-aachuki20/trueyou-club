@@ -314,6 +314,7 @@ class Index extends Component
             // $this->emit('refreshTable'); 
             $this->alert('error', trans('messages.error_message'));   
         }else{
+            $model->eventRequests()->delete();
             $model->delete();
 
             $this->resetPage();

@@ -26,15 +26,10 @@ class VolunteerController extends Controller
             ->whereYear('date', $year)
             ->whereMonth('date', $month)
             ->orderBy('date')
-            ->get()
-            ->groupBy(function($record) {
-                return Carbon::parse($record->date)->format('Y-m-d');
-            });
+            ->get();
 
-            foreach($records as $dateRecords){
-                foreach($dateRecords as $record){
-                    $record->formatted_date = $record->date->format('Y-m-d');
-                }
+            foreach($records as $index => $record){
+                $record->title = 'Availability '.($index+1);
             }
 
             $responseData = [
