@@ -7,11 +7,15 @@
 
                     @if($formMode)
 
-                    @include('livewire.admin.event.form')
+                        @include('livewire.admin.event.form')
 
                     @elseif($viewMode)
 
-                    @livewire('admin.event.show', ['event_id' => $event_id])
+                        @livewire('admin.event.show', ['event_id' => $event_id])
+
+                    @elseif($attendanceViewMode)
+
+                        @livewire('admin.event.show-attendance', ['event_id' => $event_id])
 
                     @else
                     <div wire:loading wire:target="create" class="loader"></div>
@@ -98,6 +102,11 @@
                                                 <li>
                                                     <a href="javascript:void()" wire:click.prevent="$emitUp('show', {{$event->id}})" title="View">
                                                         <x-svg-icon icon="view" />
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:void()" wire:click.prevent="$emitUp('showAttendance', {{$event->id}})" title="Attendance">
+                                                        <x-svg-icon icon="show-attendance-user" />
                                                     </a>
                                                 </li>
                                                 @endcan

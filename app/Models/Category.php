@@ -39,7 +39,9 @@ class Category extends Model
         });
 
         static::updating(function (Category $model) {
-            $model->slug = Str::slug($model->name) . '-' . bin2hex(random_bytes(10));
+            if ($model->isDirty('name')) {
+                $model->slug = Str::slug($model->name) . '-' . bin2hex(random_bytes(10));
+            }
         });
        
         static::deleting(function ($model) {

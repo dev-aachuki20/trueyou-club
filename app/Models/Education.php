@@ -43,7 +43,9 @@ class Education extends Model
         });
 
         static::updating(function (Education $model) {
-            $model->slug = Str::slug($model->title) . '-' . bin2hex(random_bytes(10));
+            if ($model->isDirty('title')) {
+                $model->slug = Str::slug($model->title) . '-' . bin2hex(random_bytes(10));
+            }
         });
 
         static::deleting(function ($model) {

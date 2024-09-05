@@ -118,6 +118,7 @@ class Index extends Component
     public function store()
     {
         // dd($this->all());
+        $this->initializePlugins();
         $validatedData = $this->validate([
             'title'         => 'required|string|max:150|unique:educations,title,NULL,id,deleted_at,NULL',                           
             'description'   => 'required|strip_tags',           
@@ -196,7 +197,7 @@ class Index extends Component
             'image'         => 'nullable|image|mimes:jpg,jpeg,png,svg',
             'video_type'   => 'required|in:'.implode(',',array_keys(config('constants.education_video_type'))),
             'video_link'    => 'nullable|string|required_if:video_type,video_link', 
-            'video'         => 'nullable|file|mimes:mp4,avi,mov,wmv,webm,flv|required_if:video_type,upload_video',
+            'video'         => 'nullable|file|mimes:mp4,avi,mov,wmv,webm,flv',
         ], [
             'description.strip_tags' => 'The description field is required',
             'category_id.required' => 'The Category is required.',

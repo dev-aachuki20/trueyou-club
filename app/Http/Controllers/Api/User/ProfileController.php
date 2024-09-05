@@ -42,9 +42,9 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $user_details = [
-            'first_name' => $user->first_name ?? null,
-            'last_name'  => $user->last_name ?? null,
-            'name'       => $user->name ?? null,
+            'first_name' => $user->first_name ? ucwords($user->first_name) : null,
+            'last_name'  => $user->last_name ? ucwords($user->last_name) : null,
+            'name'       => $user->name ? ucwords($user->name) :  null,
             'email'      => $user->email ?? null,
             'phone'      => $user->phone ?? null,
             'profile_image' => $user->profile_image_url ?? null,

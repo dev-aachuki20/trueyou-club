@@ -436,6 +436,7 @@ class Index extends Component
 
         }catch(\Exception $e){
             DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine())
             $this->flash('error',trans('messages.error_message'));
             return redirect()->route('admin.volunteers');  
         }        

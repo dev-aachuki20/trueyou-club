@@ -27,6 +27,7 @@ class ContactController extends Controller
             'email.required'        => 'This field is required',
             'phone_number.required' => 'This field is required',
             'phone_number.regex'    => 'The phone number length must be 7 to 15 digits.',
+            'message.required'      => 'This field is required',
         ]);
 
         DB::beginTransaction();

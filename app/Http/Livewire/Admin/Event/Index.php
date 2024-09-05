@@ -18,7 +18,7 @@ class Index extends Component
 {
     use  LivewireAlert, WithFileUploads, WithPagination;
 
-    public $search = null, $formMode = false, $updateMode = false, $viewMode = false;
+    public $search = null, $formMode = false, $updateMode = false, $viewMode = false, $attendanceViewMode = false;
 
     public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Title, Created Date";
 
@@ -27,7 +27,7 @@ class Index extends Component
     public $removeImage = false;    
     
     protected $listeners = [
-        'cancel', 'show', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm'
+        'cancel', 'show', 'showAttendance', 'edit', 'toggle', 'confirmedToggleAction', 'delete', 'deleteConfirm'
     ];
 
     public function mount()
@@ -126,9 +126,9 @@ class Index extends Component
         $rules = [
             'title'         => 'required',           
             'description'   => 'required|strip_tags',
-            'event_date'   => 'required|date',
-            'start_time'   => 'required|date_format:h:i A',
-            'end_time'     => 'required|date_format:h:i A',
+            'event_date'    => 'required|date',
+            'start_time'    => 'required|date_format:h:i A',
+            'end_time'      => 'required|date_format:h:i A',
             'status'        => 'required',
             'image'         => 'nullable|image|max:' . config('constants.img_max_size'),
         ];
@@ -138,9 +138,9 @@ class Index extends Component
         $currentDateTime = Carbon::now();
 
         // Check if start time is greater than current time
-        if ($starDateTime->lt($currentDateTime)) {
-            $rules['start_time'] = '|after:now';
-        }
+        // if ($starDateTime->lt($currentDateTime)) {
+        //     $rules['start_time'] = '|after:now';
+        // }
 
         // Check if end time is greater than start time
         if ($endDateTime->lt($starDateTime)) {
@@ -266,12 +266,21 @@ class Index extends Component
         }
     }
 
+    public function showAttendance($id)
+    {
+        $this->event_id = $id;
+        $this->formMode = false;
+        $this->attendanceViewMode = true;
+    }
+
     public function show($id)
     {
         $this->event_id = $id;
         $this->formMode = false;
+        $this->attendanceViewMode = false;
         $this->viewMode = true;
     }
+
 
     public function initializePlugins()
     {
@@ -285,7 +294,7 @@ class Index extends Component
     }
 
     public function resetAllFields(){
-        $this->reset(['formMode','updateMode','viewMode','event_id','title','description','image','originalImage','status','removeImage','event_date','start_time','end_time','full_start_time','full_end_time']);
+        $this->reset(['formMode','updateMode','viewMode','attendanceViewMode','event_id','title','description','image','originalImage','status','removeImage','event_date','start_time','end_time','full_start_time','full_end_time']);
     }
 
     public function delete($id)

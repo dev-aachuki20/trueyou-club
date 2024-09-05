@@ -30,7 +30,9 @@ class VolunteerController extends Controller
             ->get();
 
             foreach($records as $index => $record){
-                $record->title = 'Availability '.($index+1);
+                $record->start_time = Carbon::parse($record->start_time)->format('h A');
+                $record->end_time = Carbon::parse($record->end_time)->format('h A');
+                $record->title = 'Availability '.($index+1).' ('.$record->start_time.' - '.$record->end_time.')';
             }
 
             $responseData = [

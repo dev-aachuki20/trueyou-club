@@ -36,6 +36,7 @@
             <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.education.fields.video_link')}}<i class="fas fa-asterisk"></i></label>
                 <input type="text" class="form-control" wire:model.defer="video_link" placeholder="{{ __('cruds.education.fields.video_link')}}" autocomplete="off">
+                <span class="text-muted" style="font-size: 12px;display: block;margin-top: 3px;">Note:Please enter a valid video embed link (e.g., from YouTube or Vimeo). Direct video file links are not supported.</span>
                 @error('video_link') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
