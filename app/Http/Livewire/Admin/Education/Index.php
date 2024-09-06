@@ -188,8 +188,8 @@ class Index extends Component
 
 
     public function update()
-    {      
-        $validatedData = $this->validate([
+    {   
+        $rules = [
             'title'        => 'required|string|max:150|unique:educations,title,'.$this->education_id,           
             'description'   => 'required|strip_tags',  
             'category_id'   => 'required|numeric|exists:categories,id',
@@ -198,11 +198,23 @@ class Index extends Component
             'video_type'   => 'required|in:'.implode(',',array_keys(config('constants.education_video_type'))),
             'video_link'    => 'nullable|string|required_if:video_type,video_link', 
             'video'         => 'nullable|file|mimes:mp4,avi,mov,wmv,webm,flv',
-        ], [
+        ];
+
+        $education = Education::find($this->education_id);
+
+        if ($this->removeVideo && ($this->video_type == 'upload_video')) {
+            $rules['video']  = 'nullable|file|mimes:mp4,avi,mov,wmv,webm,flv|required_if:video_type,upload_video';
+        }
+
+        if( ($education->video_type  != 'upload_video') && ($this->video_type == 'upload_video') ){
+            $rules['video']  = 'nullable|file|mimes:mp4,avi,mov,wmv,webm,flv|required_if:video_type,upload_video';
+        }
+
+        $validatedData = $this->validate($rules, [
             'description.strip_tags' => 'The description field is required',
-            'category_id.required' => 'The Category is required.',
+            'category_id.required'   => 'The Category is required.',
             'video_link.required_if' => 'The Video Link is required.',
-            'video.required_if' => 'Please upload Video!',
+            'video.required_if'      => 'Please upload Video!',
 
         ],[
             'video_link' => 'Video Link'
@@ -251,6 +263,9 @@ class Index extends Component
                 }
             }
 
+         
+            $validatedData['video_link'] = ($validatedData['video_type'] == 'video_link') ? $this->video_link : null;
+            
             $education->update($validatedData);
 
             DB::commit();           
