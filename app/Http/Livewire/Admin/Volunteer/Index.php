@@ -396,37 +396,57 @@ class Index extends Component
         try{
             DB::beginTransaction();
 
+           
             foreach($this->volunteer_ids as $volunteer_id){
+
+                $sendNotificationFlag = false;
+
                 $validatedData['volunteer_id'] = $volunteer_id;     
+
                 $checkAlreadyInvited = EventRequest::where('volunteer_id', $volunteer_id)->where('event_id', $this->event_id)->first();
 
                 if(is_null($checkAlreadyInvited)){
                     $validatedData['attempts'] = 1;  
                     $eventrequest =  EventRequest::create($validatedData);
+
+                    $sendNotificationFlag = true;
                 }else{
-                    $checkAlreadyInvited->increment('attempts');
-                    $eventrequest =  $checkAlreadyInvited;
+
+                    if($checkAlreadyInvited->status != 1){
+
+                        $checkAlreadyInvited->increment('attempts');
+                        $checkAlreadyInvited->status  = 0;
+                        $checkAlreadyInvited->save();
+                        $eventrequest =  $checkAlreadyInvited;
+
+                        $sendNotificationFlag = true;
+
+                    }
                 }
 
-                $event= Event::where('id',$eventrequest->event_id)->first();
-                $volunteer= User::where('id',$volunteer_id)->first();
-                $eventDetail= $event->toArray();
+                if($sendNotificationFlag){
+
+                    $event= Event::where('id',$eventrequest->event_id)->first();
+                    $volunteer= User::where('id',$volunteer_id)->first();
+                    $eventDetail= $event->toArray();
+                    
+                    $eventDate = $event->event_date->format('d-M-Y');
+                    $eventStartTime = \Carbon\Carbon::parse($event->start_time)->format('h:i A');
+                    $eventEndTime   = \Carbon\Carbon::parse($event->end_time)->format('h:i A');
+
+                    $eventDetail['featured_image_url'] = $event->featured_image_url ? $event->featured_image_url : asset(config('constants.default.no_image')); 
+                    $eventDetail['formatted_date_time'] = $eventDate . ' ' .$eventStartTime. ' - ' .$eventEndTime; 
+
+                    //Send Notification
+                    $notification_message = trans('messages.invitation_notification',['name'=>strtolower($volunteer->first_name), 'event_name'=>ucwords($event->title), 'event_date'=>$eventDate, 'event_start_time' => $eventStartTime]);
+                    $notification_message .= '<br>'.$this->custom_message;
+                    Notification::send($volunteer, new UserNotification($volunteer, $notification_message));
                 
-                $eventDate = $event->event_date->format('d-M-Y');
-                $eventStartTime = \Carbon\Carbon::parse($event->start_time)->format('h:i A');
-                $eventEndTime   = \Carbon\Carbon::parse($event->end_time)->format('h:i A');
-
-                $eventDetail['featured_image_url'] = $event->featured_image_url ? $event->featured_image_url : asset(config('constants.default.no_image')); 
-                $eventDetail['formatted_date_time'] = $eventDate . ' ' .$eventStartTime. ' - ' .$eventEndTime; 
-
-                //Send Notification
-                $notification_message = trans('messages.invitation_notification',['name'=>strtolower($volunteer->first_name), 'event_name'=>ucwords($event->title), 'event_date'=>$eventDate, 'event_start_time' => $eventStartTime]);
-                $notification_message .= '<br>'.$this->custom_message;
-                Notification::send($volunteer, new UserNotification($volunteer, $notification_message));
-              
-                //Send Mail
-                $subject = 'Invitation : '.$event->title;   
-                Mail::to($volunteer->email)->queue(new SendInviteEventMail($volunteer->name, $subject, $volunteer->email, $this->custom_message,$eventDetail));
+                    //Send Mail
+                    $subject = 'Invitation : '.$event->title;   
+                    Mail::to($volunteer->email)->queue(new SendInviteEventMail($volunteer->name, $subject, $volunteer->email, $this->custom_message,$eventDetail));
+                    
+                }
             }
 
             DB::commit();
