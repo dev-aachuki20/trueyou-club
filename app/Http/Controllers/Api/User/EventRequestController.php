@@ -96,11 +96,11 @@ class EventRequestController extends Controller
 
             $message = 'Reponse Submitted!';
             if($request->status == 1){
-                $message = trans('message.event.accepted');
+                $message = trans('messages.event.accepted');
             }else if($request->status == 2){
-                $message = trans('message.event.declined');
+                $message = trans('messages.event.declined');
             }
-            
+
             $responseData = [
                 'status'  => true,
                 'message' => $message 
