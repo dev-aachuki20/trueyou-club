@@ -94,10 +94,16 @@ class EventRequestController extends Controller
 
             EventRequest::where('id',$request->id)->where('volunteer_id',$volunteer_id)->update(['status'=> $request->status]);
 
+            $message = 'Reponse Submitted!';
+            if($request->status == 1){
+                $message = trans('message.event.accepted');
+            }else if($request->status == 2){
+                $message = trans('message.event.declined');
+            }
+            
             $responseData = [
                 'status'  => true,
-                'message' => 'Successfully Changed !'
-                
+                'message' => $message 
             ];
             return response()->json($responseData, 200);
 
