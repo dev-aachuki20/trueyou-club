@@ -23,7 +23,7 @@ class VolunteerController extends Controller
             $month = $request->month;
             $year  = $request->year;
 
-            $records = VolunteerAvailability::select('id','date','start_time','end_time')
+            $records = VolunteerAvailability::select('id','date','start_time','end_time')->where('volunteer_id',auth()->user()->id)
             ->whereYear('date', $year)
             ->whereMonth('date', $month)
             ->orderBy('date')
@@ -76,7 +76,7 @@ class VolunteerController extends Controller
                     $fail('Invalid time format.');
                 }
             }],
-        ]);
+        ],[],$this->getCustomAttributes($request->input('time_slots')));
 
         try{
             DB::beginTransaction();
@@ -124,4 +124,17 @@ class VolunteerController extends Controller
             return response()->json($responseData, 500);
         }
     }
+
+
+    public function getCustomAttributes($timeSlots)
+    {
+        $customAttributes = [];
+        foreach ($timeSlots as $index => $timeSlot) {
+            $slotNumber = $index + 1;
+            $customAttributes["time_slots.$index.start_time"] = "start_time_$slotNumber";
+            $customAttributes["time_slots.$index.end_time"] = "end_time_$slotNumber";
+        }
+        return $customAttributes;
+    }
+
 }
