@@ -8,6 +8,7 @@ use App\Models\VolunteerAvailability;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class VolunteerController extends Controller
 {
@@ -55,14 +56,14 @@ class VolunteerController extends Controller
 
     public function storeVolunteerAvailability(Request $request)
     {
+        /*
         $request->validate([
             'date' => ['required', 'date_format:Y-m-d'],
             'time_slots' => ['required', 'array', 'min:1'],
             'time_slots.*.start_time' => ['required', 'regex:/^(0?[1-9]|1[0-2]):[0-5][0-9] ?(AM|PM)$/i'],
             'time_slots.*.end_time' => ['required', 'regex:/^(0?[1-9]|1[0-2]):[0-5][0-9] ?(AM|PM)$/i', function ($attribute, $value, $fail) use ($request) {
                 $index = explode('.', $attribute)[1];
-                $start_time = $request->input("time_slots.$index.start_time");
-        
+                $start_time = $request->input("time_slots.$index.start_time");        
                 // Convert times to 24-hour format using Carbon
                 try {
                     $startTime24 = Carbon::parse($start_time)->format('H:i');
@@ -77,6 +78,57 @@ class VolunteerController extends Controller
                 }
             }],
         ],[],$this->getCustomAttributes($request->input('time_slots')));
+        */     
+       
+        $request->validate([
+            'date' => ['required', 'date_format:Y-m-d'],
+            'time_slots' => ['required', 'array', 'min:1'],
+        ]);
+
+        // Custom validation to ensure format and logic for end_time after start_time
+        $timeSlots = $request->input('time_slots');
+        $errors = [];
+        $timeFormatRegex = "/^(0?[1-9]|1[0-2]):[0-5][0-9] ?(AM|PM)$/i";
+        // Iterate through time slots and validate
+        foreach ($timeSlots as $index => $slot) {
+            $start_time = $slot['start_time'] ?? null;
+            $end_time = $slot['end_time'] ?? null;
+
+            // Validate time format using regex
+            if (!preg_match($timeFormatRegex, $start_time) || !preg_match($timeFormatRegex, $end_time)) {
+                $errors[] = 'Invalid time format. Ensure times are in the format HH:MM AM/PM.';
+                continue; // Skip to the next slot
+            }
+
+            // Check if required fields are present
+            if (!$start_time || !$end_time) {
+                $errors[] = 'Both start time and end time are required for all time slots.';
+                continue; // Skip to the next slot
+            }
+
+            // Convert times to 24-hour format for comparison
+            try {
+                $startTime24 = Carbon::createFromFormat('g:i A', $start_time)->format('H:i');
+                $endTime24 = Carbon::createFromFormat('g:i A', $end_time)->format('H:i');
+                // Custom validation checks
+                if ($endTime24 <= $startTime24) {
+                    $errors[] = 'The end time must be a time after the start time.';
+                }
+                
+            } catch (\Exception $e) {
+                $errors[] = 'Invalid time format.';
+            }
+        }
+        
+        if ($errors) {
+            return response()->json([
+                'message' => 'The end time must be after the start time.',
+                'errors' => [
+                    'time_slots' => array_values(array_unique($errors)) // Ensure each error message is unique
+                ]
+            ], 422);
+        }        
+        
 
         try{
             DB::beginTransaction();
@@ -134,6 +186,7 @@ class VolunteerController extends Controller
             $customAttributes["time_slots.$index.start_time"] = "start_time_$slotNumber";
             $customAttributes["time_slots.$index.end_time"] = "end_time_$slotNumber";
         }
+        
         return $customAttributes;
     }
 
