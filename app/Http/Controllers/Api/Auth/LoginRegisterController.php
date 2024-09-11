@@ -113,7 +113,7 @@ class LoginRegisterController extends Controller
             //Success Response Send
             $responseData = [
                 'status'        => true,
-                'message'       => 'Registration successful! Please check your email for a verification link.',
+                'message'       => 'Registration Successfully Done! Please check your email for a verification link.',
             ];  
             return response()->json($responseData, 200);
 
