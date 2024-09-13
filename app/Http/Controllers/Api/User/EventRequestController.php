@@ -123,33 +123,25 @@ class EventRequestController extends Controller
         $user = Auth::user();        
 
         try
-        {
-            $getAllRecords = EventRequest::/*with(['event' => function($query) {
-                $query->select(['id', 'title', 'slug', 'description', 'event_date', 'start_time'])
-                        
-                      ->where(function($query) {
-                          $query->where('event_date', '<', now()->toDateString())
-                                ->orWhere(function($query) {
-                                    $query->where('event_date', '=', now()->toDateString())
-                                          ->where('start_time', '<', now()->toTimeString());
-                                });
-                      });
-            }])
-            ->*/select('id', 'event_id', 'volunteer_id', 'custom_message', 'status', 'created_at', 'created_by')                
-                ->where('volunteer_id', $user->id)
-                /*
-                ->whereHas('event', function($query) {
-                    $query->where(function($query) {
-                        $query->where('event_date', '<', now()->toDateString())
-                              ->orWhere(function($query) {
-                                  $query->where('event_date', '=', now()->toDateString())
-                                        ->where('start_time', '<', now()->toTimeString());
-                              });
+        {         
+            $getAllRecords = EventRequest::select('id', 'event_id', 'volunteer_id', 'custom_message', 'status', 'created_at', 'created_by')
+            ->where('volunteer_id', $user->id)
+            ->where(function($query) {
+                $query->where('status', 1)
+                    ->orWhere('status', 2)
+                    ->orWhereHas('event', function($query) {
+                        $query->where(function($query) {
+                            $query->where('event_date', '<', now()->toDateString())
+                                    ->orWhere(function($query) {
+                                        $query->where('event_date', '=', now()->toDateString())
+                                            ->where('start_time', '<', now()->toTimeString());
+                                    });
+                        });
                     });
-                })
-                */
-                ->orderBy('updated_at', 'desc')
-                ->paginate(12);
+            })
+            ->orderBy('updated_at', 'desc')
+            ->paginate(12);
+    
             
             if ($getAllRecords->count() > 0){  
                 foreach ($getAllRecords as $key=>$record)
