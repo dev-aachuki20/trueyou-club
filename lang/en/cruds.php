@@ -90,6 +90,7 @@ return [
         'title'          => 'Education',
         'title_singular' => 'Education',
         'list'           => 'Education List',
+        'menu_list'           => 'List',
         'fields'         => [
             'id'                       => 'ID',            
             'title'                    => 'Title',            

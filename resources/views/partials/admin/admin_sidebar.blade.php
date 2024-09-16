@@ -110,23 +110,71 @@
         </li>
         @endcan
 
-        @can('category_access')    
-        <li class="nav-item {{ request()->is('categories') ? 'active' : '' }}">
-            <a class="nav-link fillIcon" href="{{ route('admin.categories') }}">
-                <x-svg-icon icon="category_list" />
-                <span class="menu-title"> {{ __('cruds.category.list') }} </span>
-            </a>
-        </li>
-        @endcan
 
-        @can('education_access')    
-        <li class="nav-item {{ request()->is('education') ? 'active' : '' }}">
-            <a class="nav-link fillIcon" href="{{ route('admin.education') }}">
-                <x-svg-icon icon="education_list" />
-                <span class="menu-title"> {{ __('cruds.education.list') }} </span>
+        @can('education_access')   
+        <li class="nav-item dropdown {{(request()->is('education*') || request()->is('categories*'))? 'active' : '' }}">
+
+            <a class="nav-link fillIcon" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="content-side">
+                    <x-svg-icon icon="education_list" />
+                    <span class="menu-title"> {{ __('cruds.education.title') }} </span>
+                </div>
+                <div class="arrowimg">                    
+                    <x-svg-icon icon="down-arrow" />                       
+                </div>
             </a>
+            <div class="dropdown-menu"  aria-labelledby="dropdownMenuButton">
+                <ul class="nav dropdown-menu-item">              
+                    @can('education_access')    
+                    <li class="nav-item {{ request()->is('education') ? 'active' : '' }}">
+                        <a class="nav-link fillIcon" href="{{ route('admin.education') }}">
+                            <x-svg-icon icon="category_list" />
+                            <span class="menu-title"> {{ __('cruds.education.menu_list') }} </span>
+                        </a>                    
+                    </li>
+                    @endcan
+    
+                    @can('category_access')    
+                    <li class="nav-item {{ request()->is('categories') ? 'active' : '' }}">
+                        <a class="nav-link fillIcon" href="{{ route('admin.categories') }}">
+                            <x-svg-icon icon="category_list" />
+                            <span class="menu-title"> {{ __('cruds.category.list') }} </span>
+                        </a>
+                    </li>
+                    @endcan
+                </ul>
+            </div>
         </li>
         @endcan
+        {{-- @can('education_access')    
+        <li class="nav-item {{ request()->is('education') ? 'active' : '' }}">
+            <a class="nav-link fillIcon" href="#">
+                <x-svg-icon icon="education_list" />
+                <span class="menu-title"> {{ __('cruds.education.title') }} </span>
+            </a>
+            <div class="dropup-menu">
+                <ul class="nav dropdown-menu-item">              
+                    @can('education_access')    
+                    <li class="nav-item {{ request()->is('education') ? 'active' : '' }}">
+                        <a class="nav-link fillIcon" href="{{ route('admin.education') }}">
+                            <x-svg-icon icon="category_list" />
+                            <span class="menu-title"> {{ __('cruds.education.menu_list') }} </span>
+                        </a>                    
+                    </li>
+                    @endcan
+    
+                    @can('category_access')    
+                    <li class="nav-item {{ request()->is('categories') ? 'active' : '' }}">
+                        <a class="nav-link fillIcon" href="{{ route('admin.categories') }}">
+                            <x-svg-icon icon="category_list" />
+                            <span class="menu-title"> {{ __('cruds.category.list') }} </span>
+                        </a>
+                    </li>
+                    @endcan
+                </ul>
+            </div>
+        </li>
+        @endcan --}}
 
         @can('page_access')
         <li class="nav-item {{ request()->is('page-manage*') ? 'active' : '' }}">
