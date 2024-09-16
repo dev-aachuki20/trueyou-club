@@ -16,7 +16,7 @@ class EventRequestController extends Controller
         try
         {
             $getAllRecords = EventRequest::with(['event' => function($query) {
-                $query->select(['id', 'title', 'slug', 'description', 'event_date', 'start_time'])
+                $query->select(['id', 'title', 'slug', 'description', 'event_date', 'start_time','end_time'])
                       ->where(function($query) {
                           $query->where('event_date', '>', now()->toDateString());
                                 // ->orWhere(function($query) {
@@ -49,10 +49,11 @@ class EventRequestController extends Controller
                     $record->makeHidden(['user']);
 
                     if ($record->event) {
+                       
                         $formattedEventDate = convertDateTimeFormat($record->event->event_date, 'fulldate');
                         $record->event->formatted_event_date = $formattedEventDate;
-                        $record->event->start_time  = convertDateTimeFormat($record->event->start_time, 'fulltime');
-                        $record->event->end_time  = convertDateTimeFormat($record->event->end_time, 'fulltime');  
+                        $record->event->start_time  = \Carbon\Carbon::parse($record->event->start_time)->format('h:i A');
+                        $record->event->end_time  = \Carbon\Carbon::parse($record->event->end_time)->format('h:i A');
                         $record->event->image_url   = $record->event->featured_image_url ? $record->event->featured_image_url : asset(config('constants.default.no_image')); 
                         $record->event->created_by  = $record->user->name ?? null;    
 
