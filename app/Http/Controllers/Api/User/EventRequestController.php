@@ -51,7 +51,8 @@ class EventRequestController extends Controller
                     if ($record->event) {
                         $formattedEventDate = convertDateTimeFormat($record->event->event_date, 'fulldate');
                         $record->event->formatted_event_date = $formattedEventDate;
-                        $record->event->start_time  = convertDateTimeFormat($record->event->start_time, 'fulltime');  
+                        $record->event->start_time  = convertDateTimeFormat($record->event->start_time, 'fulltime');
+                        $record->event->end_time  = convertDateTimeFormat($record->event->end_time, 'fulltime');  
                         $record->event->image_url   = $record->event->featured_image_url ? $record->event->featured_image_url : asset(config('constants.default.no_image')); 
                         $record->event->created_by  = $record->user->name ?? null;    
 
