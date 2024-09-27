@@ -111,4 +111,6 @@ return [
     ],
 
     'event_confirmation_days' => 1,
+
+    'embed_video_link' => 'https://www.youtube.com/embed/',
 ];

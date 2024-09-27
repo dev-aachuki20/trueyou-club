@@ -140,7 +140,14 @@ class Index extends Component
 
         DB::beginTransaction();
         try {
-            $validatedData['status'] = $this->status;            
+            $validatedData['status'] = $this->status;
+
+            if($this->video_link){
+                $this->video_link = getYouTubeVideoId($this->video_link);
+                $videoLink = config('constants.embed_video_link').$this->video_link;
+                $validatedData['video_link'] = $videoLink;
+            }
+
             $education = Education::create($validatedData);
 
             if ($this->image) {
@@ -263,8 +270,15 @@ class Index extends Component
                 }
             }
 
-         
-            $validatedData['video_link'] = ($validatedData['video_type'] == 'video_link') ? $this->video_link : null;
+            if($validatedData['video_type'] == 'video_link'){
+                if($this->video_link){
+                    $this->video_link = getYouTubeVideoId($this->video_link);
+                    $videoLink = config('constants.embed_video_link').$this->video_link;
+                    $validatedData['video_link'] = $videoLink;
+                }
+            }else{
+                $validatedData['video_link'] = null;
+            }
             
             $education->update($validatedData);
 

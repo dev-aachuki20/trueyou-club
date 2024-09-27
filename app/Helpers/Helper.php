@@ -373,3 +373,30 @@ if (!function_exists('decryptValue')) {
 	}
 }
 
+if (!function_exists('getYouTubeVideoId')) {
+
+	function getYouTubeVideoId($url)
+	{
+		// Parse the URL
+		$parsedUrl = parse_url($url);
+		
+		// Check if the URL is a short YouTube URL (e.g., youtu.be)
+		if (isset($parsedUrl['host']) && $parsedUrl['host'] == 'youtu.be') {
+			// Extract the video ID from the path
+			return ltrim($parsedUrl['path'], '/');
+		}
+		
+		// For full YouTube URLs (optional handling)
+		// if the structure is https://www.youtube.com/watch?v=video_id
+		if (isset($parsedUrl['query'])) {
+			parse_str($parsedUrl['query'], $queryParams);
+			if (isset($queryParams['v'])) {
+				return $queryParams['v'];
+			}
+		}
+
+		// Return null if no valid video ID is found
+		return null;
+	}
+
+}

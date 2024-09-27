@@ -98,6 +98,7 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
 
     Route::post('/add-availability', [VolunteerController::class, 'storeVolunteerAvailability']);
 
+    Route::get('/delete-availability/{id}', [VolunteerController::class, 'destroyVolunteerAvailability']);
 
 });
 

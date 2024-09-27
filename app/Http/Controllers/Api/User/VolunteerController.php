@@ -81,8 +81,9 @@ class VolunteerController extends Controller
         */     
        
         $request->validate([
-            'date' => ['required', 'date_format:Y-m-d'],
-            'time_slots' => ['required', 'array', 'min:1'],
+           'date' => ['required', 'array', 'min:1'], 
+           'date.*' => ['required', 'date_format:Y-m-d'],
+           'time_slots' => ['required', 'array', 'min:1'],
         ]);
 
         // Custom validation to ensure format and logic for end_time after start_time
@@ -90,6 +91,8 @@ class VolunteerController extends Controller
         $errors = [];
         $timeFormatRegex = "/^(0?[1-9]|1[0-2]):[0-5][0-9] ?(AM|PM)$/i";
         // Iterate through time slots and validate
+
+
         foreach ($timeSlots as $index => $slot) {
             $start_time = $slot['start_time'] ?? null;
             $end_time = $slot['end_time'] ?? null;
@@ -133,29 +136,33 @@ class VolunteerController extends Controller
         try{
             DB::beginTransaction();
             
-            $date = Carbon::parse($request->date)->format('Y-m-d');
-            $time_slots = $request->time_slots;
-            foreach($time_slots as $slot){
-                $startTime24 = Carbon::parse($slot['start_time'])->format('H:i');
-                $endTime24 = Carbon::parse($slot['end_time'])->format('H:i');
+            $allSelectedDates = $request->date;
 
-                $existingSlot = VolunteerAvailability::where('date', $date)
-                ->where('start_time', $startTime24)
-                ->where('end_time', $endTime24)
-                ->first();
-        
-                if ($existingSlot) {
-                    continue;
+            foreach($allSelectedDates as $selectedDate){
+                $date = Carbon::parse($selectedDate)->format('Y-m-d');
+                $time_slots = $request->time_slots;
+                foreach($time_slots as $slot){
+                    $startTime24 = Carbon::parse($slot['start_time'])->format('H:i');
+                    $endTime24 = Carbon::parse($slot['end_time'])->format('H:i');
+    
+                    $existingSlot = VolunteerAvailability::where('date', $date)
+                    ->where('start_time', $startTime24)
+                    ->where('end_time', $endTime24)
+                    ->first();
+            
+                    if ($existingSlot) {
+                        continue;
+                    }
+                    
+                    $availablityData = [
+                        'date'       => $date,
+                        'start_time' => $startTime24,
+                        'end_time'   => $endTime24,
+                    ];
+    
+                    VolunteerAvailability::create($availablityData);
+    
                 }
-                
-                $availablityData = [
-                    'date'       => $date,
-                    'start_time' => $startTime24,
-                    'end_time'   => $endTime24,
-                ];
-
-                VolunteerAvailability::create($availablityData);
-
             }
 
             DB::commit();
@@ -188,6 +195,39 @@ class VolunteerController extends Controller
         }
         
         return $customAttributes;
+    }
+
+    public function destroyVolunteerAvailability($id){
+        try{
+            DB::beginTransaction();
+            $model = VolunteerAvailability::find($id);
+            if($model){
+                $model->delete();
+
+                DB::commit();
+                $responseData = [
+                    'status'  => true,
+                    'message' => 'Availablity deleted successfully!'
+                ];
+                return response()->json($responseData, 200);
+            }
+
+            $responseData = [
+                'status'  => false,
+                'message' => trans('messages.no_record_found')
+            ];
+            return response()->json($responseData, 404);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            $responseData = [
+                'status'  => false,
+                'error'   => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json($responseData, 500);
+        }
     }
 
 }
