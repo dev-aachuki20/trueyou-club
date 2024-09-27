@@ -81,8 +81,8 @@ class VolunteerController extends Controller
         */     
        
         $request->validate([
-           'date' => ['required', 'array', 'min:1'], 
-           'date.*' => ['required', 'date_format:Y-m-d'],
+           'start_date' => 'required|date|before_or_equal:end_date',
+           'end_date'   => 'required|date|after_or_equal:start_date',
            'time_slots' => ['required', 'array', 'min:1'],
         ]);
 
@@ -136,7 +136,17 @@ class VolunteerController extends Controller
         try{
             DB::beginTransaction();
             
-            $allSelectedDates = $request->date;
+            $startDate = Carbon::parse($request->start_date);
+            $endDate = Carbon::parse($request->end_date);
+
+            $dates = collect();
+
+            while ($startDate->lte($endDate)) {
+                $dates->push($startDate->copy()->toDateString());
+                $startDate->addDay(); 
+            }
+
+            $allSelectedDates = $dates->unique()->values();
 
             foreach($allSelectedDates as $selectedDate){
                 $date = Carbon::parse($selectedDate)->format('Y-m-d');
