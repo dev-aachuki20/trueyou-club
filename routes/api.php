@@ -102,6 +102,7 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
 
 });
 
+Route::get('/get-locations', [CommanController::class, 'getLocations']);
 
 Route::get('/get-site-settings-details', [CommanController::class, 'siteSettingDetails']);
 Route::get('/get-latest-records/{pageName}', [CommanController::class, 'getLatestRecords']);

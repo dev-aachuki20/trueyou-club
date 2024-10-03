@@ -32,6 +32,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'phone',
         'otp',
+        'location_id',
         'register_type',
         'social_id',
         'social_json',
@@ -144,5 +145,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(VolunteerAvailability::class,'volunteer_id');
     }
 
-
+    public function userLocation(){
+        return $this->belongsTo(Location::class, 'location_id', 'id');
+    }
 }

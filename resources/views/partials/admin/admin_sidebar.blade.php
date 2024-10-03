@@ -202,6 +202,15 @@
             </a>
         </li>
         @endcan
+
+        @can('location_access')    
+        <li class="nav-item {{ request()->is('locations') ? 'active' : '' }}">
+            <a class="nav-link fillIcon" href="{{ route('admin.locations') }}">
+                <x-svg-icon icon="volunteer_list" />
+                <span class="menu-title"> {{ __('cruds.location.list') }} </span>
+            </a>
+        </li>
+        @endcan
         
         {{-- Settings --}}
         @can('setting_access')

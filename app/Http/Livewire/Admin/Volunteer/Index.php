@@ -20,6 +20,7 @@ use App\Models\EventRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeMail;
+use App\Models\Location;
 use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\Notification;
 
@@ -32,11 +33,12 @@ class Index extends Component
 
     public $sortColumnName = 'updated_at', $sortDirection = 'desc', $paginationLength = 10;
 
-    public $filter_date_range, $filterStartDate, $filterEndDate;
+    public $filter_date_range, $filterStartDate, $filterLocation, $filterEndDate, $filter_location_id;
 
     public $formMode = false, $updateMode = false, $viewMode = false, $viewQuoteHistoryMode = false;
 
-    public $user_id = null, $first_name,  $last_name, $phone, $email,$password,$password_confirmation, $is_active = 1;
+    public $user_id = null, $first_name,  $last_name, $phone, $email,$password,$password_confirmation,$location_id, $is_active = 1;
+    public $locations = [];
     public $events = [];
     public $volunteer_ids = [];
     public $event_id = null;
@@ -102,22 +104,30 @@ class Index extends Component
                 ->orWhere('phone', 'like', '%' . $searchValue . '%')
                 ->orWhere('star_no', $starNumber)
                 ->orWhere('is_active', $statusSearch)
+                ->orWhereHas('userLocation', function($query) use($searchValue){
+                    $query->where('name', 'like', '%' . $searchValue . '%');
+                })
                 ->orWhereRaw("date_format(created_at, '" . config('constants.search_full_date_format') . "') like ?", ['%' . $searchValue . '%']);
             })
             ->whereHas('roles', function ($query) {
                 $query->where('id', config('constants.role.volunteer'));
             });
         
-        if(!is_null($startDate)){            
+        if(!empty($startDate)){            
             $allUsers = $allUsers->whereHas('availabilities', function($query) use ($startDate) {
                 $query->where('date', '=', $startDate);
             });
         }
 
+        
+        if(!empty($this->filter_location_id)){
+            $allUsers = $allUsers->where('location_id', $this->filter_location_id);
+        }
+
         // if(!is_null($startDate) && !is_null($endDate)){
         //     $allUsers = $allUsers->whereBetween('created_at', [$startDate, $endDate]);
         // }
-
+        $this->locations = Location::whereStatus(1)->pluck('name', 'id')->toArray();
         $allUsers =  $allUsers->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);
 
@@ -127,13 +137,16 @@ class Index extends Component
     public function submitFilterForm(){
         $this->resetPage();        
         $rules = [
-            'filter_date_range' => 'required',
+            'filter_date_range' => 'required_without:filter_location_id',
+            'filter_location_id' => 'required_without:filter_date_range',
         ];
         $this->validate($rules,[
-            'filter_date_range'=>'Please select date'
+            'filter_date_range'=>'Please select date',
+            'filter_location_id'=>'Please select location',
         ]);
 
-        $this->filterStartDate = Carbon::parse(date('Y-m-d',strtotime(str_replace(' ','-',$this->filter_date_range))));        
+        $this->filterLocation = $this->filter_location_id;
+        $this->filterStartDate = $this->filter_date_range ? Carbon::parse(date('Y-m-d',strtotime(str_replace(' ','-',$this->filter_date_range)))) : null;        
 
        /* $date_range = explode(' - ', $this->filter_date_range);
         $this->filterStartDate = Carbon::parse(date('Y-m-d',strtotime(str_replace(' ','-',$date_range[0]))));
@@ -143,7 +156,7 @@ class Index extends Component
 
     public function restFilterForm(){
         $this->resetPage();
-        $this->reset(['filter_date_range','filterStartDate','filterEndDate']);
+        $this->reset(['filter_date_range', 'filter_location_id', 'filterLocation', 'filterStartDate','filterEndDate']);
         $this->resetValidation();
         $this->initializePlugins();
         $this->dispatchBrowserEvent('resetDatePicker'); 
@@ -157,6 +170,7 @@ class Index extends Component
     public function create()
     {
         $this->initializePlugins();
+        $this->locations = Location::whereStatus(1)->pluck('name', 'id')->toArray();
         $this->formMode = true;
     }
 
@@ -167,6 +181,7 @@ class Index extends Component
             'last_name'  => 'required',
             'phone'      => 'required|digits:10',
             'email'      => 'required|email',
+            'location_id'=> 'required|exists:locations,id',
             // 'is_active'  => 'required',
             'password' => 'required|string|min:8|confirmed',
             'password_confirmation' => 'required|string|min:8|same:password',
@@ -180,6 +195,9 @@ class Index extends Component
             'password_confirmation.required' => 'Confirm password is required!',
             'password_confirmation.min' => 'The confirm password should be at least 8 letter.',
             'password_confirmation.same' => 'The password confirmation and password must match.',
+
+            'location_id.required' => 'The location is required.',
+            'location_id.exists' => 'The selected location is invalid.',
         ]);
 
         try
@@ -221,11 +239,14 @@ class Index extends Component
 
         $user = User::findOrFail($id);
 
+        $this->locations = Location::whereStatus(1)->pluck('name', 'id')->toArray();
+
         $this->user_id         =  $user->id;
         $this->first_name      =  $user->first_name;
         $this->last_name       =  $user->last_name;
         $this->phone           =  $user->phone;
         $this->email           =  $user->email;
+        $this->location_id     =  $user->location_id;
         $this->is_active       =  $user->is_active;
     }
 
@@ -237,11 +258,15 @@ class Index extends Component
             'last_name'  => 'required',
             'phone'      => 'required|digits:10',
             'email'      => 'required|email',
+            'location_id'=> 'required|exists:locations,id',
             // 'is_active'  => 'required',
         ], [
             'first_name.required' => 'The first name is required',
             'last_name.required' => 'The last name is required',
             'phone.digits' => '10 digit phone number is required',
+
+            'location_id.required' => 'The location is required.',
+            'location_id.exists' => 'The selected location is invalid.',
         ]);
 
         try
@@ -286,7 +311,7 @@ class Index extends Component
 
     public function cancel()
     {
-        $this->reset(['formMode','updateMode','viewMode','viewQuoteHistoryMode','user_id','first_name','last_name','phone','email','is_active']);
+        $this->reset(['formMode','updateMode','viewMode','viewQuoteHistoryMode','user_id','first_name','last_name','phone','email','is_active', 'location_id']);
         $this->resetValidation();
         $this->initializePlugins();
     }
@@ -355,7 +380,7 @@ class Index extends Component
     }
 
     public function resetAllFields(){
-        $this->reset(['formMode','updateMode','viewMode','viewQuoteHistoryMode','user_id','first_name','last_name','phone','email','is_active']);
+        $this->reset(['formMode','updateMode','viewMode','viewQuoteHistoryMode','user_id','first_name','last_name','phone','email','is_active', 'location_id']);
     }   
 
     public function triggerMassInviteModal($volunteer_ids = [])

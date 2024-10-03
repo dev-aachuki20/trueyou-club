@@ -24,6 +24,13 @@
         </div>
     </div>
 
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label font-weight-bold">@lang('cruds.volunteer.fields.location_id')</label>
+        <div class="col-sm-9 col-form-label">
+            {{ $detail->userLocation ? $user->userLocation->name : '' }}
+        </div>
+    </div>
+
 
     {{-- <div class="form-group row">
         <label class="col-sm-2 col-form-label font-weight-bold">Want A Break ?</label>

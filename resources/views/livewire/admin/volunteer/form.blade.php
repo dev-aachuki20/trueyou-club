@@ -63,6 +63,18 @@
         </div>       
         
     @endif
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="location_id">Select Location</label>
+            <select class="form-control" id="location_id" wire:model.defer="location_id">
+                <option value="" selected >Select Location</option>
+                @foreach($locations as $key => $value)
+                    <option value="{{ $key }}"  {{ $location_id == $key ? 'selected' : '' }}>{{ $value }}</option>
+                @endforeach
+            </select>
+            @error('location_id') <span class="text-danger">{{ $message }}</span> @enderror
+        </div>
+    </div>
     
 
     {{-- <div class="row logo-section">

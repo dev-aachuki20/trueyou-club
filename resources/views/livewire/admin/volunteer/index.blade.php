@@ -44,6 +44,18 @@
                                             </div>
                                             @error('filter_date_range') <span class="error text-danger">{{ $message }}</span>@enderror
                                         </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="filter_location_id">Select Location</label>
+                                                <select class="form-control" id="filter_location_id" wire:model.defer="filter_location_id">
+                                                    <option value="" selected >Select Location</option>
+                                                    @foreach($locations as $key => $value)
+                                                        <option value="{{ $key }}">{{ $value }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('filter_location_id') <span class="error text-danger">{{ $message }}</span> @enderror
+                                            </div>
+                                        </div>
 
                                         <div class="col-md-6 mt-2 mt-md-0 pl-3 pl-md-1">
                                             <button type="submit" class="btn joinBtn" wire:loading.attr="disabled">
@@ -92,6 +104,10 @@
                                                     {{ __('cruds.volunteer.fields.phone')}}
                                                 </th>
 
+                                                <th class="text-gray-500 text-xs">
+                                                    {{ __('cruds.volunteer.fields.location_id')}}
+                                                </th>
+
                                                 <th class="text-gray-500 text-xs">@lang('global.created')
                                                     <span wire:click.prevent="sortBy('created_at')" class="float-right text-sm" style="cursor: pointer;">
                                                         <i class="fa fa-arrow-up {{ $sortColumnName === 'created_at' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
@@ -111,6 +127,8 @@
                                                 <td>{{ ucwords($user->name) }}</td>
                                                
                                                 <td>{{ ucwords($user->phone) }}</td>
+
+                                                <td>{{ ucwords($user->userLocation ? $user->userLocation->name : '') }}</td>
 
                                                 <td>{{ convertDateTimeFormat($user->created_at,'fulldate') }}</td>                                                
 

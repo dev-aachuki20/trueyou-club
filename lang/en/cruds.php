@@ -48,6 +48,7 @@ return [
             'status'                   => 'Status',
             'password'                 => 'Password',
             'confirm_password'         => 'Password Confirm',
+            'location_id'              => 'Location',
             'role'                     => 'User Level',
             'created_at'               => 'Created',
             'updated_at'               => 'Updated',
@@ -296,5 +297,20 @@ return [
             'total_user' => 'Total User',
             'status' => 'Status',
         ]
-    ]
+    ],
+
+    'location'   => [
+        'title'          => 'Locations',
+        'title_singular' => 'Location',
+        'list'           => 'Location List',
+        'fields'         => [
+            'id'                       => 'ID',
+            'name'               => 'Name',
+            'created_at'               => 'Created',
+            'updated_at'               => 'Updated',
+            'deleted_at'               => 'Deleted',
+            'rating'                   => 'Rating',
+
+        ],
+    ],
 ];

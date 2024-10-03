@@ -458,6 +458,31 @@ class PermissionsTableSeeder extends Seeder
                 'updated_at' => $updateDate,
             ],
 
+            [
+                'title'      => 'location_access',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'location_create',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'location_edit',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'location_show',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'location_delete',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
         ];
 
         Permission::insert($permissions);

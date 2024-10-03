@@ -38,12 +38,16 @@ class LoginRegisterController extends Controller
                                         ],
             'password'                  => 'required|min:8',
             'password_confirmation'     => 'required|same:password',
+            'location_id'               => 'required|exists:locations,id',
             // 'passcode'                  => ['required'],
         ],[
             'phone.required'=>'The phone field is required',
             'phone.regex' =>'The phone length must be 7 to 15 digits.',
             'phone.unique' =>'The phone already exists.',
             'password.regex' => 'The :attribute must be at least 8 characters and contain at least one uppercase character, one number, and one special character.',
+
+            'location_id.required' => 'The location is required.',
+            'location_id.exists' => 'The selected location is invalid.',
         ],[
         //    'passcode'=>'golden gateway code',
         ]);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use App\Http\Controllers\Controller;
+use App\Models\Location;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Post;
 use App\Models\Seminar;
@@ -181,4 +182,23 @@ class CommanController extends Controller
         }
     }
   
+    public function getLocations(){
+        try {
+            $locations = Location::whereStatus(1)->select('id', 'name')->get();
+
+            // Return response
+            $responseData = [
+                'status' => true,
+                'data'   => $locations,
+            ];
+            return response()->json($responseData, 200);
+        } catch(\Exception $e){
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 500);
+        }
+    }
 }
