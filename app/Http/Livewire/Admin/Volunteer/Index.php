@@ -390,7 +390,7 @@ class Index extends Component
         }
         else{
             $this->volunteer_ids =  $volunteer_ids;         
-            $this->events = Event::where('status',1)->where('event_date', '>=', now()->toDateString())->get();
+            $this->events = Event::where('status',1)->where('location_id', $this->filter_location_id)->where('event_date', '>=', now()->toDateString())->get();
             $this->dispatchBrowserEvent('openInviteModal');  
         }           
     }
@@ -398,7 +398,7 @@ class Index extends Component
     public function triggerInviteModal(User $user)
     {
         array_push($this->volunteer_ids, $user->id);        
-        $this->events = Event::where('status',1)->where('event_date', '>=', now()->toDateString())->get();      
+        $this->events = Event::where('status',1)->where('location_id', $user->location_id)->where('event_date', '>=', now()->toDateString())->get();      
         $this->dispatchBrowserEvent('openInviteModal');                 
     }
 

@@ -29,6 +29,7 @@ class Event extends Model
         'start_time',
         'end_time',
         'status',
+        'location_id',
         'created_by',
         'created_at',
         'updated_at',
@@ -94,4 +95,7 @@ class Event extends Model
         return EventRequest::where('event_id', $this->id)->count();
     }
 
+    public function eventLocation(){
+        return $this->belongsTo(Location::class, 'location_id', 'id');
+    }
 }

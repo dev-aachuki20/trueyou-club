@@ -57,6 +57,12 @@
                                                     </span>
                                                 </div>
                                                 
+                                                <div class="date-time d-flex mt-1">
+                                                    <i class='fas fa-map-marker-alt'></i>
+                                                    <span>
+                                                        {{ $event->eventLocation ? $event->eventLocation->name : '' }}
+                                                    </span>
+                                                </div>
                                                 <div class="limit-description">
                                                     {!! $event->description !!}
                                                 </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin\Event;
 
 use App\Models\Event;
+use App\Models\Location;
 use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -20,10 +21,10 @@ class Index extends Component
 
     public $search = null, $formMode = false, $updateMode = false, $viewMode = false, $attendanceViewMode = false;
 
-    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Title, Created Date";
+    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Title, Location Created Date";
 
-    public $event_id = null, $title, $description, $totalInvitations, $created_at ,$image, $originalImage,$event_date = null, $start_time=null,  $end_time = null,$full_start_time=null,  $full_end_time = null, $status = 1;
-
+    public $event_id = null, $title, $description, $totalInvitations, $created_at ,$image, $location_id, $originalImage,$event_date = null, $start_time=null,  $end_time = null,$full_start_time=null,  $full_end_time = null, $status = 1;
+    public $locations = [];
     public $removeImage = false;    
     
     protected $listeners = [
@@ -77,6 +78,9 @@ class Index extends Component
 
         $allEvent = Event::query()->where(function ($query) use ($searchValue, $statusSearch) {
             $query->where('title', 'like', '%' . $searchValue . '%')
+                ->orWhereHas('eventLocation', function($query) use($searchValue){
+                    $query->where('name', 'like', '%' . $searchValue . '%');
+                })
                 ->orWhere('status', $statusSearch)
                 ->orWhereRaw("date_format(created_at, '" . config('constants.search_full_date_format') . "') like ?", ['%' . $searchValue . '%']);
         })
@@ -94,7 +98,7 @@ class Index extends Component
             // ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate($this->paginationLength);
 
-
+        $this->locations = Location::whereStatus(1)->pluck('name', 'id')->toArray();
         return view('livewire.admin.event.index',compact('allEvent'));
     }
 
@@ -118,6 +122,7 @@ class Index extends Component
     public function create()
     {
         $this->initializePlugins();
+        $this->locations = Location::whereStatus(1)->pluck('name', 'id')->toArray();
         $this->formMode = true;
     }
 
@@ -131,6 +136,7 @@ class Index extends Component
             'end_time'      => 'required|date_format:h:i A',
             'status'        => 'required',
             'image'         => 'nullable|image|max:' . config('constants.img_max_size'),
+            'location_id'   => 'required|exists:locations,id',
         ];
 
         $starDateTime = Carbon::parse($this->event_date.' '.$this->start_time);
@@ -150,6 +156,9 @@ class Index extends Component
         $validatedData = $this->validate($rules, [
             'description.strip_tags' => 'The description field is required',
             'end_time.after' => 'The end time must be a time after the start time.',
+
+            'location_id.required' => 'The location is required.',
+            'location_id.exists' => 'The selected location is invalid.',
         ]);
 
         DB::beginTransaction();
@@ -184,6 +193,8 @@ class Index extends Component
         $this->formMode = true;
         $this->updateMode = true;
 
+        $this->locations = Location::whereStatus(1)->pluck('name', 'id')->toArray();
+
         $event = Event::findOrFail($id);
         $this->event_id         =  $event->id;
         $this->title             =  $event->title;
@@ -193,6 +204,7 @@ class Index extends Component
         $this->end_time        =  Carbon::parse($event->end_time)->format('h:i A');
         $this->status           =  $event->status;
         $this->originalImage    =  $event->featured_image_url;   
+        $this->location_id     =  $event->location_id;
 
         $this->full_start_time =  $event->event_date->format('Y-m-d').' '. Carbon::parse($event->start_time)->format('H:i:s');
         $this->full_end_time =  $event->event_date->format('Y-m-d').' '. Carbon::parse($event->end_time)->format('H:i:s');
@@ -209,6 +221,7 @@ class Index extends Component
             'end_time'     => 'required|date_format:h:i A',
             'status'        => 'required',
             'image'         => 'nullable|image|max:' . config('constants.img_max_size'),
+            'location_id'   => 'required|exists:locations,id',
         ];
         
         $starDateTime = Carbon::parse($this->event_date.' '.$this->start_time);
@@ -228,6 +241,9 @@ class Index extends Component
         $validatedData = $this->validate($rules, [
             'description.strip_tags' => 'The description field is required',
             'end_time.after' => 'The end time must be a time after the start time.',
+
+            'location_id.required' => 'The location is required.',
+            'location_id.exists' => 'The selected location is invalid.',
         ]);
 
         $validatedData['status'] = $this->status;        
@@ -294,7 +310,7 @@ class Index extends Component
     }
 
     public function resetAllFields(){
-        $this->reset(['formMode','updateMode','viewMode','attendanceViewMode','event_id','title','description','image','originalImage','status','removeImage','event_date','start_time','end_time','full_start_time','full_end_time']);
+        $this->reset(['formMode','updateMode','viewMode','attendanceViewMode','event_id','title','description','image','originalImage','status','removeImage','event_date','start_time','end_time','full_start_time','full_end_time', 'location_id']);
     }
 
     public function delete($id)

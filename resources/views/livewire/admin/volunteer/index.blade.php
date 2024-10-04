@@ -26,8 +26,10 @@
                                 </button>
                                 @endcan
 
-                                @can('event_invite_volunteer_access')                                
-                                    <button type="button" class="InviteBtn btn joinBtn btn-header" wire:click="triggerMassInviteModal(volunteer_selectedIds)"><x-svg-icon icon="invite-icon" /> Invite</button>                                                              
+                                @can('event_invite_volunteer_access')
+                                    @if($filter_location_id)
+                                        <button type="button" class="InviteBtn btn joinBtn btn-header" wire:click="triggerMassInviteModal(volunteer_selectedIds)"><x-svg-icon icon="invite-icon" /> Invite</button>
+                                    @endif
                                 @endcan
                             </div>
                         </div>                 
@@ -161,9 +163,11 @@
                                                             @endcan   
                                                             
                                                             @can('event_invite_volunteer_access')
-                                                            <li>
-                                                                <a role="button" class="" wire:click="triggerInviteModal({{ $user->id }})" data-toggle="modal" data-target="#InviteModal" title="Invite"><x-svg-icon icon="invite-icon" /></a>                                                                
-                                                            </li>
+                                                            @if($user->location_id)
+                                                                <li>
+                                                                    <a role="button" class="" wire:click="triggerInviteModal({{ $user->id }})" data-toggle="modal" data-target="#InviteModal" title="Invite"><x-svg-icon icon="invite-icon" /></a>                                                                
+                                                                </li>
+                                                            @endif
                                                             @endcan
                                                             
                                                         </ul>

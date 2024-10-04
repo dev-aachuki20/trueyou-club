@@ -6,11 +6,23 @@
 <form wire:submit.prevent="{{ $updateMode ? 'update' : 'store' }}" class="forms-sample">
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
             <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.event.fields.title')}}<i class="fas fa-asterisk"></i></label>
                 <input type="text" class="form-control" wire:model.defer="title" placeholder="{{ __('cruds.event.fields.title')}}" autocomplete="off">
                 @error('title') <span class="error text-danger">{{ $message }}</span>@enderror
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="location_id">Select Location</label>
+                <select class="form-control" id="location_id" wire:model.defer="location_id">
+                    <option value="" selected >Select Location</option>
+                    @foreach($locations as $key => $value)
+                        <option value="{{ $key }}"  {{ $location_id == $key ? 'selected' : '' }}>{{ $value }}</option>
+                    @endforeach
+                </select>
+                @error('location_id') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
         </div>
     </div> 
