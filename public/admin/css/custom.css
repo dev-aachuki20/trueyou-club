@@ -1645,11 +1645,16 @@ body .datepicker .datepicker-years .table-condensed{
     box-shadow: 8px 6px 15px 0px rgba(0, 97, 222, 0.25);
     border-color: #006AF2;
 }
-
-.update-webinar>ul>li a:hover svg path{
+.update-webinar.volunteer_list_table_action>ul>li:not(:last-child) a svg path {
+    fill: #626263;
+}
+.update-webinar.volunteer_list_table_action>ul>li:not(:last-child) a svg polygon {
+    fill: #626263;
+}
+.update-webinar.volunteer_list_table_action>ul>li a:hover svg path{
     fill: #ffffff;
 }
-.update-webinar>ul>li a:hover svg polygon{
+.update-webinar.volunteer_list_table_action>ul>li a:hover svg polygon{
     fill: #ffffff;
 }
 
@@ -1657,12 +1662,7 @@ body .datepicker .datepicker-years .table-condensed{
     width: 18px;
 }
 
-.update-webinar>ul>li a svg path {
-    fill: #626263;
-}
-.update-webinar>ul>li a svg polygon {
-    fill: #626263;
-}
+
 
 .no-record {
     width: 100%;

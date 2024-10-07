@@ -135,7 +135,7 @@
                                                 <td>{{ convertDateTimeFormat($user->created_at,'fulldate') }}</td>                                                
 
                                                 <td>
-                                                    <div class="update-webinar table-btns">
+                                                    <div class="update-webinar table-btns volunteer_list_table_action">
                                                         <ul class="d-flex">
                                                             @can('volunteer_show')
                                                             <li>
