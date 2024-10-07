@@ -29,6 +29,12 @@
 
                 {{ $detail->event_date->format('d-F-Y').' '.\Carbon\Carbon::parse($detail->start_time)->format('h:i A') }} - {{ \Carbon\Carbon::parse($detail->end_time)->format('h:i A') }}
                 </div>
+                <div class="date-time d-flex mt-1">
+                    <i class='fas fa-map-marker-alt'></i>
+                    <span>
+                        {{ $detail->eventLocation ? $detail->eventLocation->name : '' }}
+                    </span>
+                </div>
                 <p class="mt-4">
                     {!! $detail->description !!}
                 </p>
