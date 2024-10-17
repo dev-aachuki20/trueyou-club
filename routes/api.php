@@ -100,6 +100,9 @@ Route::group(['middleware' => ['api', 'auth:sanctum']], function () {
 
     Route::get('/delete-availability/{id}', [VolunteerController::class, 'destroyVolunteerAvailability']);
 
+    Route::post('/event-details', [VolunteerController::class, 'eventDetails']);
+
+
 });
 
 Route::get('/get-locations', [CommanController::class, 'getLocations']);

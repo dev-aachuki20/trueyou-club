@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\EventRequest;
 use App\Models\VolunteerAvailability;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -24,16 +25,36 @@ class VolunteerController extends Controller
             $month = $request->month;
             $year  = $request->year;
 
-            $records = VolunteerAvailability::select('id','date','start_time','end_time')->where('volunteer_id',auth()->user()->id)
+            $records = VolunteerAvailability::select('id','volunteer_id','date','start_time','end_time')->where('volunteer_id',auth()->user()->id)
             ->whereYear('date', $year)
             ->whereMonth('date', $month)
             ->orderBy('date')
             ->get();
 
+            
             foreach($records as $index => $record){
+                 $eventRequest = EventRequest::where('volunteer_id', $record->volunteer_id)
+                ->where(function($query) use($record) {
+                    $query->where('status', 1)
+                        ->whereHas('event', function($query) use($record) {
+                            $query->where(function($q) use($record) {
+                                $q->where('event_date', '=', $record->date)
+                                ->where('start_time', '=', $record->start_time);
+                            });
+                        });
+                })->first();
+
+                $record->event_id = $eventRequest ? $eventRequest->event_id : null;
+                $record->event_status = $eventRequest ? $eventRequest->status : null;
+
                 $record->start_time = Carbon::parse($record->start_time)->format('h A');
                 $record->end_time = Carbon::parse($record->end_time)->format('h A');
+
                 $record->title = 'Availability '.($index+1).' ('.$record->start_time.' - '.$record->end_time.')';
+                if($eventRequest){
+                    $record->title = $eventRequest->event ?  $eventRequest->event->title.' ('.$record->start_time.' - '.$record->end_time.')' : 'Availability '.($index+1).' ('.$record->start_time.' - '.$record->end_time.')';
+                }
+
             }
 
             $responseData = [
@@ -235,6 +256,47 @@ class VolunteerController extends Controller
                 'status'  => false,
                 'error'   => trans('messages.error_message'),
                 'error_details' => $e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json($responseData, 500);
+        }
+    }
+
+    
+
+    public function eventDetails(Request $request)
+    {
+        $request->validate([
+            'event_id' => ['required','exists:events,id,deleted_at,NULL'],
+        ]);
+
+        try
+        {         
+            $event = Event::select('id', 'title', 'description', 'event_date', 'start_time', 'end_time', 'location_id','status','created_by')
+            ->first();
+    
+            $event->title       = ucwords($event->title);
+
+            $formattedEventDate = convertDateTimeFormat($event->event_date, 'fulldate');
+            $event->formatted_event_date = $formattedEventDate;
+
+            $event->start_time  = convertDateTimeFormat($event->start_time, 'fulltime');  
+            $event->image_url   = $event->featured_image_url ? $event->featured_image_url : asset(config('constants.default.no_image')); 
+            $event->created_by  = $event->user->name ?? null;    
+
+            $event->makeHidden(['user', 'featuredImage']);   
+                    
+            $responseData = [
+                'status'  => true,
+                'data' => $event,
+            ];                 
+            return response()->json($responseData, 200);
+           
+        } catch (\Exception $e) {
+            // dd($e->getMessage().'->'.$e->getLine());
+            $responseData = [
+                'status'  => false,
+                'error'   => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine(),
             ];
             return response()->json($responseData, 500);
         }
