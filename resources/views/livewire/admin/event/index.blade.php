@@ -70,6 +70,10 @@
                                                 <div class="quotes-date">
                                                     Total Invitations : {{ $event->total_invitation ?? 0 }}
                                                 </div>
+
+                                                <div class="quotes-date">
+                                                    {{ __('cruds.event.fields.required_volunteers')}} : {{ $event->volunteer ?? 0 }}
+                                                </div>
                                                 {{-- <span class="quotes-date seminar-date">
                                                     <x-svg-icon icon="small-calender" />
                                                     {{ convertDateTimeFormat($event->created_at,'fulldate') }}

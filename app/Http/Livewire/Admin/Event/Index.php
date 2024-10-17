@@ -23,7 +23,7 @@ class Index extends Component
 
     public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10, $searchBoxPlaceholder = "Search By Title, Location Created Date";
 
-    public $event_id = null, $title, $description, $totalInvitations, $created_at ,$image, $location_id, $originalImage,$event_date = null, $start_time=null,  $end_time = null,$full_start_time=null,  $full_end_time = null, $status = 1;
+    public $event_id = null, $title, $description, $totalInvitations, $created_at ,$image, $location_id, $originalImage,$event_date = null, $start_time=null,  $end_time = null,$full_start_time=null,  $full_end_time = null, $status = 1, $volunteer = 0;
     public $locations = [];
     public $removeImage = false;    
     
@@ -81,6 +81,7 @@ class Index extends Component
                 ->orWhereHas('eventLocation', function($query) use($searchValue){
                     $query->where('name', 'like', '%' . $searchValue . '%');
                 })
+                ->orWhere('volunteer', $searchValue)
                 ->orWhere('status', $statusSearch)
                 ->orWhereRaw("date_format(created_at, '" . config('constants.search_full_date_format') . "') like ?", ['%' . $searchValue . '%']);
         })
@@ -135,6 +136,7 @@ class Index extends Component
             'start_time'    => 'required|date_format:h:i A',
             'end_time'      => 'required|date_format:h:i A',
             'status'        => 'required',
+            'volunteer'      => 'required|numeric|min:0',
             'image'         => 'nullable|image|max:' . config('constants.img_max_size'),
             'location_id'   => 'required|exists:locations,id',
         ];
@@ -166,6 +168,7 @@ class Index extends Component
             $validatedData['event_date']   = Carbon::parse($this->event_date)->format('Y-m-d');
             $validatedData['start_time']   = Carbon::parse($this->start_time)->format('H:i');
             $validatedData['end_time']   = Carbon::parse($this->end_time)->format('H:i');
+            $validatedData['volunteer'] = $this->volunteer;            
             $validatedData['status'] = $this->status;            
             $event = Event::create($validatedData);
 
@@ -202,6 +205,7 @@ class Index extends Component
         $this->event_date      =  $event->event_date->format('d-m-Y');
         $this->start_time      =  Carbon::parse($event->start_time)->format('h:i A');
         $this->end_time        =  Carbon::parse($event->end_time)->format('h:i A');
+        $this->volunteer =  $event->volunteer;
         $this->status           =  $event->status;
         $this->originalImage    =  $event->featured_image_url;   
         $this->location_id     =  $event->location_id;
@@ -219,6 +223,7 @@ class Index extends Component
             'event_date'   => 'required|date',
             'start_time'   => 'required|date_format:h:i A',
             'end_time'     => 'required|date_format:h:i A',
+            'volunteer'      => 'required|numeric|min:0',
             'status'        => 'required',
             'image'         => 'nullable|image|max:' . config('constants.img_max_size'),
             'location_id'   => 'required|exists:locations,id',
@@ -310,7 +315,7 @@ class Index extends Component
     }
 
     public function resetAllFields(){
-        $this->reset(['formMode','updateMode','viewMode','attendanceViewMode','event_id','title','description','image','originalImage','status','removeImage','event_date','start_time','end_time','full_start_time','full_end_time', 'location_id']);
+        $this->reset(['formMode','updateMode','viewMode','attendanceViewMode','event_id','title','description','image','originalImage','volunteer','status','removeImage','event_date','start_time','end_time','full_start_time','full_end_time', 'location_id']);
     }
 
     public function delete($id)

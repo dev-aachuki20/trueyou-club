@@ -28,6 +28,7 @@ class Event extends Model
         'event_date',
         'start_time',
         'end_time',
+        'volunteer',
         'status',
         'location_id',
         'created_by',

@@ -22,13 +22,13 @@
                         <option value="{{ $key }}"  {{ $location_id == $key ? 'selected' : '' }}>{{ $value }}</option>
                     @endforeach
                 </select>
-                @error('location_id') <span class="text-danger">{{ $message }}</span> @enderror
+                @error('location_id') <span class="error text-danger">{{ $message }}</span> @enderror
             </div>
         </div>
     </div> 
     
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.event.fields.event_date')}}<i class="fas fa-asterisk"></i></label>
                 <input type="text" id="event_date" class="form-control" wire:model.defer="event_date" placeholder="{{ __('cruds.event.fields.event_date')}}" autocomplete="off" readonly="true">
@@ -36,18 +36,25 @@
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.event.fields.start_time')}}<i class="fas fa-asterisk"></i></label>
                 <input type="text" id="start_time" class="form-control" wire:model.defer="start_time" placeholder="{{ __('cruds.event.fields.start_time')}}" autocomplete="off" readonly="true">
                 @error('start_time') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.event.fields.end_time')}}<i class="fas fa-asterisk"></i></label>
                 <input type="text" id="end_time" class="form-control" wire:model.defer="end_time" placeholder="{{ __('cruds.event.fields.end_time')}}" autocomplete="off" readonly="true">
                 @error('end_time') <span class="error text-danger">{{ $message }}</span>@enderror
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="font-weight-bold justify-content-start">{{ __('cruds.event.fields.required_volunteers')}}<i class="fas fa-asterisk"></i></label>
+                <input type="text" class="form-control" wire:model.defer="volunteer" placeholder="{{ __('cruds.event.fields.required_volunteer')}}" autocomplete="off">
+                @error('volunteer') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
     </div>

@@ -129,6 +129,8 @@ return [
             'end_date'                 => 'End Date',
             'start_date_time'          => 'Start Datetime',
             'end_date_time'            => 'End Datetime',          
+            'required_volunteer'        => 'Number of volunteer',
+            'required_volunteers'       => 'Required Volunteers',          
         ],
     ],
 
