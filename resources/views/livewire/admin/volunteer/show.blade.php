@@ -27,7 +27,7 @@
     <div class="form-group row">
         <label class="col-sm-2 col-form-label font-weight-bold">@lang('cruds.volunteer.fields.location_id')</label>
         <div class="col-sm-9 col-form-label">
-            {{ $detail->userLocation ? $user->userLocation->name : '' }}
+            {{ $detail->userLocation ? $detail->userLocation->name : '' }}
         </div>
     </div>
 
