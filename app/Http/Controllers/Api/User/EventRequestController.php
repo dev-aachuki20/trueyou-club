@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\EventRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\VolunteerAvailability;
+
 
 class EventRequestController extends Controller
 {
@@ -94,20 +96,56 @@ class EventRequestController extends Controller
                 'status' => 'required|in:'.implode(',',array_keys(config('constants.event_request_status')))
             ]);
 
-            EventRequest::where('id',$request->id)->where('volunteer_id',$volunteer_id)->update(['status'=> $request->status]);
+            $eventRequest = EventRequest::with('event')->where('id', $request->id)
+            ->where('volunteer_id', $volunteer_id)
+            ->first();
 
-            $message = 'Reponse Submitted!';
-            if($request->status == 1){
-                $message = trans('messages.event.accepted');
-            }else if($request->status == 2){
-                $message = trans('messages.event.declined');
+            $event = $eventRequest->event;
+            if (!$event) {
+                return response()->json(['message' => 'Event not found'], 404);
+            }
+
+           // Check if the volunteer is available for the event time
+            $available = VolunteerAvailability::where('volunteer_id', $volunteer_id)
+                ->where('date', $event->event_date)
+                ->where('start_time', '<=', $event->start_time)
+                ->where('end_time', '>=', $event->end_time)
+                ->exists();
+            
+            // Check if the volunteer has already accepted another event within the same timing
+            $conflictingEvent = EventRequest::where('volunteer_id', $volunteer_id)
+                ->where('status', 1) // Already accepted
+                ->whereHas('event', function($query) use ($event) {
+                    $query->where('event_date', $event->event_date)
+                        ->where(function($q) use ($event) {
+                            $q->whereBetween('start_time', [$event->start_time, $event->end_time])
+                              ->orWhereBetween('end_time', [$event->start_time, $event->end_time]);
+                        });
+                })
+                ->exists();
+            
+            if (($available && !$conflictingEvent) || $request->status == 2) {
+                EventRequest::where('id',$request->id)->where('volunteer_id',$volunteer_id)->update(['status'=> $request->status]);
+
+                $message = 'Reponse Submitted!';
+                if($request->status == 1){
+                    $message = trans('messages.event.accepted');
+                }else if($request->status == 2){
+                    $message = trans('messages.event.declined');
+                }
+    
+                $responseData = [
+                    'status'  => true,
+                    'message' => $message 
+                ];
+                return response()->json($responseData, 200);
             }
 
             $responseData = [
-                'status'  => true,
-                'message' => $message 
+                'status'  => false,
+                'error'   => 'You are not available or is already booked for another event during the requested time.',
             ];
-            return response()->json($responseData, 200);
+            return response()->json($responseData, 409);
 
         }catch(\Exception $e){
             // dd($e->getMessage().'->'.$e->getLine());

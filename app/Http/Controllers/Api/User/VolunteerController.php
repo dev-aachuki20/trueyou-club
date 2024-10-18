@@ -31,6 +31,8 @@ class VolunteerController extends Controller
             ->orderBy('date')
             ->get();
 
+            $withEventRequests = [];
+            $withoutEventRequests = [];
             
             foreach($records as $index => $record){
                  $eventRequest = EventRequest::where('volunteer_id', $record->volunteer_id)
@@ -50,16 +52,27 @@ class VolunteerController extends Controller
                 $record->start_time = Carbon::parse($record->start_time)->format('h A');
                 $record->end_time = Carbon::parse($record->end_time)->format('h A');
 
+
                 $record->title = 'Availability '.($index+1).' ('.$record->start_time.' - '.$record->end_time.')';
                 if($eventRequest){
                     $record->title = $eventRequest->event ?  $eventRequest->event->title.' ('.$record->start_time.' - '.$record->end_time.')' : 'Availability '.($index+1).' ('.$record->start_time.' - '.$record->end_time.')';
+                    
+                     $withEventRequests[] = $record;
+                     
+                }else{
+                    
+                     $withoutEventRequests[] = $record;
                 }
 
             }
+            
+            $sortedRecords = collect($withEventRequests)->merge($withoutEventRequests)
+            ->sortBy('date')
+            ->values(); 
 
             $responseData = [
                 'status'  => true,
-                'data'    => $records,
+                'data'    => $sortedRecords,
             ];                 
             return response()->json($responseData, 200);
          
@@ -271,7 +284,7 @@ class VolunteerController extends Controller
 
         try
         {         
-            $event = Event::select('id', 'title', 'description', 'event_date', 'start_time', 'end_time', 'location_id','status','created_by')
+            $event = Event::select('id', 'title', 'description', 'event_date', 'start_time', 'end_time', 'location_id','status','created_by')->where('id',$request->event_id)
             ->first();
     
             $event->title       = ucwords($event->title);
@@ -279,11 +292,12 @@ class VolunteerController extends Controller
             $formattedEventDate = convertDateTimeFormat($event->event_date, 'fulldate');
             $event->formatted_event_date = $formattedEventDate;
 
-            $event->start_time  = convertDateTimeFormat($event->start_time, 'fulltime');  
+            $event->start_time  = convertDateTimeFormat($event->start_time, 'fulltime');
+            $event->end_time  = convertDateTimeFormat($event->end_time, 'fulltime');
             $event->image_url   = $event->featured_image_url ? $event->featured_image_url : asset(config('constants.default.no_image')); 
             $event->created_by  = $event->user->name ?? null;    
 
-            $event->makeHidden(['user', 'featuredImage']);   
+            $event->makeHidden(['user', 'featuredImage','event_date']);   
                     
             $responseData = [
                 'status'  => true,
